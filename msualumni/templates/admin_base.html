@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+Dashboard - MSU Alumni Admin
+{% endblock title%}
+
+{% block css %}
+  <link href="{% static 'css/admin.css' %}" rel="stylesheet"/>
+{% endblock css %}
+
+{% block logo %}
+  <a href="/admin" class="navbar-brand">
+    MSU Alumni Admin
+  </a>
+{% endblock logo %}
+
+{% block nav %}
+  <ul class="nav navbar-nav">
+    <li><a href="/admin/dashboard">Dashboard</a></li>
+    <li><a href="/admin/profiles">Profiles</a></li>
+    <li><a href="/admin/news">News</a></li>
+    <li><a href="#">Events</a></li>
+    <li><a href="#">Photos</a></li>
+    <li><a href="/">Portal</a></li>
+  </ul>
+{% endblock nav %}
+
+

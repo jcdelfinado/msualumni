@@ -1,0 +1,88 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+Dashboard - MSU Alumni Admin
+{% endblock title%}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <h1>
+        Welcome to Alumni Administration!
+      </h1>
+      <h3>
+        Manage alumni profiles and web portal content.
+      </h3>
+      
+    </div>
+  </header>
+{% endblock header %}
+
+{% block content %}
+  <div style="margin-top:10px">
+    <div class="col-sm-4">
+	    <div class="panel panel-default" style="padding:0">
+	    	<div class="panel-heading">
+	      		<strong>Alumni Profiles Statistics</strong>
+	      	</div>
+	      	<div class="panel panel-body">
+			    <table class="table" style="margin:0">
+			    	<tr>
+				    <td>
+					    <a href="#" class="
+				    	{% if stats.for_approval > 0 %}
+				          ">
+				        {% else %}
+				          disabled">
+				        {% endif %}
+				        <strong>{{ stats.for_approval }}</strong> Alumni profiles waiting for approval
+				        </a>
+				    </td>
+				    </tr>
+				    <tr>
+				    <td>
+				        <a href="profiles?query=*&filter=alumni_id" class="">
+				          <strong>{{ stats.alumni }}</strong> Alumni on database
+				        </a>
+				    </td>
+				    </tr>
+				    <tr>
+				    <td>
+				        <a href="profiles?filter=alumni_id&query=%2A&active_only=true">
+				        <strong>{{ stats.non_admin }}</strong> Activated web portal user{% if user_count > 1 %}s{% endif %}
+				        </a>
+				    </td> 
+				    </tr>
+				    <tr>
+				    <td>
+				        <a href="#">
+				        <strong>{{ stats.inactive }}</strong> Users for email activation
+				        </a>
+				    </td>
+				    </tr>
+				</table>
+		    </div>
+		</div> 
+    </div>
+    <div class="col-sm-6">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <div class="panel-title"><strong>Site Content</strong></div>
+        </div>
+        <div class="panel-body">
+          <h3>No new news feeds.</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam sit amet faucibus lorem. Vivamus varius semper erat, id fringilla nunc cursus ut. Morbi egestas tempor quam, eget mattis magna tincidunt sed. Vivamus vel dui ante. Quisque sagittis ipsum tristique eros dictum fermentum. </p>
+          <div class=" col-sm-4">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+
+

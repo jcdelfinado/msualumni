@@ -1,0 +1,42 @@
+{% extends 'portal.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %}); min-height:550px">
+    <div class="container">
+      
+      <div class="col-sm-4">
+        <h1>
+          Sign Up
+        </h1>
+        {% if errors %}
+          <h4>{{ errors }}</h4>
+        {% endif %}
+        <form method="post" action="/accounts/register">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <button class="btn btn-danger" style="width:100%">
+            Submit
+          </button>
+        </form>      
+        <h4>
+          Already have an account?&nbsp;
+          <a style="text-decoration: underline" href="#">Sign In Here</a>
+        </h4>
+        <h4>
+          No Alumni ID?&nbsp;
+          <a style="text-decoration: underline" href="register">Get It Here</a>
+        </h4>
+      </div>
+      <div class="col-sm-8">
+        
+      </div>
+    </div>    
+  </header>
+  
+{% endblock %}
+
+{% block content %}
+  
+{% endblock content %}

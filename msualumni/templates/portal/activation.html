@@ -1,0 +1,35 @@
+{% extends 'portal.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %}); min-height:550px">
+    <div class="container">
+      
+      <div class="col-sm-4">
+        <h1>
+          Congratulations!
+        </h1>
+        <h3>
+          Your account is now active.
+        </h3>
+        <h4>
+          Need catching up?&nbsp;
+          <a style="text-decoration: underline" href="#">Read some news.</a>
+        </h4>
+        <h4>
+          Feeling nostalgic??&nbsp;
+          <a style="text-decoration: underline" href="#">View some photos</a>
+        </h4>
+      </div>
+      <div class="col-sm-8">
+        
+      </div>
+    </div>    
+  </header>
+  
+{% endblock %}
+
+{% block content %}
+  
+{% endblock content %}

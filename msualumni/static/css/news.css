@@ -1,0 +1,14 @@
+.headline, .headline > a {
+	color: #111;
+	line-height: .15em;
+}
+
+.headline > a:hover {
+	color: #428bca;
+}
+
+.byline {
+	font-size: 80%;
+	color: #999;
+	line-height: .5;
+}

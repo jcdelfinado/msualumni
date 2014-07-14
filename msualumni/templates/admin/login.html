@@ -1,0 +1,34 @@
+{% extends 'portal.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %}); min-height:550px">
+    <div class="container">
+      
+      <div class="col-sm-4">
+        <h1>
+          Administrative Login
+        </h1>
+        <h4>Log in with administrative privileges</h4>
+        <form method="post" action="/login/">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <button class="btn btn-danger" style="width:100%">
+            Sign In
+          </button>
+        </form>    
+      
+        <h4>
+          Not admin?&nbsp;
+          Regular sign in <a style="text-decoration: underline" href="signup">here</a>
+        </h4>
+      </div>
+    </div>    
+  </header>
+  
+{% endblock %}
+
+{% block content %}
+  
+{% endblock content %}

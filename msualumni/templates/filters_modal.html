@@ -1,0 +1,145 @@
+{% load bootstrap3 %} 
+<form autocomplete="on" method="get" action="profiles/advanced_search" id="filters_form">
+<div class="modal fade" id="filters_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" style="color:#111111" >Advanced Filters</h4>
+      </div>
+      <div class="modal-body">
+        <table width="100%">
+          <tr><td></td><td><strong>Full Name</strong><br></td></tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_first_name">
+            </td>
+            <td>
+              {% bootstrap_field filters.first_name %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_middle_name">
+            </td>
+            <td>
+              {% bootstrap_field filters.middle_name %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_last_name">
+            </td>
+            <td>
+              {% bootstrap_field filters.last_name %}
+            </td>
+          </tr>
+          <tr><td></td><td><strong>Graduation</strong><br></td></tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_class_year">
+            </td>
+            <td>
+              {% bootstrap_field filters.class_year %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_college">
+            </td>
+            <td>
+              {% bootstrap_field filters.college %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_campus">
+            </td>
+            <td>
+              {% bootstrap_field filters.campus %}
+            </td>
+          </tr>
+          <tr><td></td><td><strong>Hometown</strong><br></td></tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_hometown_city">
+            </td>
+            <td>
+              {% bootstrap_field filters.hometown_city %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_hometown_province">
+            </td>
+            <td>
+              {% bootstrap_field filters.hometown_province %}
+            </td>
+          </tr>
+        </table>          
+        
+        <a href="#" id="more">Show more</a>
+          
+        <div id="more_filters" style="display:none">
+          <table width="100%" style="margin:0">
+            <tr><td></td><td><strong>Residence</strong><br></td></tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_residence_city">
+              </td>
+              <td>
+                {% bootstrap_field filters.residence_city %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_residence_province">
+              </td>
+              <td>
+                {% bootstrap_field filters.residence_province %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_residence_country">
+              </td>
+              <td>
+                {% bootstrap_field filters.residence_country %}
+              </td>
+            </tr>
+            <tr><td></td><td><strong>Business Address</strong><br></td></tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_business_city">
+              </td>
+              <td>
+                {% bootstrap_field filters.business_city %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_business_province">
+              </td>
+              <td>
+                {% bootstrap_field filters.business_province %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_business_country">
+              </td>
+              <td>
+                {% bootstrap_field filters.business_country %}
+              </td>
+            </tr>
+          </table>
+        </div> 
+      </div>   
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button id="go_advanced" disabled type="submit" data-target="success" class="btn btn-primary">Search</button>
+      </div>      
+    </div>
+  </div>
+</div>
+</form>

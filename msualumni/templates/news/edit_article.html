@@ -1,0 +1,65 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load webdesign %}
+
+{% block title %}
+	News - MSU Alumni Administration
+{% endblock title %}
+{% block css %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/editor.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap3-wysiwyg5.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-wysihtml5.css' %}">
+{% endblock css %}
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <table>
+        <tr>
+          <td class="head-icon" style="padding-top: 25px">
+            <img src="{% static 'images/news.png' %}" height="75px"/>
+          </td>
+          <td class="head-content">
+            <h1>
+            	Edit Article
+            	<small>Modify a news article</small>
+            </h1>
+            
+          </td>
+        </tr>
+      </table>
+    </div>
+  </header>
+{% endblock header %}
+
+{% block content %}
+	<form method="POST" role="form">
+	{% csrf_token %}
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			{% bootstrap_field form.title %}
+		</div>
+		<div class="panel-body">
+			{% bootstrap_field form.content %}
+		</div>
+		<div class="panel-footer">
+			<span style="text-align: right">
+				<button class="btn btn-primary">Save</button>
+			</span>
+		</div>
+	</div>
+	</form>
+{% endblock content %}
+
+{% block scripts %}
+	{{ block.super }}
+	<script type="text/javascript" src="{% static 'js/wysihtml5-0.3.0.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/bootstrap3-wysihtml5.js' %}"></script>
+	<script type="text/javascript" src="{% static 'js/jquery.hotkeys.js' %}"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#editor').wysihtml5()
+	})
+	</script>
+{% endblock scripts %}

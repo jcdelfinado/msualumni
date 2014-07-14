@@ -1,0 +1,44 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+  Profiles - MSU Alumni Admin
+{% endblock title %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <img src="{% static 'images/cap.png' %}" height="75px" style="float:left; margin-right:8px; margin-top:24px"/>
+      
+        <h1>
+          Portal Users
+          <!--<a href="add_profile"><button type="button" class="btn btn-xs btn-default">Add Profile</button></a>-->
+        </h1>
+        
+      
+      
+    </div>
+  </header>
+{% endblock header %}
+{% block content %}
+  
+  <table>
+    <tr style="vertical-align: top">
+      <td style="width:800px">
+        <div id="result">
+          {% include 'results_table.html' %}
+        </div>
+      </td>
+      <td style="padding-left:10px">
+        
+        <div id="profile">
+        </div>
+      </td>
+    </tr>
+  </table>
+{% endblock content %}
+
+{% block scripts %}
+  <script type="text/javascript" src="/static/js/simple_search.js"></script>
+{% endblock scripts %}

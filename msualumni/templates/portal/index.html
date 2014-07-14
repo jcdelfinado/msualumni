@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% load webdesign %}
+{% load staticfiles %}
+
+{% block header %}
+    <div class="carousel slide" id="home_carousel" data-ride="carousel">
+      <!--Indicators-->
+      <ol class="carousel-indicators">
+        <li data-target="#home_carousel" data-slide-to="0"></li>
+        <li data-target="#home_carousel" data-slide-to="1"></li>
+        <li data-target="#home_carousel" data-slide-to="2"></li>
+      </ol>
+      <!--Slides-->
+      <div class="carousel-inner">
+        <div class="item active">
+          <img src="{% static 'images/slide1.jpg' %}"/>
+          <div class="carousel-caption">
+            {% if user.is_authenticated %}
+              <h1>Got any comments?</h1>
+              <h4>Tell us about it.</h4>
+              <a href="#" class="btn btn-danger">Send us an email</a> and we'll make sure we consider it<br>
+              Meanwhile, we recommend you <a style="text-decoration: underline" href="#">read more about this project.</a>
+            {% else %}
+              <h1>Welcome Home!</h1>
+              <h4>We've been waiting for you.</h4>
+              <a href="/accounts/register" class="btn btn-danger">Sign Up</a> using your Alumni ID or <a style="text-decoration: underline" href="login">Sign In Here</a><br>
+              No Alumni ID yet? <a style="text-decoration: underline" href="register">Register Here</a>
+            {% endif %}
+          </div>
+        </div>
+        <div class="item">
+          <img src="{% static 'images/slide2.jpg' %}"/>
+          <div class="carousel-caption">
+            <h1>Slide 2</h1>
+          </div>
+        </div>
+        <div class="item">
+          <img src="{% static 'images/slide1.jpg' %}"/>
+          <div class="carousel-caption">
+            <h1>Slide 3</h1>
+          </div>
+        </div>
+      </div>
+      <!--Controls-->
+      <a class="left carousel-control" href="#home_carousel" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+      </a>
+      <a class="right carousel-control" href="#home_carousel" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+      </a>
+    </div>
+  {% endblock header %}
+
+  {% block content %}
+  	<div class="col-md-4">
+		<h3>Alumni News</h3>
+		{% lorem 32 w %}
+		<a href='#'>Read more</a>
+  	</div>
+  	<div class="col-md-4">
+  			<h3>Alumni Events</h3>
+  		<table class="table table-condensed">
+  			<tr>
+  				<td>Alumni Olympiad</td>
+  				<td>Aug. 10, 2014</td>
+  			</tr>
+  			<tr>
+  				<td>Literary-Musical Festival</td>
+  				<td>Aug. 25, 2014</td>
+  			</tr>
+  			<tr>
+  				<td>54th MSU Foundation</td>
+  				<td>Sept. 1, 2014</td>
+  			</tr>
+  			<tr>
+  				<td>MASCUF Games</td>
+  				<td>Sept. 23-25, 2014</td>
+  			</tr>
+  		</table>
+  	</div>
+  	<div class="col-md-4"  style="text-align:center">
+  		<img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
+  		<br><br>
+  		<strong>Alumni Photo Gallery</strong>
+  	</div>
+  {% endblock content %}

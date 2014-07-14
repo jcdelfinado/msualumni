@@ -1,0 +1,200 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+Profile Details - MSU Alumni Administration
+{% endblock %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <img src="/static/images/edit_user.png" height="75px" style="float:left; margin-right:8px; margin-top:24px"/>
+      <h3>{{ alum.last_name|upper }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})</h3>
+      <p>{{ alum.alumni_id }}</p>
+      <a href="profiles"><button type="button" class="btn btn-xs btn-warning">Back to Profiles</button></a>
+    </div>
+  </header>
+{% endblock header %}
+
+{% block content %}
+  <div class="col-sm-3">
+    <form method="post" action="save_profile_details" autocomplete="on" id="info_form" style="margin-top:10px">
+      {% csrf_token %}
+      {% bootstrap_form info %}
+      <input type="hidden" name="id" value="{{alum.alumni_id}}">
+      <button id="save" data-loading-text="Saving Details..." style="width:100%" class="btn btn-danger">Save</button>
+    </form>
+    
+  </div>
+  <div class="col-sm-6" style="margin-left:10px; margin-top:10px">
+    <div class="alert alert-success alert-dismissable fade in hidden">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+      <strong>Success!</strong> <span id="message"></span>
+    </div>
+    <h5><strong>Hometown</strong> | <a data-toggle="modal" data-target="#hometown_modal" style="cursor:pointer">Edit</a></h5>
+    <address>
+      {{ alum.hometown.city }}&nbsp;{{ alum.hometown.zip }}, {{ alum.hometown.province }}
+    </address>
+    <div class="modal fade" id="hometown_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#790000; color:#FFF">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Hometown Details</h4>
+          </div>
+          <div class="modal-body">
+            <form autocomplete="on" method="post" id="hometown_form">
+              {% bootstrap_form hometown %} 
+            </form>
+          </div>   
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="hometown_ok"  data-target="success" class="btn btn-primary">Save</button>
+          </div>      
+        </div>
+      </div>
+    </div>
+    
+    
+    <h5><strong>Residence</strong> | <a data-toggle="modal" data-target="#residence_modal" style="cursor:pointer">Edit</a></h5>
+    <address>
+      {{ alum.residence.street }}&nbsp;{{ alum.residence.barangay }}<br>
+      {{ alum.residence.city.city }}&nbsp;{{ alum.residence.city.zip }}<br>
+      {{ alum.residence.city.province }},&nbsp;{{alum.residence.city.country}}
+    </address>
+    <div class="modal fade" id="residence_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#790000; color:#FFF">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" >Residence Details</h4>
+          </div>
+          <div class="modal-body">
+            <form autocomplete="on" method="post" id="residence_form">
+              {% bootstrap_form residence %}
+            </form>
+          </div>   
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="residence_ok" data-target="success" class="btn btn-primary">Save</button>
+          </div>      
+        </div>
+      </div>
+    </div>
+    
+    <h5><strong>Business Address</strong> | <a data-toggle="modal" data-target="#business_modal" style="cursor:pointer">Edit</a></h5>
+    <address>
+      {{ alum.business_address.position }}&nbsp;at&nbsp;{{ alum.business_address.company }}<br>
+      {{ alum.business_address.city.city }}&nbsp;{{ alum.business_address.city.zip }}<br>
+      {{ alum.business_address.city.province }},&nbsp;{{alum.business_address.city.country}}
+    </address>
+    <div class="modal fade" id="business_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#790000; color:#FFF">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title" >Business Address Details</h4>
+          </div>
+          <div class="modal-body">
+            <form autocomplete="on" method="post" id="business_form">
+              {% bootstrap_form business %}
+            </form>
+          </div>   
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="business_ok" data-target="success" class="btn btn-primary">Save</button>
+          </div>      
+        </div>
+      </div>
+    </div>    
+  </div>
+{% endblock content %}
+{% block scripts %}
+<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#business_ok').on('click', function(){
+    
+    $('#business_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#business_form').valid()){
+      alert($.cookie("csrfmiddlewaretoken"))
+      $(this).button('loading')
+      $.post(
+        'save_business', 
+        {'business' : $('#business_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          $('#business_modal').modal('hide')
+          $('#message').html(msg)
+          $('.alert').removeClass('hidden')
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
+  
+  $('#residence_ok').on('click', function(){
+    
+    $('#residence_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#residence_form').valid()){
+      $(this).button('loading')
+      $.post(
+        'save_residence', 
+        {'residence' : $('#residence_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          $('#residence_modal').modal('hide')
+          $('#message').html(msg)
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
+
+  $('#hometown_ok').on('click', function(){
+    
+    $('#hometown_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#hometown_form').valid()){
+      $(this).button('loading')
+      $.post(
+        'save_hometown', 
+        {'hometown' : $('#hometown_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          $('#hometown_modal').modal('hide')
+          $('#message').html(msg)
+          $('.alert').removeClass('hidden')
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
+  $('#save').on('click', function(){
+    $(this).button('loading')
+  });
+});
+</script>
+
+{% endblock scripts %}

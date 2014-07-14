@@ -1,0 +1,64 @@
+<form method="get" action="profile_details">
+  <input type="hidden" name="id" value="{{profile.alumni.alumni_id}}"/>
+  <h3>Profile Summary&nbsp;
+    <div class="btn-group">
+      <button class="btn btn-small btn-danger">
+        Edit
+      </button>
+      <button class="btn btn-small btn-default" type="button">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+    </div>
+  </h3>
+</form>
+<img src="/media/{{ profile.alumni.pic }}" style="height:80px; float:left; border: 1px solid"/>
+<div style="margin-left:90px">
+  <address style="float:left">   
+    <strong>{{ profile.alumni.first_name }}&nbsp;{{ profile.alumni.last_name }}</strong><br/>
+    <small>
+      {{ profile.major }}<br>
+      {{ profile.month }}&nbsp;{{profile.year}},&nbsp;
+      {{ profile.college }}<br>
+      {{ profile.college.campus }}
+    </small>
+  </address>
+  <address>
+    <small>
+      <strong>Birthdate: </strong>
+        {{ profile.alumni.birthdate }}<br>
+      <strong>Gender: </strong>
+        {{ profile.alumni.gender }}<br>
+      <strong>Civil Status: </strong>
+        {{ profile.alumni.civil_status }}<br>
+      <strong>Citizenship </strong>
+        {{ profile.alumni.citizenship }}<br>
+      <strong>Tribe: </strong>
+        {{ profile.alumni.tribe }}<br>
+      <strong>Religion: </strong>
+        {{ profile.alumni.religion }}<br>
+    </small>
+  </address>
+  <address>
+    <small>
+      <strong>Hometown: </strong>
+      {{ profile.alumni.hometown.city }},&nbsp;
+      {{ profile.alumni.hometown.province }}
+    </small>
+  </address>
+  <address>
+    <small>
+      <strong>Current Residence:<br></strong>
+      <div style="margin-left:10px">
+      {% if profile.alumni.residence.street %}
+        {{ profile.alumni.residence.street }},&nbsp;
+      {% endif %}
+      {% if profile.alumni.residence.barangay %}
+        {{ profile.alumni.residence.barangay }}<br>
+      {% endif %}
+      {{ profile.alumni.residence.zip }}
+      {{ profile.alumni.residence.city }},&nbsp;
+      {{ profile.alumni.residence.province }}
+      </div>
+    </small>
+  </address>
+</div>

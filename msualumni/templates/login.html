@@ -1,0 +1,34 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+
+{% block title %}
+Log In - MSU Alumni Admin
+{% endblock title %}
+
+{% block header %}
+  <h1>Administrator Log In</h1>
+  
+  {% if error %}
+    <h1><small><span style="color:#FFF">Invalid Username or Password.</span> Please try again.</small></h1>
+  {% else %}
+    <h1><small>Log in to your account to get administrator privileges</small></h1>
+  {% endif %}
+    
+{% endblock header %}
+
+{% block bg %}
+<div class="head_style_lg"></div>
+{% endblock bg %}
+
+
+{% block content %}
+  <div class="col-sm-4" style="margin: 0; padding: 0">
+    
+    <form method="post" action="/login">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <button class="btn btn-danger col-sm-12">LogIn</button>
+      <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
+  </div>
+{% endblock content %}

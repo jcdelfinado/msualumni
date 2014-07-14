@@ -1,0 +1,79 @@
+[
+  {
+    "model" : "profiles.campus",
+    "pk" : 1,
+    "fields" : {
+      "name" : "MSU Marawi"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 2,
+    "fields" : {
+      "name" : "MSU Iligan (IIT)"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 3,
+    "fields" : {
+      "name" : "MSU MSAT"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 4,
+    "fields" : {
+      "name" : "MSU Naawan"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 5,
+    "fields" : {
+      "name" : "MSU Sulu"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 6,
+    "fields" : {
+      "name" : "MSU Tawi-Tawi"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 7,
+    "fields" : {
+      "name" : "MSU General Santos"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 8,
+    "fields" : {
+      "name" : "MSU LNCAT"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 9,
+    "fields" : {
+      "name" : "MSU Buug"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 10,
+    "fields" : {
+      "name" : "MSU Maguindanao"
+    }    
+  },
+  {
+    "model" : "profiles.campus",
+    "pk" : 11,
+    "fields" : {
+      "name" : "MSU LNAC"
+    }    
+  }
+]

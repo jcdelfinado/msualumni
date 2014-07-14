@@ -1,0 +1,55 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+Add Alum - MSU Alumni Administration
+{% endblock %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <table>
+        <tr>
+          <td class="head-icon">
+            <img src="/static/images/add_user.png" height="75px"/>
+          </td>
+          <td class="head-content">
+            <h1>Add Alum</h1>
+            <h4 style="line-height: .5">Fill in the form to add an alum.</h4>
+            <a href="profiles"><button type="button" class="btn btn-xs btn-warning">Back to Profiles</button></a>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </header>
+{% endblock header %}
+
+{% block content %}
+<form method="POST" action="profiles/add" style="margin:10px 0">
+  {% csrf_token %}
+  <div class="col-sm-4 ">
+    <fieldset id="general" style="padding:0px">
+    <legend id="gen_label">Basic Alumni Information</legend>
+    {% bootstrap_field form.first_name %}
+    {% bootstrap_field form.last_name %}
+    {% bootstrap_field form.middle_name %}
+    </fieldset>
+    <fieldset id="general" style="padding:0px">
+    <legend id="gen_label">Graduation Information</legend>
+    {% bootstrap_field form.campus %}
+    {% bootstrap_field form.college %}
+    {% bootstrap_field form.program %}
+    {% bootstrap_field form.major %}
+    <div class="col-sm-6" style="padding:0px">
+      {% bootstrap_field form.month %}
+    </div>
+    <div class="col-sm-6">
+      {% bootstrap_field form.year %}
+    </div><br>
+    <button id="continue" class="btn btn-danger col-sm-12">Continue</button>
+    </fieldset>
+  </div>
+</form>
+
+{% endblock content %}
