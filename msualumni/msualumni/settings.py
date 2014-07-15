@@ -66,7 +66,8 @@ WSGI_APPLICATION = 'msualumni.wsgi.application'
 import dj_database_url
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-DATABASES = {'default': dj_database_url.config(env='ALUMNI_DB_URL')}
+DATABASES = {}
+DATABASES['default'] = dj_database_url.config(env='ALUMNI_DB_URL')
 
 #DATABASES = {
 #    'default': {
