@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load webdesign %}
+
+{% block title %}
+	News - MSU Alumni Administration
+{% endblock title %}
+{% block css %}
+	{{ block.super }}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/news.css' %}">
+{% endblock css %}
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <table>
+        <tr>
+          <td class="head-content">
+            <h1>
+            	Alumni News
+            </h1>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </header>
+{% endblock header %}
+
+{% block content %}
+	<div class="col-sm-2">
+		<ul class="nav nav-pills nav-stacked">
+			<li class="active"><a href="#">News Feed</a></li>
+			<li><a href="#">Categories</a></li>
+			<li ><a href="#">Archives</a></li>
+		</ul>
+	</div>
+	<div class="col-sm-10">
+		<ul class="list-group">
+			{% for article in articles %}
+			<li class="list-group-item">
+				<div class="btn-group pull-right">
+				  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+				  	<span class="glyphicon glyphicon-cog"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu">
+				    <li><a href="edit?id={{ article.id }}">Edit...</a></li>
+				    <li><a href="#">Delete...</a></li>
+				  </ul>
+				</div>
+				<h4 class="headline">
+					<a href="read?id={{ article.id }}" >
+					{{ article.title }}
+					</a>
+				</h4>
+				<small class="byline">
+					by <b>{{ article.author }}</b>| <b>posted {{ article.pub_date }}</b> | <b>modified {{ article.date_modified }}</b>
+				</small>
+				<br>	
+				{{ article.content | safe | truncatechars:140 }}
+				<a href="read?id={{ article.id }}" class="label label-primary">read more</a>
+				
+			</li>
+			{% endfor %}			
+		</ul>
+	</div>
+{% endblock content %}

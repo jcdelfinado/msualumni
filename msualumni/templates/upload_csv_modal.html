@@ -1,0 +1,27 @@
+{% load bootstrap3 %} 
+<div class="modal fade" id="upload_csv_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" style="color:#111111" >Upload CSV data</h4>
+      </div>
+      <div class="modal-body upload-modal-body">
+        <div class="input-group">
+          <input type="text" id="dummy-text-field" disabled="disabled" class="form-control">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" id="browse_csv_button">Browse</button>
+          </span>
+        </div>
+      </div>   
+      <div class="modal-footer" style="">
+        <form autocomplete="on" method="post" action="/admin/profiles/add_csv" id="upload_csv_form" enctype="multipart/form-data">
+          <input name="csv_file" type="file" id="hidden_upload" style="visibility:hidden">
+          {% csrf_token %}
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="go_upload" disabled type="submit" data-target="success" class="btn btn-primary">Upload</button>
+        </form>
+      </div>      
+    </div>
+  </div>
+</div>
