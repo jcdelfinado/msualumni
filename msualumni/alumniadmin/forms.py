@@ -26,7 +26,7 @@ class FiltersForm(forms.Form):
 class SearchForm(forms.Form):
   
   #CHOICES = (('alumni_id', 'Alumni ID'), ('last_name','Last Name'), ('first_name', 'First Name'))
-  query = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Search for alumni', 'id':'search_field'}))
+  query = forms.CharField(max_length=64, required=False, label="", widget=forms.TextInput(attrs={'placeholder':'Search for alumni', 'id':'search_field'}))
   #filter = forms.ChoiceField(choices=CHOICES, label="", widget=forms.Select(attrs={'type':'radio', 'selected':'alumni_id'}))
   
 

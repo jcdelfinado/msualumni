@@ -190,7 +190,7 @@ class Graduation(models.Model):
 
   
   alumni = models.ForeignKey(Alum)
-  major = models.ForeignKey(Major)
+  program = models.ForeignKey(Program)
   college = models.ForeignKey(College, null=True)
   month = models.CharField(max_length=10, choices=MONTHS)
   year = models.PositiveIntegerField(validators=[MinValueValidator(1963)])

@@ -12,7 +12,7 @@ django_admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^admin/', include('alumniadmin.urls')),
     url(r'^django-admin/', include(django_admin.site.urls)),
-    #url(r'^news/', include('news.urls')),
+    url(r'^news/', include('news.urls')),
     url(r'^events/', events),
     url(r'^accounts/', include('portal.urls')),
     url(r'^login/$',

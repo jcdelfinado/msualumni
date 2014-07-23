@@ -1,44 +1,5 @@
 {% load filters %}
-<div style="height:500px">
-  <small>
-  <table class="table table-hover table-condensed" style="margin-bottom:0;" id="result">          
-    <caption>
-      {% if resultset.object_list %}
-      Showing <b>{{resultset.object_list|length}}</b> of <b>{{ total }}</b>
-      
-        {% if active_only == 'false' %}
-          <a class="label label-default" href="?{{ query_params.urlencode }}&amp;active_only=true" onclick="">Show activated users only</a>
-        {% else %}
-          <a class="label label-primary" href="?{{ query_params.urlencode }}&amp;active_only=false" onclick="">Show all results</a>
-        {% endif%}
-      {% else %}
-       
-      {% endif %}
-    </caption>         
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Class</th>
-        <th>Course</th>
-      </tr>
-    </thead>        
-    <tbody>
-    {% if not nomatch %}
-      {% for result in resultset %}
-        <tr id="{{ result.alumni_id }}" class="alum-row" style="cursor : pointer">
-          <td>{{ result.alumni_id }}</td>
-          <td><strong>{{ result.alumni.last_name|upper }},&nbsp;{{ result.alumni.first_name }}&nbsp;{{ result.alumni.middle_name|slice:":1" }}.</strong></td>
-          <td>{{ result.month }}&nbsp;{{ result.year }}</td>
-          <td>{{ result.major }}</td>
-        </tr>
-      {% endfor %}
-    {% else %}
-      <script type="text/javascript">alert('No matches were found.')</script>
-    {% endif %}
-    </tbody>
-  </table>
-  <div class="col-md-offset-5">
+  <div style="text-align: center; margin-left:auto">
   {% if resultset.object_list and resultset.paginator.num_pages > 1 %}
     <ul class="pagination pagination-sm">
       {% if resultset.has_previous %}
@@ -68,6 +29,76 @@
     </ul>
   {% endif %}
   </div>
-  </small>
-  
-</div>
+  <table class="table table-hover table-condensed" style="margin-bottom:0;" id="result">          
+    <caption>
+      {% if resultset.object_list %}
+      Showing <b>{{resultset.object_list|length}}</b> of <b>{{ total }}</b>
+      
+        {% if active_only == 'false' %}
+          <a class="label label-default" href="?{{ query_params.urlencode }}&amp;active_only=true" onclick="">Show activated users only</a>
+        {% else %}
+          <a class="label label-primary" href="?{{ query_params.urlencode }}&amp;active_only=false" onclick="">Show all results</a>
+        {% endif%}
+      {% else %}
+       
+      {% endif %}
+    </caption>         
+    <thead>
+      <tr>
+        <th style="width:80px">ID</th>
+        <th>Name</th>
+        <th>Status</th>
+      </tr>
+    </thead>        
+    <tbody>
+    {% if not nomatch %}
+      {% for result in resultset %}
+        <tr id="{{ result.alumni_id }}" class="alum-row" style="cursor : pointer">
+          <td>{{ result.alumni_id }}</td>
+          <td><strong>{{ result.last_name|upper }},&nbsp;{{ result.first_name }}&nbsp;{{ result.middle_name|slice:":1" }}.</strong></td>
+          <td>
+            {% if result.is_active %}
+            <span class="label label-success">Active</span>
+            {% else %}
+            <span class="label label-danger">Inactive</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    {% else %}
+      <script type="text/javascript">alert('No matches were found.')</script>
+    {% endif %}
+    </tbody>
+  </table>
+  <div style="text-align: center; margin-left:auto">
+  {% if resultset.object_list and resultset.paginator.num_pages > 1 %}
+    <ul class="pagination pagination-sm">
+      {% if resultset.has_previous %}
+        <li>
+          <a href= "?{{ query_params.urlencode }}&amp;page={{ resultset.previous_page_number }}">&laquo;</a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href= "#">&laquo;</a>
+        </li>
+      {% endif %}
+      
+      {% for page in resultset.paginator.num_pages|get_range %}
+        <li {% ifequal resultset.number page %} class="active"{% endifequal %}>
+          <a href="?{{ query_params.urlencode }}&amp;page={{ page }}">{{ page }}</a>
+        </li>
+      {% endfor %}
+      {% if resultset.has_next %}
+        <li>
+          <a href= "?{{ query_params.urlencode }}&amp;page={{ resultset.next_page_number }}">&raquo;</a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href= "#">&raquo;</a>
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+  </div>
+  <div id="profile">
+  </div>

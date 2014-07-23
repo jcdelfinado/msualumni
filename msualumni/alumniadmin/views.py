@@ -21,7 +21,9 @@ def dashboard(request):
     stats['non_admin'] = User.objects.filter(is_active=True).filter(is_staff=False).count()
     stats['inactive'] = User.objects.filter(is_active=False).filter(is_staff=False).count()
     stats['for_approval'] = Alum.objects.filter(approved=False).count()
-    return render(request, 'admin/index.html', {'stats':stats})
+    from news import views
+    articles = views._article_list(7, 1)
+    return render(request, 'admin/index.html', {'stats':stats, 'articles':articles})
   return redirect('/')
 
 @login_required(login_url='/login')

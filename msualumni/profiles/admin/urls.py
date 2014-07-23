@@ -5,6 +5,7 @@ from views import *
 urlpatterns = patterns (
     url(r'^$', index),
     url(r'^add$', add_profile_view),
+    url(r'^add_csv$', add_csv),
     url(r'^get_profile', get_profile),
     url(r'^profile_details', profile_details),
     url(r'^save_profile_details$', save_profile_details),

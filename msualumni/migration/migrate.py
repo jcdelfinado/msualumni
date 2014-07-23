@@ -1,12 +1,3 @@
-"""
-	This program converts the old MSU-OAR directory to a CSV format for easy migration to the new database.
-
-	usage: migrate.py [--multiple] [filename]
-		where filename is the name or path to the file to be converted
-		if the --multiple flag is supplied, filename should be the name of the text file containing the filenames of the files to be converted.
-
-	if filename is not supplied, the user will be prompted to enter one.
-"""
 import sys, re, pickle, csv
 from datetime import datetime
 from collections import OrderedDict
@@ -38,7 +29,6 @@ def parse(file):
 			print data[0]
 			campus = data[2]
 			grad = []
-			degree = {}
 			degrees = split_dual(data[1])
 			for d in degrees:
 				degree = {}
@@ -47,19 +37,20 @@ def parse(file):
 				degree['campus'] = campus
 				grad.append(degree)
 			alum['id'] = get_alum_id(grad)
-			save_to_file(alum, 'alum.csv', OrderedDict([('id',None),
+			for g in grad:
+				g['alum_id'] = alum['id']
+				g['last'] = alum['last']
+				g['first'] = alum['first']
+				g['middle'] = alum['middle'] if alum.has_key('middle') else ''
+				save_to_file(g, 'alumni.csv', OrderedDict([('alum_id',None),
 														('last',None),
 														('first',None),
 														('middle',None),
+														('course',None),
+														('month',None),
+														('year',None),
+														('campus',None),
 														]))
-			for g in grad:
-				g['alum_id'] = alum['id']
-				save_to_file(g, 'grad.csv', OrderedDict([('alum_id',None),
-															('course',None),
-															('month',None),
-															('year',None),
-															('campus',None),
-															]))
 			data_count += 1
 		except FormatError as e:
 			print e.value

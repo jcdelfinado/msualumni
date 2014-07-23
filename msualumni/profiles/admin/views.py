@@ -4,9 +4,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, QueryDict, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils import timezone
-import string
-import random
-import sys
+
+import sys, random, string, csv
 from profiles.forms import AlumInfoForm, HometownForm, BusinessForm, ResidenceForm
 from alumniadmin.forms import AddProfileForm, LogInForm, SearchForm, FiltersForm
 from profiles.models import Alum, Campus, College, Program, Major, Graduation, City, BusinessAddress, Residence, Tribe, Religion
@@ -28,17 +27,17 @@ def index(request):
     filter = request.GET.get('filter')
     active_only = request.GET.get('active_only')
     if query == '*':
-      resultset = Graduation.objects.select_related('alum').all().order_by('alumni__last_name')
+      resultset = Alum.objects.all().order_by('last_name')
     else:
       if filter == 'alumni_id':
-        resultset = Graduation.objects.select_related('alum').filter(alumni__alumni_id__startswith=query).order_by('alumni__last_name')
+        resultset = Alum.objects.filter(alumni_id__istartswith=query).order_by('last_name')
       if filter == 'first_name':
-        resultset = Graduation.objects.select_related('alum').filter(alumni__first_name__contains=query).order_by('alumni__first_name')
+        resultset = Alum.objects.filter(first_name__icontains=query).order_by('first_name')
       if filter == 'last_name':
-        resultset = Graduation.objects.select_related('alum').filter(alumni__last_name__startswith=query).order_by('alumni__last_name')
+        resultset = Alum.objects.filter(last_name__istartswith=query).order_by('last_name')
     
     if active_only == 'true':
-      resultset = resultset.filter(alumni__is_active=True)
+      resultset = resultset.filter(is_active=True)
     else:
       active_only = 'false'
       
@@ -54,7 +53,7 @@ def index(request):
     if queries_without_page.has_key('active_only'):
       del queries_without_page['active_only']
     total = resultset.count
-    paginator = Paginator(resultset, 3)
+    paginator = Paginator(resultset, 50)
     try: page = int(request.GET.get("page", '1'))
     except ValueError: page = 1
 
@@ -66,7 +65,38 @@ def index(request):
   else:    
     return render(request, 'admin/profiles.html', {'title': 'Alumni Profiles', 'filters':filters, 'form':form})
 
+@login_required(login_url='/login')
+def add_csv(request):
+
+  csv_file = request.FILES['csv_file']
+  data = csv.DictReader(csv_file, delimiter=';')
+  count = 0
+  for d in data:
+    print d
+    if not Alum.objects.filter(alumni_id=d['alumni_id']).exists():
+      alum = Alum(alumni_id = d['alumni_id'], 
+            first_name = d['first'],
+            last_name = d['last'],
+            middle_name = d['middle'],
+            approved = True,
+            date_approved = timezone.now(),
+            is_active = False)
+      alum.save()
     
+    campus, created = Campus.objects.get_or_create(name=d['campus'])
+    #college, created = College.objects.get_or_create(name=d['college'], campus_id=campus.id)
+    program, created = Program.objects.get_or_create(name=d['program'])
+      
+    grad = Graduation(alumni_id = d['alumni_id'],
+                      program_id = program.id,
+                      #college_id = college.id,
+                      month = d['month'], 
+                      year = int(d['year']))
+    grad.save()
+    count += 1
+  return render(request, 'add_success.html', {'count':count})
+
+
 #@login_required(login_url='/login')
 #@user_passes_test(lambda u:u.is_staff, login_url='/admin/login')
 def get_profile(request):
@@ -74,9 +104,10 @@ def get_profile(request):
   context = RequestContext(request)
   
   id = request.GET.get('id')
-  profile = Graduation.objects.select_related('alum').get(alumni__alumni_id=id)
+  profile = Alum.objects.get(alumni_id=id)
+  grads = Graduation.objects.filter(alumni_id=id)
   
-  return render_to_response('admin/profile_preview.html', {'profile' : profile}, context)  
+  return render_to_response('profile_preview.html', {'profile' : profile, 'grads':grads}, context)  
     
 
 def generate_id(year):
@@ -106,35 +137,7 @@ def add_profile_view(request):
         date_approved = timezone.now(),
         is_active = False)
       alum.save()
-      try:
-        campus = Campus.objects.get(name=form.cleaned_data['campus'])
-      except:
-        campus = Campus(name=form.cleaned_data['campus'])
-        campus.save()
       
-      try:
-        college = College.objects.get(name=form.cleaned_data['college'], campus_id=campus.id)
-      except:
-        college = College(name=form.cleaned_data['college'], campus_id=campus.id)
-        college.save()
-      
-      try:
-        program = Program.objects.get(name=form.cleaned_data['program'])
-      except:
-        program = Program(name=form.cleaned_data['program'])
-        program.save()
-      
-      try:
-        major = Major.objects.get(name=form.cleaned_data['major'], program_id=program.id)
-      except:
-        major = Major(name=form.cleaned_data['major'], program_id=program.id)
-        major.save()
-      
-      grad = Graduation(alumni_id = full_id,
-                        major_id = major.id,
-                        college_id = college.id,
-                        month = form.cleaned_data['month'], 
-                        year = year)
       grad.save()
       return HttpResponseRedirect('/admin/profile_details?id='+full_id)
   form = AddProfileForm()

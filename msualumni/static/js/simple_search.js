@@ -11,6 +11,7 @@ $('.alum-row').on('click', function() {
   
   $.get('profiles/get_profile', {'id' : id}, function(data){
     $('#profile').html(data);
+    $('#profile_preview_modal').modal();
   });
 });
 

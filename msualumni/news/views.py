@@ -4,6 +4,12 @@ from forms import ArticleForm
 from models import Article
 import sys
 
+def index(request):
+
+	articles = _article_list(5, 1)
+
+	return render(request, 'news/index.html', {'articles':articles})
+
 def _article_form(*args):
 	if args:
 		try:

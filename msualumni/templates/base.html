@@ -36,8 +36,8 @@
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="#">Alumni</a></li>
-            <li><a href="#">News</a></li>
-            <li><a href="events">Events</a></li>
+            <li><a href="/news">News</a></li>
+            <li><a href="#">Events</a></li>
             <li><a href="#">Photos</a></li>
             {% if user.is_authenticated and user.is_staff %}
               <li><a href="admin/dashboard">Admin</a></li>
@@ -86,13 +86,13 @@
       {% endblock content %}
     </content>
   </div>
-  <footer>
+  <footer>    
+    {% block footer %}
     <div class="container">
       <h4>
         MSU Alumni Portal
       </h4>
     </div>
-    {% block footer %}
     {% endblock footer %}
   </footer>
   

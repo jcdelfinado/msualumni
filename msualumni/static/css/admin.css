@@ -10,23 +10,26 @@ header {
   color: #fff;
 }
 footer {
-  margin-top: 10px;
-  position:relative;
-  left:0px;
-  bottom:0px;
-  height:150px;
-  width:100%;
   background:#111111;
 }
 
 
 header {
   width: 100%;
-  min-height: 150px;
+  max-height: 125px;
   background-color: #111111;
   background-position: center;
   background-size: cover;
   text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+  color:#fff;
+}
+
+header a{
+  color: #fff;
+}
+
+header a:hover{
+  color: #428bca;
 }
 
 content {
@@ -40,22 +43,25 @@ header h1 {
 .head-content {
   padding-left:10px;
 }
-
-header .container{
-  padding-top:36px;
+.profile-thumb {
+  height: 80px;
+  widows: 80px;
+  border-radius: 40px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .3);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, .3);
 }
-
-#profile{
-  margin-left: 15px;
-  padding: 0px;
-  border: 1px;
-}
+.modal #profile_preview { width: 360px; }
 
 .carousel {
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .3);
           box-shadow: 0 6px 12px rgba(0, 0, 0, .3);
 }
-
+.upload-modal-footer{
+  margin-top: 0;
+}
+.upload-modal-body{
+  padding-bottom: 0;
+}
 .navbar { 
     position: relative;
     right: 0;
