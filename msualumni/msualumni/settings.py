@@ -46,8 +46,7 @@ INSTALLED_APPS = (
     'south',
     'profiles',
     'alumniadmin',
-    'news',
-    'portal'
+    'news'
 )
 
 MIDDLEWARE_CLASSES = (

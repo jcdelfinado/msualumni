@@ -9,7 +9,7 @@ function searchAlum(form){
 $('.alum-row').on('click', function() {
   var id = $(this).attr('id');
   
-  $.get('profiles/get_profile', {'id' : id}, function(data){
+  $.get('/admin/profiles/get_profile', {'id' : id}, function(data){
     $('#profile').html(data);
     $('#profile_preview_modal').modal();
   });

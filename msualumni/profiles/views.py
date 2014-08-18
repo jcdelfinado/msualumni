@@ -1,7 +1,14 @@
 from django.shortcuts import render
-from forms import SignUpForm
+from forms import SignUpForm, ProfileRequestForm
 from alumniadmin.forms import AddProfileForm
 # Create your views here.
+
+def profile_request(request):
+
+	if request.method == 'POST':
+		form = ProfileRequestForm(request.POST)
+	form = ProfileRequestForm()
+	return render(request, 'registration/profile_request_form.html', {'form':form})
 
 def register(request):
   

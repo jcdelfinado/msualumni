@@ -2,13 +2,40 @@
   <div class="modal-dialog" id="profile_preview">
   <div class="modal-content">
   <div class="modal-header">
-     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h4>{{ profile.last_name | upper }},&nbsp;{{ profile.first_name }}&nbsp;{{ profile.middle_name }}</h4>
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <form method="get" id="edit" action="/admin/profiles/details">
+        <input type="hidden" id="alumni_id" name="id" value="{{profile.alumni_id}}"/>
+    </form>
+    <form method="post" id="approve" action="/admin/profiles/approve">
+        <input type="hidden" id="alumni_id" name="id" value="{{profile.alumni_id}}"/>
+        <input type="hidden" id="approval" name="approve" value="True">
+    </form>
+    <h4>
+      {{ profile.last_name | upper }},&nbsp;{{ profile.first_name }}&nbsp;{{ profile.middle_name }}      
+      <small>|&nbsp;
+        {% if profile.status == 'A' %} 
+          <a style="cursor:pointer" href="javascript:{}" onclick="$('#edit').submit()">Edit</a>
+        {% else  %}
+          <a style="cursor:pointer" href="
+          javascript:{}" onclick="$('#approve').submit()">Approve</a>
+          <a style="cursor:pointer; color:#777" href="javascript:{}" onclick="$('#approval').val('False');$('#approve').submit()">Decline</a>
+        {% endif %}
+      </a>
+      </small>
+    </h4>
+    
   </div>
   <div class="modal-body">
     <div style="text-align:center">  
-      <img src="{{ profile.pic }}" height="80px" class="profile-thumb"/> 
-      <h4>{{ profile.first_name }}&nbsp;{{ profile.middle_name|slice:":1" }}.&nbsp;{{ profile.last_name | title }}</h4><br>
+      <img src="/media/{{ profile.pic }}" height="80px" class="profile-thumb"/> 
+      <h4>{{ profile.first_name }}&nbsp;{{ profile.middle_name|slice:":1" }}.&nbsp;{{ profile.last_name | title }}</h4>
+      <h5 id="alumni_id">{{ profile.alumni_id }}</h5>
+      {% if profile.is_active %}
+        <button class="btn btn-success btn-xs" data-load-text="Deactivating...">Active</button><br>
+      {% else %}
+        <button id="activate" class="btn btn-danger btn-xs" data-loading-text="Activating...">Inactive</button><br>
+      {% endif %}
+      <br>
       {% for grad in grads %}
         <strong>{{ grad.program }}</strong><br>
         {{ grad.month }}&nbsp;{{grad.year}},&nbsp;
@@ -47,4 +74,30 @@
   </div>
   </div>
   </div>
+
 </div>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#activate').click(function(){
+      $(this).button('loading')
+      var id = parseInt($('#alumni_id').text())
+      $.ajax({
+        type : 'post',
+        data : {id:id, csrfmiddlewaretoken:csrftoken},
+        url : '/accounts/activate',
+        success:  function(data){
+            $('#activate').html(data)
+            if (data == 'Active')
+              $('#activate').addClass('btn-success')
+            else $('#activate').addClass('btn-danger')
+          },
+        error: function(data){
+            $('#activate').addClass('btn-danger')
+            $('#activate').html('Error Performing Action')
+          }
+      }).always(
+         $('#activate').button('reset')
+        );
+  })
+  })
+  </script>

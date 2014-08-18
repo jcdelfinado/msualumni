@@ -10,6 +10,7 @@ header {
   color: #fff;
 }
 footer {
+  margin-top: 25px;
   background:#111111;
 }
 
@@ -83,6 +84,7 @@ header h1 {
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
 .nav-pills > li.active > a:focus {
-  color: #fff;
-  background-color: #111;
+  color: #000;
+  font-size: 1.5em;
+  background-color: rgba(0,0,0,0);
 }

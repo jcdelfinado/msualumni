@@ -13,6 +13,9 @@ CAMPUSES = (('MSU Marawi', 'MSU Marawi'),
             ('MSU Buug', 'MSU Buug'), 
             ('MSU Maguindanao', 'MSU Maguindanao'), 
             ('MSU LNAC', 'MSU LNAC'))
+STATUS = (('A', 'Approved'),
+          ('R', 'Rejected'),
+          ('P', 'Pending'))
 
 #model for storing religion. we can't really be sure how many there are so we add a model for it.
 class Religion(models.Model):
@@ -97,7 +100,7 @@ class Alum(models.Model):
   first_name = models.CharField(max_length=32)
   last_name = models.CharField(max_length=32)
   middle_name = models.CharField(max_length=32)
-  email = models.EmailField(null=True, unique=True, blank=True)
+  email = models.EmailField(null=True, blank=True)
   mobile = models.CharField(max_length=12, null=True, blank=True)
   birthdate = models.DateField(null=True, blank=True)
   gender = models.CharField(max_length=6, null=True, blank=True)
@@ -108,9 +111,8 @@ class Alum(models.Model):
   residence = models.ForeignKey(Residence, null=True, blank=True)
   hometown = models.ForeignKey(City, null=True, blank=True)
   business_address = models.ForeignKey(BusinessAddress, null=True, blank=True)
-  pic = models.ImageField(upload_to='/profiles/', default='/media/profiles/no-pic.png')
-  approved = models.BooleanField(default=False)
-  date_approved = models.DateTimeField(null=True)
+  pic = models.ImageField(upload_to='profiles/', default='/media/profiles/no-pic.png')
+  status = models.CharField(choices=STATUS, max_length=1, default='P')
   date_created = models.DateTimeField(auto_now_add=True)
   date_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
   is_active = models.BooleanField(default=False)
@@ -189,7 +191,7 @@ MONTHS = (("January", "January"), ("February", "February"), ("March", "March"), 
 class Graduation(models.Model):
 
   
-  alumni = models.ForeignKey(Alum)
+  alumni = models.ForeignKey(Alum, related_name="grad")
   program = models.ForeignKey(Program)
   college = models.ForeignKey(College, null=True)
   month = models.CharField(max_length=10, choices=MONTHS)
@@ -200,4 +202,4 @@ class Graduation(models.Model):
     db_table='graduation'
     
   def __unicode__(self):
-    return u'%s (%s)' % (self.alumni, self.date)
+    return u'%s (%s %d)' % (self.alumni, self.month, self.year)

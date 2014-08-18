@@ -9,25 +9,51 @@ Profile Details - MSU Alumni Administration
 {% block header %}
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
-      <img src="/static/images/edit_user.png" height="75px" style="float:left; margin-right:8px; margin-top:24px"/>
-      <h3>{{ alum.last_name|upper }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})</h3>
-      <p>{{ alum.alumni_id }}</p>
-      <a href="profiles"><button type="button" class="btn btn-xs btn-warning">Back to Profiles</button></a>
+      <h2>Edit Profile Details</h2>
     </div>
   </header>
 {% endblock header %}
 
 {% block content %}
-  <div class="col-sm-3">
+  <div class="col-md-3" style="text-align:center">
+    <img src="{{ alum.pic }}" height="80px" class="profile-thumb"/> 
+    <form method="post" action="/profiles/save_photo">
+      <input type="hidden" name="id" value="{{ alum.alumni_id }}">
+      <input type="file" name="img">
+    </form>
+    <h4>{{ alum.last_name|upper }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})</h4>
+    <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#name_modal">Change Name</button>
+    <p>{{ alum.alumni_id }}</p>
+    
+  </div>
+  <div class="modal fade" id="name_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header" style="background-color:#790000; color:#FFF">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Change Name</h4>
+          </div>
+          <div class="modal-body">
+            <form action="/admin/profiles/save_name"autocomplete="on" method="post" id="name_form">
+              {% bootstrap_form name %}
+            </form>
+          </div>   
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="name_ok"  data-target="success" class="btn btn-primary">Save</button>
+          </div>      
+        </div>
+      </div>
+    </div>
+  <div class="col-sm-6">
     <form method="post" action="save_profile_details" autocomplete="on" id="info_form" style="margin-top:10px">
       {% csrf_token %}
       {% bootstrap_form info %}
       <input type="hidden" name="id" value="{{alum.alumni_id}}">
       <button id="save" data-loading-text="Saving Details..." style="width:100%" class="btn btn-danger">Save</button>
     </form>
-    
   </div>
-  <div class="col-sm-6" style="margin-left:10px; margin-top:10px">
+  <div class="col-md-3">
     <div class="alert alert-success alert-dismissable fade in hidden">
       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
       <strong>Success!</strong> <span id="message"></span>
@@ -114,6 +140,29 @@ Profile Details - MSU Alumni Administration
 <script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+  $('#name_ok').on('click', function(){
+    
+    $('#name_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#name_form').valid()){
+      //alert($.cookie("csrfmiddlewaretoken"))
+      $(this).button('loading')
+      $.post(
+        'save_name', 
+        {'name' : $('#name_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
   $('#business_ok').on('click', function(){
     
     $('#business_form').validate({

@@ -4,14 +4,21 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, QueryDict, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils import timezone
+from django.views.generic.list import ListView
 
 import sys, random, string, csv
-from profiles.forms import AlumInfoForm, HometownForm, BusinessForm, ResidenceForm
+from profiles.forms import NameForm, PhotoForm, AlumInfoForm, HometownForm, BusinessForm, ResidenceForm
 from alumniadmin.forms import AddProfileForm, LogInForm, SearchForm, FiltersForm
 from profiles.models import Alum, Campus, College, Program, Major, Graduation, City, BusinessAddress, Residence, Tribe, Religion
 from alumniadmin.models import User
 
  
+
+class RequestsListView(ListView):
+  queryset = Alum.objects.prefetch_related('grad').filter(status='P')
+  paginate_by = 25
+  template_name = 'admin/profile_requests.html'
+
 @login_required(login_url='/admin/login')
 @user_passes_test(lambda u:u.is_staff, login_url='/admin/login')
 def index(request):
@@ -26,26 +33,25 @@ def index(request):
     query = form.cleaned_data['query']
     filter = request.GET.get('filter')
     active_only = request.GET.get('active_only')
-    if query == '*':
+    if query == '':
       resultset = Alum.objects.all().order_by('last_name')
     else:
       if filter == 'alumni_id':
-        resultset = Alum.objects.filter(alumni_id__istartswith=query).order_by('last_name')
+        resultset = Alum.objects.filter(alumni_id__istartswith=query).filter(status='A').order_by('last_name')
       if filter == 'first_name':
-        resultset = Alum.objects.filter(first_name__icontains=query).order_by('first_name')
+        resultset = Alum.objects.filter(first_name__icontains=query).filter(status='A').order_by('first_name')
       if filter == 'last_name':
-        resultset = Alum.objects.filter(last_name__istartswith=query).order_by('last_name')
+        resultset = Alum.objects.filter(last_name__istartswith=query).filter(status='A').order_by('last_name')
     
     if active_only == 'true':
       resultset = resultset.filter(is_active=True)
     else:
-      active_only = 'false'
-      
+      active_only = 'false'      
     
     nomatch = True
     if len(resultset) > 0:
       nomatch = False
-    resultset.order_by('alumni__last_name')
+    resultset.prefetch_related('grad')
     
     queries_without_page = request.GET.copy()
     if queries_without_page.has_key('page'):
@@ -78,8 +84,7 @@ def add_csv(request):
             first_name = d['first'],
             last_name = d['last'],
             middle_name = d['middle'],
-            approved = True,
-            date_approved = timezone.now(),
+            status = 'A',
             is_active = False)
       alum.save()
     
@@ -106,8 +111,8 @@ def get_profile(request):
   id = request.GET.get('id')
   profile = Alum.objects.get(alumni_id=id)
   grads = Graduation.objects.filter(alumni_id=id)
-  
-  return render_to_response('profile_preview.html', {'profile' : profile, 'grads':grads}, context)  
+
+  return render_to_response('profile_preview.html', {'profile' : profile, 'grads':grads}, context)
     
 
 def generate_id(year):
@@ -133,8 +138,7 @@ def add_profile_view(request):
         first_name=form.cleaned_data['first_name'], 
         last_name=form.cleaned_data['last_name'], 
         middle_name=form.cleaned_data['middle_name'],
-        approved = True,
-        date_approved = timezone.now(),
+        status='A',
         is_active = False)
       alum.save()
       
@@ -152,21 +156,21 @@ def advanced_search(request):
     used = []
     if filters.is_valid():
       print filters.cleaned_data
-      query = Graduation.objects.all()
+      query = Alum.objects.all()
       if filters.cleaned_data['first_name']:
-        query = query.filter(alumni__first_name=filters.cleaned_data['first_name'])
+        query = query.filter(first_name=filters.cleaned_data['first_name'])
         used.append(('First Name', filters.cleaned_data['first_name']))
         
       if filters.cleaned_data['last_name'] and query.count() > 0:
-        query = query.filter(alumni__last_name=filters.cleaned_data['last_name'])
+        query = query.filter(last_name=filters.cleaned_data['last_name'])
         used.append(('Last Name', filters.cleaned_data['last_name']))
       print query.values()  
       if filters.cleaned_data['middle_name'] and query.count() > 0:
-        query = query.filter(alumni__middle_name=filters.cleaned_data['middle_name'])
+        query = query.filter(middle_name=filters.cleaned_data['middle_name'])
         used.append(('Middle Name', filters.cleaned_data['middle_name']))
       
       if filters.cleaned_data['class_year'] and query.count() > 0:
-        query = query.filter(year=filters.cleaned_data['class_year'])
+        query = query.grad_set.filter(year=filters.cleaned_data['class_year'])
         used.append(('Class Year', filters.cleaned_data['class_year']))
         
       if query.count() > 0 and filters.cleaned_data['college'] :
@@ -218,18 +222,22 @@ def advanced_search(request):
 def profile_details(request):
   
   if request.method == 'GET':
-    id = request.GET.get('id')
-    try:
-      alum = Alum.objects.get(alumni_id=id)
-      info = AlumInfoForm(
-        initial={
-          'birthdate':alum.birthdate,
-          'gender' : alum.gender,
-          'citizenship' : alum.citizenship,
-          'tribe' : alum.tribe,
-          'religion' : alum.religion,
-          'email':alum.email
-        })
+      id = request.GET.get('id')
+      try:
+        alum = Alum.objects.get(alumni_id=id)
+        name = NameForm(instance=alum)
+        photo = PhotoForm()
+        info = AlumInfoForm(
+          initial={
+            'birthdate':alum.birthdate,
+            'gender' : alum.gender,
+            'citizenship' : alum.citizenship,
+            'tribe' : alum.tribe,
+            'religion' : alum.religion,
+            'email':alum.email
+          })
+      except:
+        info = AlumInfoForm()
       try:
         hometown_data = City.objects.get(id=alum.hometown_id)
         hometown = HometownForm(initial={
@@ -265,9 +273,7 @@ def profile_details(request):
         })
       except:
         residence = ResidenceForm()
-      return render(request, 'admin/profile_details.html', {'alum':alum, 'info':info, 'residence':residence, 'hometown':hometown, 'business':business})
-    except:
-      return redirect('/admin/profiles')
+      return render(request, 'admin/profile_details.html', {'photo':photo, 'name':name, 'alum':alum, 'info':info, 'residence':residence, 'hometown':hometown, 'business':business})
   return redirect('/admin')
   
   
@@ -291,7 +297,18 @@ def save_hometown(request):
       return HttpResponse("Hometown updated")
   return redirect("/admin/profiles")
   
-  
+def save_name(request):
+  try:
+    if request.method == 'POST':
+      name = QueryDict(request.POST.get('name'))
+      alum = Alum.objects.get(alumni_id=request.POST.get('id'))
+      print alum
+      name_form = NameForm(name, instance=alum)
+      name_form.save()
+  except:
+    print sys.exc_info()[0], sys.exc_info()[1]
+  return HttpResponse('sdada')
+
 def save_business(request):
 
   if request.method == 'POST':
@@ -396,7 +413,7 @@ def save_profile_details(request):
       #except:
       #  city = Hometown.objects.create(name=hometown_form.cleaned_data['hometown_city'])
       
-      return redirect("/admin/profile_details?id="+alum.alumni_id)
+      return redirect("/admin/profiles/details?id="+alum.alumni_id)
     else:
       print "invalid form"
   return index(request)

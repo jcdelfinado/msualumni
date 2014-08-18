@@ -1,15 +1,9 @@
-from django.contrib import admin
-from profiles.models import *
+from django.contrib import admin as dj_admin
+from models import Alum, Program, College, Campus, Graduation
 
-# admin site
-admin.site.register(Alum)
-admin.site.register(Graduation)
-admin.site.register(City)
-admin.site.register(Tribe)
-admin.site.register(Religion)
-admin.site.register(BusinessAddress)
-admin.site.register(Residence)
-admin.site.register(Campus)
-admin.site.register(College)
-admin.site.register(Program)
-admin.site.register(Major)
+dj_admin.site.register(Alum)
+
+dj_admin.site.register(Campus)
+dj_admin.site.register(College)
+dj_admin.site.register(Program)
+dj_admin.site.register(Graduation)

@@ -1,4 +1,4 @@
-{% extends 'admin_base.html' %}
+{% extends 'admin/profiles_base.html' %}
 {% load bootstrap3 %}
 {% load staticfiles %}
 
@@ -10,53 +10,27 @@
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
       <img src="{% static 'images/cap.png' %}" height="75px" style="float:left; margin-right:8px; margin-top:24px"/>
-      {% if title == 'Alumni Profiles' %}
-        {% include 'simple_search.html' %}
-        <h1>
-          Alumni Profiles
-        </h1>
-        <a href="/admin/profiles/add">
-            <span class="glyphicon glyphicon-user"></span>
-            Add profile
-        </a>
-        &nbsp;
-        <a href="#" id="upload_csv" data-target="#upload_csv_modal" data-toggle="modal">
-          <span class="glyphicon glyphicon-upload"></span>
-          Add from csv file
-        </a>
-        {% include 'upload_csv_modal.html' %}
-        
-      {% endif %}
-      {% if title == 'Advanced Search' %}
-        <h1>
-          Advanced Search
-        </h1>
-        <a href="#"  style="color:#FFF" data-toggle="modal" data-target="#filters_modal">
-          <strong>Filters</strong>
-          {% for f in used %}
-            {{ f.0 }}:&nbsp;{{ f.1 }},
-          {% endfor %}
-        </a><br>
-        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#filters_modal">
-          Search
-        </button>
-      {% endif %}
+      {% include 'simple_search.html' %}
+      <h1>
+        Alumni Profiles
+      </h1>
+      <a href="/admin/profiles/add">
+          <span class="glyphicon glyphicon-user"></span>
+          Add profile
+      </a>
+      &nbsp;
+      <a href="#" id="upload_csv" data-target="#upload_csv_modal" data-toggle="modal">
+        <span class="glyphicon glyphicon-upload"></span>
+        Add from csv file
+      </a>
+      {% include 'upload_csv_modal.html' %}
     </div>
   </header>
 {% endblock header %}
-{% block content %}
-  {% include 'filters_modal.html' %} 
-  <div class="col-sm-12" >
-    <div id="result" style="min-height:420px">
-      {% include 'results_table.html' %}
-    </div>
-  </div>
-  <!-- <div class="col-sm-4">
-    <div id="profile">
-    </div>
-  </div> -->
-{% endblock content %}
-
+{% block side_nav %}
+  <li class="active"><a href="/admin/profiles">Profiles</a></li>
+  <li><a href="/admin/profiles/requests">Request</a></li>
+{% endblock side_nav %}
 {% block scripts %}
   <script type="text/javascript" src="/static/js/simple_search.js"></script>
   <script type="text/javascript" src="{% static 'js/admin.js' %}"></script>

@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 import random, string
 from django.core.mail import send_mail
+from profiles.models import STATUS
 
 class CustomUserManager(BaseUserManager):
 
@@ -69,9 +70,10 @@ class User(AbstractBaseUser, PermissionsMixin):
   is_active = models.BooleanField(_('active'), default=True,
       help_text=_('Designates whether this user should be treated as '
                   'active. Unselect this instead of deleting accounts.'))
+  status = models.CharField(max_length=1, choices=STATUS)
   date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
   activation_code = models.CharField(max_length=8, null=True, blank=True)
-  #first_name = models.CharField(max_length=64, null=True, blank=True)
+  #username = models.CharField(max_length=16, unique=True)
   #last_name = models.CharField(max_length=64, null=True, blank=True)
 
   objects = CustomUserManager()

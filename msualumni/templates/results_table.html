@@ -1,38 +1,8 @@
 {% load filters %}
-  <div style="text-align: center; margin-left:auto">
-  {% if resultset.object_list and resultset.paginator.num_pages > 1 %}
-    <ul class="pagination pagination-sm">
-      {% if resultset.has_previous %}
-        <li>
-          <a href= "?{{ query_params.urlencode }}&amp;page={{ resultset.previous_page_number }}">&laquo;</a>
-        </li>
-      {% else %}
-        <li class="disabled">
-          <a href= "#">&laquo;</a>
-        </li>
-      {% endif %}
-      
-      {% for page in resultset.paginator.num_pages|get_range %}
-        <li {% ifequal resultset.number page %} class="active"{% endifequal %}>
-          <a href="?{{ query_params.urlencode }}&amp;page={{ page }}">{{ page }}</a>
-        </li>
-      {% endfor %}
-      {% if resultset.has_next %}
-        <li>
-          <a href= "?{{ query_params.urlencode }}&amp;page={{ resultset.next_page_number }}">&raquo;</a>
-        </li>
-      {% else %}
-        <li class="disabled">
-          <a href= "#">&raquo;</a>
-        </li>
-      {% endif %}
-    </ul>
-  {% endif %}
-  </div>
   <table class="table table-hover table-condensed" style="margin-bottom:0;" id="result">          
     <caption>
       {% if resultset.object_list %}
-      Showing <b>{{resultset.object_list|length}}</b> of <b>{{ total }}</b>
+      <b>{{ total }}</b> Results
       
         {% if active_only == 'false' %}
           <a class="label label-default" href="?{{ query_params.urlencode }}&amp;active_only=true" onclick="">Show activated users only</a>
@@ -47,7 +17,8 @@
       <tr>
         <th style="width:80px">ID</th>
         <th>Name</th>
-        <th>Status</th>
+        <th>Degree, Year</th>
+        <th style="width:60px">Status</th>
       </tr>
     </thead>        
     <tbody>
@@ -56,6 +27,11 @@
         <tr id="{{ result.alumni_id }}" class="alum-row" style="cursor : pointer">
           <td>{{ result.alumni_id }}</td>
           <td><strong>{{ result.last_name|upper }},&nbsp;{{ result.first_name }}&nbsp;{{ result.middle_name|slice:":1" }}.</strong></td>
+          <td>
+            {% for g in result.grad.all %}
+              {{ g.program }}, {{ g.year }} <br>
+            {% endfor %}
+          </td>
           <td>
             {% if result.is_active %}
             <span class="label label-success">Active</span>

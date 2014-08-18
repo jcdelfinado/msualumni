@@ -1,0 +1,14 @@
+{% extends 'profile_preview.html'%}
+
+{% block actions %}
+	<h4>{{ profile.last_name | upper }},&nbsp;{{ profile.first_name }}&nbsp;{{ profile.middle_name }}
+      <small>
+        <form method="get" id="edit" action="/admin/profiles/details">
+          <input type="hidden" id="alumni_id" name="id" value="{{profile.alumni_id}}"/>
+        </form>
+        <a class="text-primary previous" style="cursor:pointer" href="javascript:{}" onclick="$('#edit').submit()">
+          | Approve
+        </a>
+      </small>
+    </h4>
+{% endblock actions %}

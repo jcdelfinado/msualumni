@@ -1,44 +1,35 @@
-{% extends 'admin_base.html' %}
-{% load bootstrap3 %}
-{% load staticfiles %}
+{% extends 'admin/accounts_base.html' %}
 
-{% block title %}
-  Profiles - MSU Alumni Admin
-{% endblock title %}
+{% block side_nav %}
+	<li class="active"><a href="/admin/users">Users</a></li>
+	<li><a href="/admin/groups">Groups</a></li>
+{%endblock%}
 
-{% block header %}
-  <header style="background-image: url({% static 'images/slide1.jpg' %})">
-    <div class="container">
-      <img src="{% static 'images/cap.png' %}" height="75px" style="float:left; margin-right:8px; margin-top:24px"/>
-      
-        <h1>
-          Portal Users
-          <!--<a href="add_profile"><button type="button" class="btn btn-xs btn-default">Add Profile</button></a>-->
-        </h1>
-        
-      
-      
-    </div>
-  </header>
-{% endblock header %}
-{% block content %}
-  
-  <table>
-    <tr style="vertical-align: top">
-      <td style="width:800px">
-        <div id="result">
-          {% include 'results_table.html' %}
-        </div>
-      </td>
-      <td style="padding-left:10px">
-        
-        <div id="profile">
-        </div>
-      </td>
-    </tr>
-  </table>
-{% endblock content %}
-
-{% block scripts %}
-  <script type="text/javascript" src="/static/js/simple_search.js"></script>
-{% endblock scripts %}
+{% block main_content %}
+<table class="table table-hover">
+	<thead>
+		<th>Alumni ID</th>
+		<th>Email</th>
+		<th>Group</th>
+		<th>Status</th>
+		<th>Date Joined</th>
+	</thead>
+	<tbody>
+		{% for user in object_list %}
+			<tr>
+				<td>{{ user.alumni_id }}</td>
+				<td>{{ user.email }}</td>
+				<td>{{ user.groups.all.0 }}</td>
+				<td>
+		            {% if user.is_active %}
+		            <span class="label label-success">Active</span>
+		            {% else %}
+		       		<span class="label label-danger">Inactive</span>
+		          	{% endif %}
+		        </td>
+		        <td>{{ user.date_joined }}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock main_content %}

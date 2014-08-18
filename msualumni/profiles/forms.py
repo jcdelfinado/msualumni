@@ -14,6 +14,12 @@ class PhotoForm(forms.Form):
 
   photo = forms.ImageField(label="", required=False, widget=forms.FileInput(attrs={'class':'btn btn-default'}))
 
+class NameForm(forms.ModelForm):
+
+  class Meta:
+    model = Alum
+    fields = ['first_name', 'middle_name', 'last_name']
+
 class AlumInfoForm(forms.Form):
 
   birthdate = forms.DateField(required=False, label="Birth Date", widget=forms.DateInput(attrs={'type':'date', 'max':'2000-01-01'}))
@@ -52,10 +58,13 @@ class HometownForm(forms.Form):
 class AlumGraduationForm(forms.Form):
 
 
-  program = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Program', 'class':'input-sm'}))
-  major = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Major', 'class':'input-sm'}))
-  college = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'College', 'class':'input-sm'}))
-  campus = forms.ChoiceField(label="", choices = CAMPUSES, widget=forms.Select(attrs={'placeholder':'Campus', 'class':'input-sm', 'type':'radio'}))
-  date = forms.DateField(label="Graduation Information", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'month', 'class':'date input-sm'}))
+  program = forms.CharField(max_length=64, label="Program", widget=forms.TextInput(attrs={'placeholder':'Program', 'class':'input-sm'}))
+  # major = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Major', 'class':'input-sm'}))
+  # college = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'College', 'class':'input-sm'}))
+  campus = forms.ChoiceField(label="Campus", choices = CAMPUSES, widget=forms.Select(attrs={'placeholder':'Campus', 'class':'input-sm', 'type':'radio'}))
+  year = forms.DateField(label="Date", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'month', 'class':'date input-sm'}))
   
-  #add meta here
+class ProfileRequestForm(forms.Form):
+
+  name = NameForm()
+  grad = AlumGraduationForm()

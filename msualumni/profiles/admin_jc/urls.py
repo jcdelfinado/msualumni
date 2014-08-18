@@ -1,14 +1,17 @@
 from django.conf.urls import patterns, include, url
+from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from views import *
 
 urlpatterns = patterns (
     url(r'^$', index),
+    url(r'^requests$', RequestsListView.as_view()),
     url(r'^add$', add_profile_view),
     url(r'^add_csv$', add_csv),
     url(r'^get_profile', get_profile),
-    url(r'^profile_details', profile_details),
+    url(r'^details', profile_details),
     url(r'^save_profile_details$', save_profile_details),
+    url(r'^save_name$', save_name),
     url(r'^save_hometown$', save_hometown),
     url(r'^save_residence$', save_residence),
     url(r'^save_business$', save_business),

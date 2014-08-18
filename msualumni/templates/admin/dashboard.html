@@ -28,7 +28,7 @@ Dashboard - MSU Alumni Admin
 	      		<strong>Alumni Profiles</strong>
 	      	</div>
 	      	<div class="panel panel-body">
-		    	<p><a href="#" class="
+		    	<p><a href="/admin/profiles/requests" class="
 			    	{% if stats.for_approval > 0 %} ">
 			        {% else %} disabled"> {% endif %}
 			        <strong>{{ stats.for_approval }}</strong>
@@ -36,7 +36,7 @@ Dashboard - MSU Alumni Admin
 			        </a>
 			    </p>
 			    <p>
-			        <a href="profiles?query=*&filter=alumni_id">
+			        <a href="profiles?query=&filter=alumni_id">
 			          <strong>{{ stats.alumni }}</strong>
 			          Alumni on database
 			        </a>
