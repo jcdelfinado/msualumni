@@ -42,7 +42,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.webdesign',
-    'captcha',
     'bootstrap3',
     'south',
     'profiles',
