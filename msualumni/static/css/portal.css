@@ -63,6 +63,10 @@ header .container{
   height: 200px;
 }
 
+.inverse-row{
+  color:#FFF;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .6);
+}
 .navbar { 
     position: relative;
     right: 0;

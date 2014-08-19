@@ -22,7 +22,8 @@ urlpatterns = patterns('',
         }),
     url(r'^signup$', signup),
     url(r'^logout$', auth_views.logout, {'next_page':'/login'}),
-    url(r'^$', index)
+    url(r'^$', index),
+    url(r'^captcha/', include('captcha.urls')),
 )
 
 urlpatterns += patterns(

@@ -1,0 +1,24 @@
+<div class="modal fade" id="captcha_modal" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" style="color:#111111" >Safety First</h4>
+      </div>
+      <div class="modal-body">
+        <div class="center-block" style="width:150px">
+          <input type="text" id="captcha_field" name="captcha" placeholder="Enter the code here">
+        </div>
+        <div style="text-align:center">
+          <h3 style="padding:0">Please enter the code you see</h3>
+          <h4>This is to make sure you're not a computer or a hacker trying to harm us.</h4>
+        </div>
+      </div>   
+      <div class="modal-footer" >
+          {% csrf_token %}
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="confirm" disabled type="submit" data-target="success" class="btn btn-primary">Confirm</button>
+      </div>      
+    </div>
+  </div>
+</div>

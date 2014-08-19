@@ -1,40 +1,67 @@
-{% extends 'portal.html' %}
+{% extends 'base.html' %}
 {% load bootstrap3 %}
 {% load staticfiles %}
 
+{% block css %}
+  {{ block.super }}
+  <link href={% static 'css/jquery.realperson.css' %} rel="stylesheet" type="text/css"/>
+{% endblock css %}
+
 {% block header %}
-  <header style="background-image: url({% static 'images/slide1.jpg' %}); min-height:550px">
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
-      
-      <div class="col-sm-4">
-        <h1>
-          Get Your Alumni ID
-        </h1>
-        <form method="post" action="admin/login">
-          {% csrf_token %}
-          {% bootstrap_form form.name %}
-          {% bootstrap_form form.grad %}
-          <button class="btn btn-danger" style="width:100%">
-            Submit
-          </button>
-        </form>      
-        <h4>
-          Already have an account?&nbsp;
-          <a style="text-decoration: underline" href="#">Sign In Here</a>
-        </h4>
-        <h4>
-         or&nbsp;
-          <a style="text-decoration: underline" href="/accounts/signup">Get Your Account Here</a>
-        </h4>
-      </div>
-      <div class="col-sm-8">
-        
-      </div>
+      <h1>
+        Get Your Alumni ID
+      </h1>
+       <h4>
+        Already have an ID?&nbsp;
+        <a style="text-decoration: underline" href="/accounts/signup">Get Your Account Here</a>
+      </h4>
+      <h4>
+        or&nbsp;<a style="text-decoration: underline" href="/login">Sign In Here</a> if you already have an account.
+      </h4>
     </div>    
   </header>
   
 {% endblock %}
 
+{% block scripts %}
+  {{ block.super }}
+   <script type="text/javascript" src={% static 'js/jquery.plugin.js' %}></script>
+  <script type="text/javascript" src={% static 'js/jquery.realperson.js' %}></script>
+
+  <script type="text/javascript">
+      $('#captcha_field').realperson();
+  </script>
+{% endblock scripts %}
+
 {% block content %}
-  
+  <div class="container">
+  <div class="col-sm-4">
+    <form method="post" action="admin/login">
+      {% csrf_token %}
+      {% bootstrap_form form.name %}
+      {% bootstrap_field form.email %}
+      {% bootstrap_form form.grad %}
+      <button class="btn btn-danger" data-toggle="modal" data-target="#captcha_modal" style="width:100%" type="button">
+        Submit
+      </button>
+      {% include 'captcha_modal' %}
+    </form>      
+  </div>
+  <div class="col-sm-8">
+    <h1>
+      What's this for?
+    </h1>
+    <p>
+      If you are an alumnus of Mindanao State University who already registered on our database, you should already have an Alumni ID. If you do not know your ID, please <a href="#">contact us</a>.
+    </p>
+    <p>
+      However, MSU alumni who are not in the database, i.e. those who graduated before 1986 need to supply the information to the right for approval of the MSU Office on Alumni Relations. You will receive a verification email once your Alumni Profile is approved and you can proceed to creating an account for this site.
+    </p>
+    <p>
+      Welcome home!
+    </p>
+  </div>  
+  </div>
 {% endblock content %}

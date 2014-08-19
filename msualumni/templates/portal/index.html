@@ -24,7 +24,7 @@
               <h1>Welcome Home!</h1>
               <h4>We've been waiting for you.</h4>
               <a href="/accounts/signup" class="btn btn-danger">Sign Up</a> using your Alumni ID or <a style="text-decoration: underline" href="login">Sign In Here</a><br>
-              No Alumni ID yet? <a style="text-decoration: underline" href="#">Get It Here</a>
+              No Alumni ID yet? <a style="text-decoration: underline" href="/accounts/register">Get It Here</a>
             {% endif %}
           </div>
         </div>
@@ -52,35 +52,45 @@
   {% endblock header %}
 
   {% block content %}
-  	<div class="col-md-4">
-		<h3>Alumni News</h3>
-		{% lorem 32 w %}
-		<a href='#'>Read more</a>
-  	</div>
-  	<div class="col-md-4">
-  			<h3>Alumni Events</h3>
-  		<table class="table table-condensed">
-  			<tr>
-  				<td>Alumni Olympiad</td>
-  				<td>Aug. 10, 2014</td>
-  			</tr>
-  			<tr>
-  				<td>Literary-Musical Festival</td>
-  				<td>Aug. 25, 2014</td>
-  			</tr>
-  			<tr>
-  				<td>54th MSU Foundation</td>
-  				<td>Sept. 1, 2014</td>
-  			</tr>
-  			<tr>
-  				<td>MASCUF Games</td>
-  				<td>Sept. 23-25, 2014</td>
-  			</tr>
-  		</table>
-  	</div>
-  	<div class="col-md-4"  style="text-align:center">
-  		<img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
-  		<br><br>
-  		<strong>Alumni Photo Gallery</strong>
-  	</div>
+    <div class="container">
+      <div class="row">
+      	<div class="col-md-4">
+    		<h3>Alumni News</h3>
+    		{% lorem 32 w %}
+    		<a href='#'>Read more</a>
+      	</div>
+      	<div class="col-md-4">
+      			<h3>Alumni Events</h3>
+      		<table class="table table-condensed">
+      			<tr>
+      				<td>Alumni Olympiad</td>
+      				<td>Aug. 10, 2014</td>
+      			</tr>
+      			<tr>
+      				<td>Literary-Musical Festival</td>
+      				<td>Aug. 25, 2014</td>
+      			</tr>
+      			<tr>
+      				<td>54th MSU Foundation</td>
+      				<td>Sept. 1, 2014</td>
+      			</tr>
+      			<tr>
+      				<td>MASCUF Games</td>
+      				<td>Sept. 23-25, 2014</td>
+      			</tr>
+      		</table>
+      	</div>
+      	<div class="col-md-4"  style="text-align:center">
+      		<img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
+      		<br><br>
+      		<strong>Alumni Photo Gallery</strong>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="inverse-row" style="background-image:url({% static 'images/slide1.jpg' %})">
+      <div class="container">
+        <h1>Connect to the Alumni Community</h1>
+      </div>
+    </div>
   {% endblock content %}

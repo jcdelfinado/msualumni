@@ -2,6 +2,7 @@ from django import forms
 from django.forms import widgets
 from models import CAMPUSES, MONTHS
 from models import Alum
+from captcha.fields import CaptchaField
 
 class SignUpForm(forms.Form):
 
@@ -67,4 +68,5 @@ class AlumGraduationForm(forms.Form):
 class ProfileRequestForm(forms.Form):
 
   name = NameForm()
+  email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder':'Email Address'}))
   grad = AlumGraduationForm()
