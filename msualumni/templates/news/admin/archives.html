@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin_base.html' %}
 
 {% load bootstrap3 %}
 {% load staticfiles %}
@@ -15,11 +15,9 @@
 {% endblock css %}
 {% block header %}
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
-    <div class="container">
- 
+    <div class="container"> 
 	    <h1>
-	    	Alumni News
-	    	<small></small>
+	    	Alumni News Archives
 	    </h1>
     </div>
   </header>
@@ -29,8 +27,7 @@
 <div class="container" style="min-height:500px">
 	<div class="col-md-2">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="/news">News Feed</a></li>
-			<li><a class="dropdown-toggle" type="button" data-toggle="dropdown">
+			<li class="active"><a class="dropdown-toggle" type="button" data-toggle="dropdown">
 			    Archives
 			  </a>
 			  <ul class="dropdown-menu" role="menu">
@@ -41,31 +38,29 @@
 		    	{% endfor %}
 			  </ul>
 			</li>
+			<li><a href="/news">News Feed</a></li>
 		</ul>
 	</div>
 	<div class="col-md-10">
-		<h1 class="headline">
-			{{ article.title }}
-		</h1>
-		<h4>
-		<small class="byline">
-			by <b>{{ article.author }}</b>| <b>posted {{ article.pub_date }}</b> | <b>modified {{ article.date_modified }}</b>
-		</small>
-		</h4>
-		<br>	
-		{{ article.content | safe }}
+		<div>			
+			{% if year %}
+				{% for date in date_list %}
+					<a href="/news/archives/{{date|date:'Y'}}/{{ date|date:'m' }}">{{ date|date:'F' }}</a>&nbsp;
+				{% endfor %}
+		    	<h1>All Articles for {{ year|date:"Y" }}</h1>
+		    {% elif month %}
+		    	<a href="/news/archives/{{ month|date:'Y' }}">Back to {{ month|date:'Y' }}</a>
+		    	<h1>All Articles for {{ month|date:"F Y" }}</h1>
+		    
+		    {% endif %}
+		    {% for obj in object_list %}
+		        <label class="pull-left">{{ obj.pub_date|date:"F j, Y" }}</label>
+		        <h4>&nbsp;
+		        	<a href="/news/read/{{ obj.id }}">{{ obj.title }}</a>
+		        	<small>posted by <strong>{{ obj.author }}</strong> at {{ obj.pub_date|date:'P' }}</small>
+		        </h4> 
+		    {% endfor %}
+		</div>
 	</div>
 </div>
 {% endblock content %}
-
-{% block scripts %}
-	{{ block.super }}
-	<script type="text/javascript" src="{% static 'js/wysihtml5-0.3.0.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/bootstrap3-wysihtml5.js' %}"></script>
-	<script type="text/javascript" src="{% static 'js/jquery.hotkeys.js' %}"></script>
-	<script type="text/javascript">
-	$(document).ready(function(){
-		$('#editor').wysihtml5()
-	})
-	</script>
-{% endblock scripts %}

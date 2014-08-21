@@ -31,8 +31,17 @@
 	<div class="col-sm-2">
 		<ul class="nav nav-pills nav-stacked">
 			<li class="active"><a href="#">News Feed</a></li>
-			<li><a href="#">Categories</a></li>
-			<li ><a href="#">Archives</a></li>
+			<li><a class="dropdown-toggle" type="button" data-toggle="dropdown">
+			    Archives
+			  </a>
+			  <ul class="dropdown-menu" role="menu">
+			    {% for year in years %}
+			    	<li><a href="/admin/news/archives/{{year}}">{{ year }}</a></li>
+			    {% empty %}
+			    	<li><a href="#">No Archives</a></li>
+		    	{% endfor %}
+			  </ul>
+			</li>
 		</ul>
 	</div>
 	<div class="col-sm-10">
