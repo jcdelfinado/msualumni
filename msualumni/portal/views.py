@@ -21,8 +21,8 @@ def index(request):
 
 def send_activation(alum, user):
 
-  plaintext = get_template('email.txt')
-  html = get_template('email.html')
+  plaintext = get_template('email_activation.txt')
+  html = get_template('email_activation.html')
   params = Context({
     'activation_code' : user.activation_code,
     'user' : alum

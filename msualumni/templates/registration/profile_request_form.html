@@ -29,24 +29,53 @@
   {{ block.super }}
    <script type="text/javascript" src={% static 'js/jquery.plugin.js' %}></script>
   <script type="text/javascript" src={% static 'js/jquery.realperson.js' %}></script>
-
   <script type="text/javascript">
       $('#captcha_field').realperson();
+      
+     /* $('#request_form').submit(function(e){
+        var form_data = $('#request_form').serializeArray()
+        alert(form_data)
+        $.ajax({
+          url : '/accounts/register',
+          data : form_data, 
+          type : 'POST',
+          success: function(data, status){
+            $('#messages').html(data)
+          },
+          error: function(data, status){
+            $('#messages').html(data)
+          }
+        })
+        e.preventDefault()
+      })*/
   </script>
 {% endblock scripts %}
 
 {% block content %}
   <div class="container">
   <div class="col-sm-4">
-    <form method="post" action="admin/login">
+    {% for msg in errors %}
+      <div class="alert alert-danger alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Oops!</strong> {{ msg }}
+      </div>
+    {% endfor %}
+    {% for msg in messages %}
+      <div class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Success!</strong> {{ msg }}
+      </div>
+    {% endfor %}
+    <form id="request_form" method="post" action="/accounts/register">
       {% csrf_token %}
-      {% bootstrap_form form.name %}
-      {% bootstrap_field form.email %}
-      {% bootstrap_form form.grad %}
-      <button class="btn btn-danger" data-toggle="modal" data-target="#captcha_modal" style="width:100%" type="button">
+      {% bootstrap_form form %}
+      <label>Just to prove you're human</label>
+      <div class="center-block" style="width:150px">
+        <input type="text" id="captcha_field" name="captcha" placeholder="Enter the code here">
+      </div>
+      <button id="submit" class="btn btn-danger" style="width:100%" type="submit">
         Submit
       </button>
-      {% include 'captcha_modal' %}
     </form>      
   </div>
   <div class="col-sm-8">

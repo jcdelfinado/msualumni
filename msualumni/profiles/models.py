@@ -17,6 +17,13 @@ STATUS = (('A', 'Approved'),
           ('R', 'Rejected'),
           ('P', 'Pending'))
 
+DEGREES = (('BS', 'Bachelor of Science'),
+           ('AB', 'Bachelor of Arts'),
+           ('Diploma', 'Diploma'),
+           ('Certificate', 'Certificate'),
+           ('MA', 'Master of Arts'),
+           ('MS', 'Master of Science'),
+           ('D', 'Doctorate'))
 #model for storing religion. we can't really be sure how many there are so we add a model for it.
 class Religion(models.Model):
   

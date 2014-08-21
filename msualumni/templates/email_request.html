@@ -1,0 +1,27 @@
+{% load staticfiles %}
+<html>
+<head>
+	<link href={% static 'css/bootstrap.min.css' %} rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>
+  MSU Alumni Web Portal
+</h1>
+<h4>
+  Hi {{ alum.first_name }} {{ alum.last_name }}
+</h4>
+<p>
+You have successfully submitted your request to create your alum profile at the MSU Alumni Web Portal. In order to create an account on the site,
+your profile must first be approved by the MSU Office on Alumni Relations to verify that you are a bona fide alum.
+</p>
+<p>
+You will receive another email concerning the action taken for your request.
+</p>
+
+<label>Name:</label>&nbsp;{{ alum.last_name }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})
+<label>Program:</label>&nbsp;{{ grad.program }}
+<label>Date:</label>&nbsp;{{ grad.month }}&nbsp;{{ grad.year }}
+
+-MSU Office of Alumni Relations
+</body>
+</html>

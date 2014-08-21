@@ -17,7 +17,9 @@
 
 <body>
     <nav class="navbar navbar-default" id="site_nav" role="navigation">
+      {% block nav-div %}
       <div class="container">
+      {% endblock nav-div %}
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -40,7 +42,7 @@
             <li><a href="#">Events</a></li>
             <li><a href="#">Photos</a></li>
             {% if user.is_authenticated and user.is_staff %}
-              <li><a href="admin/dashboard">Admin</a></li>
+              <li><a href="/admin/dashboard">Admin</a></li>
             {% endif %}
           </ul>
         {% endblock nav %}
@@ -58,7 +60,7 @@
               </ul>
             </li>
             {% else %}
-              <li><a href="login">You are not logged in</a></li>
+              <li><a href="/login">You are not logged in</a></li>
             {% endif %}
             
           </ul>

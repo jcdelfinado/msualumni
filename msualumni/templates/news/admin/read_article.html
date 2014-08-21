@@ -1,4 +1,5 @@
 {% extends 'admin_base.html' %}
+
 {% load bootstrap3 %}
 {% load staticfiles %}
 {% load webdesign %}
@@ -14,42 +15,35 @@
 {% endblock css %}
 {% block header %}
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
-    <div class="container-fluid">
- 
+    <div class="container"> 
 	    <h1>
-	    	Add Article
-	    	<small>Contribute a news article</small>
+	    	Alumni News
 	    </h1>
     </div>
   </header>
 {% endblock header %}
 
 {% block content %}
-<div class="container-fluid" style="height:500px">
+<div class="container" style="min-height:500px">
 	<div class="col-md-2">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="#">News Feed</a></li>
+			<li><a href="/admin/news">News Feed</a></li>
 			<li><a href="#">Categories</a></li>
 			<li><a href="#">Archives</a></li>
 		</ul>
 	</div>
 	<div class="col-md-10">
-		<form method="POST" action="" role="form">
-		{% csrf_token %}
-		<div class="panel panel-default">
-			<div class="panel-heading">
-				
-			</div>
-			<div class="panel-body">
-				{% bootstrap_form form %}
-			</div>
-			<div class="panel-footer">
-				<span style="text-align: right">
-					<button class="btn btn-primary" value="Create">Post</button>
-				</span>
-			</div>
-		</div>
-		</form>
+		<h1 class="headline">
+			{{ article.title }}
+		</h1>
+		<h4>
+		<small class="byline">
+			by <b>{{ article.author }}</b>| <b>posted {{ article.pub_date }}</b> | <b>modified {{ article.date_modified }}</b>
+		</small>
+		</h4>
+		<a href="/admin/news/edit/{{ article.id }}">Edit this Article</a>
+		<br>	
+		{{ article.content | safe }}
 	</div>
 </div>
 {% endblock content %}

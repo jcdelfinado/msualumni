@@ -67,6 +67,10 @@ class AlumGraduationForm(forms.Form):
   
 class ProfileRequestForm(forms.Form):
 
-  name = NameForm()
-  email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'placeholder':'Email Address'}))
-  grad = AlumGraduationForm()
+  first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'First name on Diploma'}))
+  middle_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'Middle name on Diploma'}))
+  last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'Last name on Diploma'}))
+  email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'placeholder':'Email Address'}))
+  program = forms.CharField(required=False, max_length=64, label="Program", widget=forms.TextInput(attrs={'placeholder':'Program'}))
+  campus = forms.ChoiceField(label="Campus", choices = CAMPUSES, widget=forms.Select(attrs={'placeholder':'Campus', 'type':'radio'}))
+  year = forms.DateField(required=False, label="Date", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'date'}))

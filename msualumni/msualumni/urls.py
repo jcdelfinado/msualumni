@@ -6,6 +6,7 @@ from events.views import index as events
 from portal.views import index
 from profiles.views import register, signup
 from msualumni import settings
+from msualumni.utils import captcha
 
 dj_admin.autodiscover()
 
@@ -23,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^signup$', signup),
     url(r'^logout$', auth_views.logout, {'next_page':'/login'}),
     url(r'^$', index),
-    url(r'^captcha/', include('captcha.urls')),
+    #url(r'^captcha/get_salt', captcha.get_salt),
 )
 
 urlpatterns += patterns(

@@ -1,0 +1,18 @@
+<h1>
+  MSU Alumni Web Portal
+</h1>
+<h4>
+  Hi {{ user.first_name }} {{ user.last_name }}
+</h4>
+
+Please follow this <a href="http://127.0.0.1:8000/accounts/activate?code={{ activation_code }}">link</a> to complete your activation. <br>
+
+http://127.0.0.1:8000/accounts/activate?code={{ activation_code }}
+
+<address>
+  <strong>This will activate the account for {{ user.first_name }} {{ user.last_name }}.</strong>
+  If this is not you, you may try filing up the form again <a href="http://127.0.0.1:8000/signup">here</a>.
+  Or reply to this email so we can address your concerns.
+</address>
+
+-MSU Office of Alumni Relations

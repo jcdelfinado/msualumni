@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth import views as auth_views
 from views import dashboard, UsersListView, GroupsListView
 from profiles.admin_jc import views as profiles_admin
+from news.views import NewsFeed
 #from admin_profiles.views import (
 #  index,
 #  add_profile_view,
@@ -20,6 +21,8 @@ urlpatterns = patterns (
     url(r'^groups$', GroupsListView.as_view(), name='groups-list'),
     url(r'^profiles$', profiles_admin.index),
     url(r'^profiles/', include('profiles.admin_jc.urls')),
+    url(r'^news/$', NewsFeed.as_view(template_name="news/admin/index.html"), name='admin-news-feed'),
+    url(r'^news/', include('news.msuadmin.urls')),
     url(r'^login/$',
         auth_views.login,
         {'template_name':'admin/login.html',

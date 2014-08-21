@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'admin_base.html' %}
 {% load bootstrap3 %}
 {% load staticfiles %}
 {% load webdesign %}
@@ -12,14 +12,22 @@
 {% endblock css %}
 {% block header %}
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
-    <div class="container">
-        <h1>Alumni News</h1>
+    <div class="container-fluid">
+      
+        <h1>
+        	Alumni News
+        </h1>
+        <a href="/admin/news/write" class="btn btn-primary">
+        	<span class="glyphicon glyphicon-plus"></span>
+        	Add Article
+        </a>
+        <br>
     </div>
   </header>
 {% endblock header %}
 
 {% block content %}
-<div class="container" style="min-height:500px">
+<div class="container-fluid" style="min-height:500px">
 	<div class="col-sm-2">
 		<ul class="nav nav-pills nav-stacked">
 			<li class="active"><a href="#">News Feed</a></li>

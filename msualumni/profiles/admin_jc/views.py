@@ -132,7 +132,7 @@ def add_profile_view(request):
       full_id = generate_id(year)
       
       while Alum.objects.filter(alumni_id=full_id).exists():
-        generate_id(year)
+        full_id = generate_id(year)
       
       alum = Alum(alumni_id=full_id, 
         first_name=form.cleaned_data['first_name'], 
