@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <h1>
+        Alumni Events
+      </h1>
+      <h3>From the simplest to the grandest, you're invited.</h3>
+    </div>
+  </header>  
+{% endblock %}
+
+{% block content %}
+	<div class="container" style="min-height:400px">
+		{% if object_list %}
+		
+			<h3>Join the Alumni Community!<br><small>Here, we list events where you can gather.</small></h3>
+			<p>
+				With the thousands of alumni conquering the world, it's almost impossible not to find an MSU Alumni near you.
+			</p>
+			<p>
+				From simple <a href="events/category/casual">casual gatherings</a>, to grand <a href="events/category/reunions">reunions</a>, we aim to build a stronger network of alumni.
+			</p>
+			<p>
+				Support your college or the MSU varsity in <a href="/events/category/sports">sports events</a> on and off the campus. Or watch one of the university's premiere performing arts groups.
+			</p>
+			<p>
+				Below is a shortlist of the upcoming events. Click one to see the details.
+			</p>
+			<div class="container col-md-10">
+			<table class="table">
+				<thead>
+					<th>Event</th>
+					<th>Date</th>
+					<th>Venue</th>
+				</thead>
+				<tbody>
+				{% for event in object_list %}
+					<tr>
+						<td><a href="/events/details/{{ event.id }}">{{ event.title }}</a></td>
+						<td>{{ event.date | naturalday }}</td>
+						<td>{{ event.venue }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% if is_paginated %}
+				<a href="/events/upcoming">See all upcoming events</a>
+			{% endif %}
+		</div>
+		{% else %}
+			<h3>
+				There are currently no upcoming events.<br>
+				<small>Please check again later for updates.</small>
+			</h3>		
+		{% endif %}
+		<div class="col-md-12">
+		<h5>Browse by category:
+			{% for cat in categories %}
+				<a href="#">{{ cat }}</a>&nbsp;
+			{% endfor %}
+		</h5>
+		</div>
+	</div>
+{% endblock content %}

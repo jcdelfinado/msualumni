@@ -39,7 +39,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="#">Alumni</a></li>
             <li><a href="/news">News</a></li>
-            <li><a href="#">Events</a></li>
+            <li><a href="/events">Events</a></li>
             <li><a href="#">Photos</a></li>
             {% if user.is_authenticated and user.is_staff %}
               <li><a href="/admin/dashboard">Admin</a></li>
@@ -50,7 +50,7 @@
             {% if user.is_authenticated %}
               <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                {{ user.alumni_id.first_name }} {{ user.alumni_id.last_name }} ({{ user.email }})
+                {{ user.alumni_id.first_name }} {{ user.alumni_id.last_name }} ({{ user.name }})
               </a>
               <ul class="dropdown-menu">
                 <li><a href="/password/change">Account Settings</a></li> 
@@ -89,9 +89,20 @@
   <footer>    
     {% block footer %}
     <div class="container">
-      <h4>
+      
+      <h4 style="float:left">
         MSU Alumni Portal
       </h4>
+        <ul class="nav-inverse" type="none">
+          <li><a href="/">Home</a></li>
+          <li><a href="#">Alumni</a></li>
+          <li><a href="/news">News</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="#">Photos</a></li>
+          {% if user.is_authenticated and user.is_staff %}
+            <li><a href="/admin/dashboard">Admin</a></li>
+          {% endif %}
+        </ul>
     </div>
     {% endblock footer %}
   </footer>

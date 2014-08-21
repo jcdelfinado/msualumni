@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <h1>
+        Upcoming Alumni Events
+      </h1>
+      <h3>From the simplest to the grandest, you're invited.</h3>
+    </div>
+  </header>  
+{% endblock %}
+
+{% block content %}
+	<div class="container" style="min-height:400px">
+		{% if object_list %}
+		<div class="container col-md-10">
+			<table class="table">
+				<thead>
+					<th>Event</th>
+					<th>Date</th>
+					<th>Venue</th>
+				</thead>
+				<tbody>
+				{% for event in object_list %}
+					<tr>
+						<td><a href="/events/details/{{ event.id }}">{{ event.title }}</a></td>
+						<td>{{ event.date | naturalday }}</td>
+						<td>{{ event.venue }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% if is_paginated %}
+				<a href="/events/upcoming">See all upcoming events</a>
+			{% endif %}
+		</div>
+		{% else %}
+			<h3>
+				There are currently no upcoming events.<br>
+				<small>Please check again later for updates.</small>
+			</h3>		
+		{% endif %}
+		<div class="col-md-12">
+		<h5>Browse by category:
+			{% for cat in categories %}
+				<a href="#">{{ cat }}</a>&nbsp;
+			{% endfor %}
+		</h5>
+		</div>
+	</div>
+{% endblock content %}

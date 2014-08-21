@@ -64,6 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
   alumni_id = models.ForeignKey(Alum, null=True, blank=True)
   email = models.EmailField(_('email address'), unique=True)
+  name = models.CharField(_('username'), max_length=32, unique=True)
   is_staff = models.BooleanField(_('staff status'), default=False,
       help_text=_('Designates whether the user can log into this admin '
                   'site.'))
@@ -84,6 +85,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     verbose_name = _('user')
     verbose_name_plural = _('users')
     db_table="user"
+
+  def __unicode__(self):
+    return self.name
   
   def get_absolute_url(self):
     return "/users/%s/" % urlquote(self.username)
@@ -99,8 +103,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   
   def get_short_name(self):
     "Returns the short name for the user."
-    alum = Alum.objects.get(alumni_id=self.alumni_id)
-    return alum.first_name
+    return self.name
 
   def send_email(self, subject, message, from_email=None):
     """

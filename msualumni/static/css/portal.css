@@ -92,3 +92,19 @@ header .container{
   font-size: 1.5em;
   background-color: rgba(0,0,0,0);
 }
+
+.nav-inverse{
+  float:left;
+  padding-left:0;
+  margin-left: 0;
+  vertical-align: bottom;
+}
+.nav-inverse > li{
+  float: left;
+  padding: 0 10px;
+}
+.nav-inverse > li > a,
+.nav-inverse> li > a:hover,
+.nav-inverse > li > a:focus {
+  color: #333;
+}

@@ -42,11 +42,13 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.webdesign',
+    'django.contrib.humanize',
     'bootstrap3',
     'south',
     'profiles',
     'alumniadmin',
-    'news'
+    'news',
+    'events'
 )
 
 MIDDLEWARE_CLASSES = (

@@ -2,7 +2,6 @@ from django import forms
 from django.forms import widgets
 from models import CAMPUSES, MONTHS
 from models import Alum
-from captcha.fields import CaptchaField
 
 class SignUpForm(forms.Form):
 
