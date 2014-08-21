@@ -5,7 +5,9 @@ argparse==1.2.1
 dj-database-url==0.3.0
 dj-static==0.0.6
 django-bootstrap3==4.4.1
-django-simple-captcha==0.4.2
+django-model-utils==2.2
+django-photologue==2.8.2
+django-sortedm2m==0.7.0
 django-toolbelt==0.0.1
 gunicorn==19.0.0
 numpy==1.8.2
