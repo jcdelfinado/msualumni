@@ -2,10 +2,37 @@ from django.shortcuts import render, RequestContext
 from django.views.generic.dates import ArchiveIndexView
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView
 from django.http import HttpResponse
+from urllib import unquote
 import sys
 import datetime
 from models import Event, Category, RSVP
+
+class AddEvent(CreateView):
+	model = Event
+
+class EventsByCategory(ListView):
+	allow_empty = True
+	def get(self, request, *args, **kwargs):
+		category = kwargs.get('category')
+		cat_name = unquote(category)
+		self.category = Category.objects.get(name=cat_name)
+		self.queryset = Event.objects.filter(
+			is_approved=True,
+			date__gte=datetime.date.today(),
+			category_id__name__iexact = category
+		).order_by("date")
+
+		return super(EventsByCategory, self).get(request, **kwargs)
+
+	def get_context_data(self, **kwargs):
+		context = super(EventsByCategory, self).get_context_data(**kwargs)
+		print self.category
+		context['category'] = self.category
+		context['categories'] = Category.objects.only('name').all()
+		context['today'] = datetime.date.today()
+		return context
 
 class EventsIndex(ListView):
 	queryset = Event.objects.filter(

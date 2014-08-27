@@ -7,7 +7,7 @@
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
       <h1>
-        Alumni Events
+        Upcoming Alumni Events
       </h1>
       <h3>From the simplest to the grandest, you're invited.</h3>
     </div>
@@ -17,21 +17,9 @@
 {% block content %}
 	<div class="container" style="min-height:400px">
 		{% if object_list %}
-		
-			<h3>Join the Alumni Community!<br><small>Here, we list events where you can gather.</small></h3>
-			<p>
-				With the thousands of alumni conquering the world, it's almost impossible not to find an MSU Alumni near you.
-			</p>
-			<p>
-				From simple <a href="events/category/casual">casual gatherings</a>, to grand <a href="events/category/reunions">reunions</a>, we aim to build a stronger network of alumni.
-			</p>
-			<p>
-				Support your college or the MSU varsity in <a href="/events/category/sports">sports events</a> on and off the campus. Or watch one of the university's premiere performing arts groups.
-			</p>
-			<p>
-				Below is a shortlist of the upcoming events. Click one to see the details.
-			</p>
-			<div class="container col-md-10">
+		<div class="container col-md-10">
+			<h3>Showing all events for category {{ category.name }}</h3>
+			<h4>{{ category.description }}</h4>
 			<table class="table">
 				<thead>
 					<th>Event</th>
@@ -53,10 +41,8 @@
 			{% endif %}
 		</div>
 		{% else %}
-			<h3>
-				There are currently no upcoming events.<br>
-				<small>Please check again later for updates.</small>
-			</h3>		
+			<h3>There are currently no upcoming events for the category {{ category.name }}<br><small>{{ category.description }}</small></h3>
+			<h3><small>Please check back later for updates.</small></h3>
 		{% endif %}
 		<div class="col-md-12">
 		{% include 'events/browse_event_by_category.html' %}

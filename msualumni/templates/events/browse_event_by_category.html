@@ -1,0 +1,5 @@
+<h5>Browse by category:
+	{% for cat in categories %}
+		<a href={% url 'event_category' category=cat.name|urlencode %}>{{ cat }}</a>&nbsp;
+	{% endfor %}
+</h5>

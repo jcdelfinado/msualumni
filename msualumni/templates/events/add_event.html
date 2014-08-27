@@ -7,42 +7,28 @@
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
       <h1>
-        Alumni Events
+        Add Alumni Event
       </h1>
-      <h3>From the simplest to the grandest, you're invited.</h3>
+      <h3>Gather other alumni to your event!</h3>
     </div>
   </header>  
 {% endblock %}
 
 {% block content %}
 	<div class="container" style="min-height:400px">
-		<h2>{{ event.title }}</h2>
-		<h4>
-			<small>
-			<strong>{{ event.venue }}</strong>;
-			<strong>{{ event.date }}</strong>
-			{% if event.time %}
-				at {{ event.time | naturaltime }}
-			{% else %}
-				(No set time)
-			{% endif %}
-			</small>
-		</h4>
+		<div class="col-md-4">
+		<form action="post">
+		<h2>{% bootstrap_field form.title %}</h2>
+		{% bootstrap_field form.venue %}
+		{% bootstrap_field form.date %}
+		{% bootstrap_field form.time %}
 		<p>
-			{{ event.description }}
+			{% bootstrap_field form.description %}
 		</p>
-		<h5>
-			{{ attendance }} alumni attending this event.
-		</h5>
-		{% if user.is_authenticated %}
-			<button id="rsvp" data-loading-text="Processing..." class="btn btn-primary">RSVP</button>
-			{% if not attendance %}
-				Be the first!
-			{% endif %}
-		{% endif %}
-		<br>
-		<br>
-		<a href="/events/upcoming">&laquo; Back to events</a>
+		<button class="btn btn-primary">Submit</button>
+		<a href="/events/upcoming" class="btn btn-default">&laquo; Back to events</a>
+		</form>
+		</div>
 	</div>
 {% endblock content %}
 
