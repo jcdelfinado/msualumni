@@ -3,40 +3,44 @@
 {% load staticfiles %}
 
 {% block header %}
-  <header style="background-image: url({% static 'images/slide1.jpg' %}); min-height:550px">
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
       
       <div class="col-sm-4">
         <h1>
           Sign Up
         </h1>
-        {% if errors %}
-          <h4>{{ errors }}</h4>
-        {% endif %}
-        <form method="post" action="/accounts/register">
-          {% csrf_token %}
-          {% bootstrap_form form %}
-          <button class="btn btn-danger" style="width:100%">
-            Submit
-          </button>
-        </form>      
         <h4>
-          Already have an account?&nbsp;
-          <a style="text-decoration: underline" href="/login">Sign In Here</a>
-        </h4>
-        <h4>
-          No Alumni ID?&nbsp;
-          <a style="text-decoration: underline" href="/accounts/register">Get It Here</a>
+          Get your Alumni Account so you can connect with the Alumni Community!
         </h4>
       </div>
-      <div class="col-sm-8">
-        
-      </div>
-    </div>    
-  </header>
+    </div>
+  </header> 
+  
   
 {% endblock %}
 
 {% block content %}
-  
+  <div class="container">
+    <div class="col-md-4">
+      {% if errors %}
+        <h4>{{ errors }}</h4>
+      {% endif %}
+      <form method="post" action="/signup">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button class="btn btn-danger" style="width:100%">
+          Submit
+        </button>
+      </form>      
+      <h4>
+        Already have an account?&nbsp;
+        <a style="text-decoration: underline" href="/login">Sign In Here</a>
+      </h4>
+      <h4>
+        No Alumni ID?&nbsp;
+        <a style="text-decoration: underline" href="/accounts/register">Get It Here</a>
+      </h4>
+    </div>
+  </div>
 {% endblock content %}

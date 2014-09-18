@@ -37,7 +37,7 @@ def send_activation(alum, user):
   msg.attach_alternative(html_content, "text/html")
   msg.send()
   
-def register(request):
+def signup(request):
 
   form = SignUpForm()
   if request.method == 'POST':

@@ -7,9 +7,9 @@
   <header style="background-image: url({% static 'images/slide1.jpg' %})">
     <div class="container">
       <h1>
-        Add Alumni Event
+        Update Alumni Event
       </h1>
-      <h3>Gather other alumni to your event!</h3>
+      <h3>Tailor your alumni event.</h3>
     </div>
   </header>  
 {% endblock %}
@@ -19,13 +19,7 @@
 		<div class="col-md-4">
 		<form method="POST" role="form">
 			{% csrf_token %}
-		<h2>{% bootstrap_field form.title %}</h2>
-		{% bootstrap_field form.venue %}
-		{% bootstrap_field form.date %}
-		{% bootstrap_field form.time %}
-		<p>
-			{% bootstrap_field form.description %}
-		</p>
+		{% bootstrap_form form %}
 		<button class="btn btn-primary">Submit</button>
 		<a href="/events/upcoming" class="btn btn-default">&laquo; Back to events</a>
 		</form>

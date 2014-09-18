@@ -1,0 +1,94 @@
+{% extends 'admin/profiles_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+  Profiles - MSU Alumni Admin
+{% endblock title %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <img src="{% static 'images/cap.png' %}" height="75px" style="float:left; margin-right:8px; margin-top:24px"/>
+      <h1>
+        Alumni Profile Requests
+      </h1>
+
+    </div>
+  </header>
+{% endblock header %}
+{% block side_nav %}
+  <li class="active"><a href="/admin/profiles/requests">Requests</a></li>
+  <li><a href="/admin/profiles">Profiles</a></li>
+{% endblock side_nav %}
+
+{% block main_pane %}
+  <div class="dropdown">
+  <button class="btn btn-sm bdropdown-toggle" type="button" id="action_taken" data-toggle="dropdown">
+    Choose Action
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="action_taken">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Approve</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ask more info</a></li>
+    <li role="presentation" class="divider"></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
+  </ul>
+</div>
+  <table class="table table-hover">
+    <thead>
+      <th width="20px"><input type="checkbox" id="check-all"></th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Degree, Year</th>
+      <th>Birthdate</th>
+      <th>Campus</th>
+    </thead>
+  {% for applicant in object_list %}
+    <tr id="{{ applicant.alumni_id }}" class="alum-row">
+    <td><input type="checkbox" class="selector" data-id="{{ applicant.alumni_id }}"></td>
+    <td>{{ applicant }} </td>
+    <td>{{ applicant.email }}</td>
+    <td>
+      {{ applicant.program }},&nbsp;{{ applicant.year }}
+    </td>
+    <td>
+      {{ applicant.birthdate }}
+    </td>
+    <td>
+      {{ applicant.campus }}
+    </td>
+    </tr>
+  {% empty %}
+    <div class="jumbotron">
+      <h2>There are no requests to approve.</h2>
+      <h2><small>Check again later.</small></h2>
+    </div>
+  {% endfor %}
+  </table>
+  <div class="dropdown">
+  <button class="btn btn-sm bdropdown-toggle" type="button" id="action_taken" data-toggle="dropdown">
+    Choose Action
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="action_taken">
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Approve</a></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ask more info</a></li>
+    <li role="presentation" class="divider"></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
+  </ul>
+</div>
+  <div id="profile"></div>
+{% endblock main_pane %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    $('#check-all').click(function(){
+      $('.selector').prop('checked', this.checked);
+    })
+    $('.selector').click(function(){
+      var check = ($('.selector').filter(':checked').length == $('.selector').length);
+      $('#check-all').prop('checked', check);
+    })
+  </script>
+{% endblock scripts %}

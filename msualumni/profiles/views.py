@@ -1,16 +1,38 @@
 from django.shortcuts import render, render_to_response, RequestContext
 from django.http import HttpResponse
-from forms import SignUpForm, ProfileRequestForm
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
+from django.views.generic.edit import CreateView
+
 from alumniadmin.forms import AddProfileForm
-from models import Alum, Graduation, Campus, Program
 from msualumni.utils.captcha import hash
-from admin_jc.views import generate_id
+from msuadmin.views import generate_id
+
+from models import Alum, Graduation, Campus, Program, ProfileApplication
+from forms import SignUpForm, ProfileRequestForm
 import sys
 # Create your views here.
 
+class ProfileRequestView(CreateView):
+  template_name = 'registration/profile_request_form.html'
+  model = ProfileApplication
+  form_class = ProfileRequestForm
+  success_url = '/profiles/request/success'
+  captcha_error = False
+  
+  def form_valid(self, form):
+    if int(hash(self.request.POST['captcha'])) == int(self.request.POST['captchaHash']):
+      return super(ProfileRequestView, self).form_valid(form)
+    self.captcha_error = True
+    return self.form_invalid(form)
+
+  def get_context_data(self, **kwargs):
+    context = super(ProfileRequestView, self).get_context_data(**kwargs)
+    if self.captcha_error:
+      context['errors'] = ["That's not the right code!"]
+    return context
+  
 def profile_request(request):
   messages = []
   errors = []
@@ -59,8 +81,6 @@ def profile_request(request):
     else:      
       errors.append("That's not the right code!")
       #return render_to_response("error_alert.html", {'msg' : msg}, context)
-  
-  
   return render(request, 'registration/profile_request_form.html', {'form':form, 'messages':messages, 'errors':errors})
 
 def send_email(alum, grad, email):

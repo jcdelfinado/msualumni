@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import widgets
 from models import CAMPUSES, MONTHS
-from models import Alum
+from models import Alum, ProfileApplication
 
 class SignUpForm(forms.Form):
 
@@ -64,12 +64,10 @@ class AlumGraduationForm(forms.Form):
   campus = forms.ChoiceField(label="Campus", choices = CAMPUSES, widget=forms.Select(attrs={'placeholder':'Campus', 'class':'input-sm', 'type':'radio'}))
   year = forms.DateField(label="Date", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'month', 'class':'date input-sm'}))
   
-class ProfileRequestForm(forms.Form):
+class ProfileRequestForm(forms.ModelForm):
+  captcha = forms.CharField(label="Just to prove you're human", max_length=5, widget=forms.TextInput(attrs={'id':'captcha_field', 'placeholder':"Enter the code above",}))
+  captchaHash = forms.IntegerField(widget=forms.HiddenInput())
 
-  first_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'First name on Diploma'}))
-  middle_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'Middle name on Diploma'}))
-  last_name = forms.CharField(required=False, widget=forms.TextInput(attrs={'placeholder':'Last name on Diploma'}))
-  email = forms.EmailField(required=False, widget=forms.EmailInput(attrs={'placeholder':'Email Address'}))
-  program = forms.CharField(required=False, max_length=64, label="Program", widget=forms.TextInput(attrs={'placeholder':'Program'}))
-  campus = forms.ChoiceField(label="Campus", choices = CAMPUSES, widget=forms.Select(attrs={'placeholder':'Campus', 'type':'radio'}))
-  year = forms.DateField(required=False, label="Date", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'date'}))
+  class Meta:
+    model = ProfileApplication
+    exclude = ['status']

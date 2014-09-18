@@ -1,0 +1,113 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+Dashboard - MSU Alumni Admin
+{% endblock title%}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container-fluid">
+      <h1>
+        Welcome to Alumni Administration!
+      </h1>
+      <h3>
+        Manage alumni profiles and web portal content.
+      </h3>
+      
+    </div>
+  </header>
+{% endblock header %}
+
+{% block content %}
+  <div style="margin-top:10px">
+    <div class="col-md-3">
+	    <div class="panel panel-default" style="padding:0">
+	    	<div class="panel-heading">
+	      		<strong>Alumni Profiles</strong>
+	      	</div>
+	      	<div class="panel panel-body">
+		    	<p><a href="/admin/profiles/requests" class="
+			    	{% if stats.for_approval > 0 %} ">
+			        {% else %} disabled"> {% endif %}
+			        <strong>{{ stats.for_approval }}</strong>
+			        Alumni profiles for approval
+			        </a>
+			    </p>
+			    <p>
+			        <a href="profiles?query=&filter=alumni_id">
+			          <strong>{{ stats.alumni }}</strong>
+			          Alumni on database
+			        </a>
+			    </p>
+			    <p>
+			        <a href="profiles?filter=alumni_id&query=%2A&active_only=true">
+			        <strong>{{ stats.non_admin }}</strong> Activated web portal user{% if user_count > 1 %}s{% endif %}
+			        </a>
+			    </p>
+			    <p>
+			        <a href="#">
+			        <strong>{{ stats.inactive }}</strong> Users for email activation
+			        </a>
+			    </p>
+			    <p>
+			    	<a href="/admin/profiles/add">
+			    		<span class="glyphicon glyphicon-user"></span>
+			    		Add profile
+			    	</a>
+			    </p>
+			    <p>	
+			    	<a href="#" id="upload_csv" data-target="#upload_csv_modal" data-toggle="modal">
+			    		<span class="glyphicon glyphicon-upload"></span>
+			    		Add from csv file
+			    	</a>
+			    	{% include 'upload_csv_modal.html' %}			    	
+			    </p>
+		    </div>
+		</div> 
+    </div>
+    <div class="col-md-6">
+    	<div class="panel panel-default">
+	        <div class="panel-heading">
+	          <div class="panel-title"><strong>Alumni News</strong></div>
+	        </div>
+	        <div class="panel-body">
+	        	
+	        	{% for article in articles %}
+					<p>
+						<a href="read?id={{ article.id }}" >
+						{{ article.title | truncatechars:54 }}
+						</a>					
+					<p>
+				{% endfor %}
+	        </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+    	<div class="panel panel-default">
+	        <div class="panel-heading">
+	          <div class="panel-title"><strong>Alumni Events</strong></div>
+	        </div>
+	        <div class="panel-body">
+	        	
+	        	{% for article in articles %}
+					<p>
+						<a href="read?id={{ article.id }}" >
+						{{ article.title | truncatechars:36 }}
+						</a>					
+					<p>
+				{% endfor %}
+	        </div>
+        </div>
+    </div>
+  </div>
+{% endblock content %}
+
+{% block footer %}
+{% endblock footer %}
+
+{% block scripts %}
+	<script type="text/javascript" src="{% static 'js/admin.js' %}"></script>
+{% endblock scripts %}
+

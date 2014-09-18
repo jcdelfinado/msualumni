@@ -1,0 +1,15 @@
+{% extends 'admin_base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+	<div class="col-md-2">
+		<ul class="nav nav-pills nav-stacked">
+			{% block side_nav %}
+			{% endblock side_nav %}
+		</ul>
+	</div>
+	<div class="col-md-10">
+		{% block main_content %}
+		{% endblock main_content %}
+	</div>
+{% endblock content %}

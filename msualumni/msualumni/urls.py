@@ -2,8 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin as dj_admin
 from django.contrib.auth import views as auth_views
 
-from portal.views import index
-from profiles.views import register, signup
+from portal.views import index, signup, activate
 from msualumni import settings
 from msualumni.utils import captcha
 
@@ -14,14 +13,16 @@ urlpatterns = patterns('',
     url(r'^django/', include(dj_admin.site.urls)),
     url(r'^news/', include('news.urls')),
     url(r'^events/', include('events.urls')),
-    url(r'^accounts/', include('portal.urls')),
+    url(r'^profiles/', include('profiles.urls')),
+    
+    url(r'^signup$', signup),
+    url(r'^activate$', activate),
+    url(r'^logout$', auth_views.logout, {'next_page':'/login'}),
     url(r'^login/$',
         auth_views.login,
         {'template_name':'portal/login.html',
          'redirect_field_name':'/admin/dashboard'
         }),
-    url(r'^signup$', signup),
-    url(r'^logout$', auth_views.logout, {'next_page':'/login'}),
     url(r'^$', index),
     #url(r'^captcha/get_salt', captcha.get_salt),
 )

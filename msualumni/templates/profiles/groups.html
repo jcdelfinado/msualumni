@@ -1,0 +1,27 @@
+{% extends 'admin/accounts_base.html' %}
+
+{% block side_nav %}
+	<li class="active"><a href="/admin/groups">Groups</a></li>
+	<li><a href="/admin/users">Users</a></li>
+{%endblock%}
+
+{% block main_content %}
+<table class="table table-hover">
+	<thead>
+		<th>Group Name</th>
+		<th>Privileges</th>
+	</thead>
+	<tbody>
+		{% for group in object_list %}
+			<tr>
+				<td>{{ group.name }}</td>
+				<td>
+					{% for priv in group.privileges %}
+						{{ priv }}
+					{% endfor %}
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock main_content %}

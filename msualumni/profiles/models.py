@@ -15,7 +15,7 @@ CAMPUSES = (('MSU Marawi', 'MSU Marawi'),
             ('MSU LNAC', 'MSU LNAC'))
 STATUS = (('A', 'Approved'),
           ('R', 'Rejected'),
-          ('P', 'Pending'))
+          ('P', 'Pending'),)
 
 DEGREES = (('BS', 'Bachelor of Science'),
            ('AB', 'Bachelor of Arts'),
@@ -138,7 +138,6 @@ class Alum(models.Model):
     db_table='alum'
     verbose_name_plural='alumni'
     
-  
 class Campus(models.Model):
 
   
@@ -210,3 +209,22 @@ class Graduation(models.Model):
     
   def __unicode__(self):
     return u'%s (%s %d)' % (self.alumni, self.month, self.year)
+
+class ProfileApplication(models.Model):
+  """docstring for Applicant"""
+  first_name = models.CharField(max_length=32)
+  last_name = models.CharField(max_length=32)
+  middle_name = models.CharField(max_length=32)
+  email = models.EmailField(unique=True)
+  mobile = models.CharField(max_length=12, null=True, blank=True)
+  birthdate = models.DateField(null=True, blank=True)
+  status = models.CharField(choices=STATUS, max_length=1, default='P')
+  program = models.CharField(max_length=64)
+  campus = models.CharField(choices=CAMPUSES, max_length=64)
+  year = models.PositiveIntegerField(validators=[MinValueValidator(1963)])
+
+  def __unicode__(self):
+    return u'%s %s' % (self.first_name, self.last_name)
+
+  class Meta:
+    db_table = 'profile_application'

@@ -1,0 +1,51 @@
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+{% load humanize %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <h1>
+        Upcoming Alumni Events
+      </h1>
+      <h3>From the simplest to the grandest, you're invited.</h3>
+    </div>
+  </header>  
+{% endblock %}
+
+{% block content %}
+	<div class="container" style="min-height:400px">
+		{% if object_list %}
+		<div class="container col-md-10">
+			<h3>Showing all events for category {{ category.name }}</h3>
+			<h4>{{ category.description }}</h4>
+			<table class="table">
+				<thead>
+					<th>Event</th>
+					<th>Date</th>
+					<th>Venue</th>
+				</thead>
+				<tbody>
+				{% for event in object_list %}
+					<tr>
+						<td><a href="/events/details/{{ event.id }}">{{ event.title }}</a></td>
+						<td>{{ event.date | naturalday }}</td>
+						<td>{{ event.venue }}</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			{% if is_paginated %}
+				<a href="/events/upcoming">See all upcoming events</a>
+			{% endif %}
+		</div>
+		{% else %}
+			<h3>There are currently no upcoming events for the category {{ category.name }}<br><small>{{ category.description }}</small></h3>
+			<h3><small>Please check back later for updates.</small></h3>
+		{% endif %}
+		<div class="col-md-12">
+		{% include 'events/browse_event_by_category.html' %}
+		</div>
+	</div>
+{% endblock content %}

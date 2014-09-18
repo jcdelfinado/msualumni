@@ -15,7 +15,7 @@
       </h1>
        <h4>
         Already have an ID?&nbsp;
-        <a style="text-decoration: underline" href="/accounts/signup">Get Your Account Here</a>
+        <a style="text-decoration: underline" href="/signup">Get Your Account Here</a>
       </h4>
       <h4>
         or&nbsp;<a style="text-decoration: underline" href="/login">Sign In Here</a> if you already have an account.
@@ -54,7 +54,7 @@
 {% block content %}
   <div class="container">
   <div class="col-sm-4">
-    {% for msg in errors %}
+    {% for msg in form.error_messages %}
       <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
         <strong>Oops!</strong> {{ msg }}
@@ -66,13 +66,9 @@
         <strong>Success!</strong> {{ msg }}
       </div>
     {% endfor %}
-    <form id="request_form" method="post" action="/accounts/register">
+    <form id="request_form" method="post" action="/profiles/request">
       {% csrf_token %}
-      {% bootstrap_form form %}
-      <label>Just to prove you're human</label>
-      <div class="center-block" style="width:150px">
-        <input type="text" id="captcha_field" name="captcha" placeholder="Enter the code here">
-      </div>
+      {% bootstrap_form form %}      
       <button id="submit" class="btn btn-danger" style="width:100%" type="submit">
         Submit
       </button>

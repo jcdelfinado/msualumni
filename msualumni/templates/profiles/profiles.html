@@ -32,10 +32,17 @@
     </div>
   </header>
 {% endblock header %}
-{% blcok %}
+
 {% block side_nav %}
   <li class="active"><a href="/admin/profiles">Profiles</a></li>
-  <li><a href="/admin/profiles/requests">Requests</a></li>
+  <li>
+    <a href="/admin/profiles/requests">
+      Requests
+      <label class="label label-primary">
+        {{ request_count }}
+      </label>
+    </a>
+  </li>
 {% endblock side_nav %}
 {% block scripts %}
   <script type="text/javascript" src="/static/js/simple_search.js"></script>

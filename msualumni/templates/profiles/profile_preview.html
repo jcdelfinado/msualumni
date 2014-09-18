@@ -1,0 +1,91 @@
+<div class="thumbnail text-center">
+  <form method="get" id="edit" action="profiles/profile_details">
+      <input type="hidden" id="alumni_id" name="id" value="{{profile.alumni.alumni_id}}"/>
+      <a class="text-primary previous" style="cursor:pointer" href="javascript:{}" onclick="$('#edit').submit()">
+        Edit this profile
+      </a>
+      <a class="text-danger next" type="button" style="cursor:pointer">
+        Delete
+      </a>
+  </form>
+  <img class="img-thumbnail" data-src="holder.js/100x100" src={{ profile.alumni.pic }} height="100px"/>
+  <div class="caption">
+    <address>   
+      <small>
+        {% if profile.alumni.is_active %}
+          <button class="btn btn-success btn-xs" data-load-text="Deactivating...">Active</button><br>
+        {% else %}
+          <button id="activate" class="btn btn-default btn-xs" data-loading-text="Activating...">Inactive</button><br>
+        {% endif %}
+        
+        <strong>{{ profile.alumni.first_name }}&nbsp;{{ profile.alumni.last_name }}&nbsp;({{ profile.alumni.middle_name }})</strong><br>
+        {{ profile.major }}<br>
+        {{ profile.month }}&nbsp;{{profile.year}},&nbsp;
+        {{ profile.college }}<br>
+        {{ profile.college.campus }}<br>
+      
+        <strong>Birthdate: </strong>
+          {{ profile.alumni.birthdate }}<br>
+        <strong>Gender: </strong>
+          {{ profile.alumni.gender }}<br>
+        <strong>Civil Status: </strong>
+          {{ profile.alumni.civil_status }}<br>
+        <strong>Citizenship </strong>
+          {{ profile.alumni.citizenship }}<br>
+        <strong>Tribe: </strong>
+          {{ profile.alumni.tribe }}<br>
+        <strong>Religion: </strong>
+          {{ profile.alumni.religion }}<br>
+    
+        <strong>Hometown:</strong><br>
+        {{ profile.alumni.hometown.city }},&nbsp;
+        {{ profile.alumni.hometown.province }}
+    
+        <strong><br>Current Residence:<br></strong>
+        
+        {% if profile.alumni.residence.street %}
+          {{ profile.alumni.residence.street }}&nbsp;
+        {% endif %}
+        {% if profile.alumni.residence.barangay %}
+          {{ profile.alumni.residence.barangay }}<br>
+        {% endif %}
+        {{ profile.alumni.residence.zip }}
+        {{ profile.alumni.residence.city.city }},&nbsp;
+        {{ profile.alumni.residence.city.province }}
+      </small>
+    </address>
+    </div>
+</div>
+{% block scripts %}
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#activate').click(function(){
+      $(this).button('loading')
+      var id = $('#alumni_id').val()
+      alert(id)
+      $.ajax({
+        type : 'post',
+        data : {id:id, csrfmiddlewaretoken:csrftoken},
+        url : '/accounts/activate',
+        success:  function(data){
+            $('#activate').html(data)
+            if (data == 'Active')
+              $('#activate').addClass('btn-success')
+            else $('#activate').addClass('btn-danger')
+          },
+        error: function(data){
+            $('#activate').addClass('btn-danger')
+            $('#activate').html('Error Performing Action')
+          }
+      }).always(
+         $('#activate').button('reset')
+        );
+  })
+  })
+  </script>
+{% endblock %}
+
+
+
+
+

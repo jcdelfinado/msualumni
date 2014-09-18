@@ -23,8 +23,8 @@
             {% else %}
               <h1>Welcome Home!</h1>
               <h4>We've been waiting for you.</h4>
-              <a href="/accounts/signup" class="btn btn-danger">Sign Up</a> using your Alumni ID or <a style="text-decoration: underline" href="login">Sign In Here</a><br>
-              No Alumni ID yet? <a style="text-decoration: underline" href="/accounts/register">Get It Here</a>
+              <a href="/signup" class="btn btn-danger">Sign Up</a> using your Alumni ID or <a style="text-decoration: underline" href="/login">Sign In Here</a><br>
+              No Alumni ID yet? <a style="text-decoration: underline" href="/profiles/request">Get It Here</a>
             {% endif %}
           </div>
         </div>
@@ -88,9 +88,28 @@
       </div>
     </div>
     <br>
-    <div class="inverse-row" style="background-image:url({% static 'images/slide1.jpg' %})">
+    <div class="inverse-row" style="background-image:url({% static 'images/sample2.jpg' %})">
       <div class="container">
         <h1>Connect to the Alumni Community</h1>
+        {% lorem 3 p %}
+      </div>
+    </div>
+    <br>
+    <div class="container" style="text-align:center">
+      <div class="col-md-4">
+        <img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
+          <br><br>
+          <strong>Alumni Photo Gallery</strong>
+      </div>
+      <div class="col-md-4">
+        <img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
+          <br><br>
+          <strong>Alumni Photo Gallery</strong>
+      </div>
+      <div class="col-md-4">
+        <img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
+          <br><br>
+          <strong>Alumni Photo Gallery</strong>
       </div>
     </div>
   {% endblock content %}

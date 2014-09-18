@@ -10,6 +10,7 @@
         <h1>
           Sign Up
         </h1>
+        <h4>Get an account on this portal to enjoy more features.</h4>
         <form method="post" action="admin/login">
           {% csrf_token %}
           {% bootstrap_form form %}
@@ -23,7 +24,7 @@
         </h4>
         <h4>
           No Alumni ID?&nbsp;
-          <a style="text-decoration: underline" href="register">Get It Here</a>
+          <a style="text-decoration: underline" href="/profiles/request">Get It Here</a>
         </h4>
       </div>
       <div class="col-sm-8">

@@ -8,26 +8,21 @@
       
       <div class="col-sm-4">
         <h1>
-          Get Your Alumni ID
+          Administrative Login
         </h1>
-        <form method="post" action="admin/login">
+        <h4>Log in with administrative privileges</h4>
+        <form method="post" action="/login/">
           {% csrf_token %}
           {% bootstrap_form form %}
           <button class="btn btn-danger" style="width:100%">
-            Submit
+            Sign In
           </button>
-        </form>      
+        </form>    
+      
         <h4>
-          Already have an account?&nbsp;
-          <a style="text-decoration: underline" href="#">Sign In Here</a>
+          Not admin?&nbsp;
+          Regular sign in <a style="text-decoration: underline" href="signup">here</a>
         </h4>
-        <h4>
-          No Alumni ID?&nbsp;
-          <a style="text-decoration: underline" href="register">Get It Here</a>
-        </h4>
-      </div>
-      <div class="col-sm-8">
-        
       </div>
     </div>    
   </header>

@@ -1,11 +1,4 @@
 //ajax for simple string search
-
-function searchAlum(form){  
-  $.get('search', {'query' : $('#search_field').val(), 'filter' : $('#item_search_filters').val()}, function(data){
-    $('#result').html(data)
-  });
-}
-
 $('.alum-row').on('click', function() {
   var id = $(this).attr('id');
   

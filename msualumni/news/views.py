@@ -42,7 +42,7 @@ class WriteArticle(CreateView):
 		return super(WriteArticle, self).form_valid(form)
 
 	def get_context_data(self, **kwargs):
-		context = super(NewsFeed, self).get_context_data(**kwargs)
+		context = super(WriteArticle, self).get_context_data(**kwargs)
 		context['years'] = []
 		dates = Article.objects.all().datetimes('pub_date', 'year')
 		for years in dates:
@@ -73,7 +73,7 @@ class EditArticle(UpdateView):
 		return base_url + str(self.object.id)
 
 	def get_context_data(self, **kwargs):
-		context = super(NewsFeed, self).get_context_data(**kwargs)
+		context = super(EditArticle, self).get_context_data(**kwargs)
 		context['years'] = []
 		dates = Article.objects.all().datetimes('pub_date', 'year')
 		for years in dates:

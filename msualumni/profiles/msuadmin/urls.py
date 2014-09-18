@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from views import *
 
 urlpatterns = patterns (
-    url(r'^$', index),
+    url(r'^$', ProfilesIndexView.as_view()),
     url(r'^requests$', RequestsListView.as_view()),
     url(r'^add$', add_profile_view),
     url(r'^add_csv$', add_csv),

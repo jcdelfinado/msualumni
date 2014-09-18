@@ -9,67 +9,55 @@ from django.views.generic.list import ListView
 import sys, random, string, csv
 from profiles.forms import NameForm, PhotoForm, AlumInfoForm, HometownForm, BusinessForm, ResidenceForm
 from alumniadmin.forms import AddProfileForm, LogInForm, SearchForm, FiltersForm
-from profiles.models import Alum, Campus, College, Program, Major, Graduation, City, BusinessAddress, Residence, Tribe, Religion
+from profiles.models import Alum, Campus, College, Program, Major, Graduation, City, BusinessAddress, Residence, Tribe, Religion, ProfileApplication
 from alumniadmin.models import User
+from django.views.generic.edit import FormMixin
 
  
 
 class RequestsListView(ListView):
-  queryset = Alum.objects.prefetch_related('grad').filter(status='P')
+  queryset = ProfileApplication.objects.filter(status='P')
   paginate_by = 25
-  template_name = 'admin/profile_requests.html'
+  template_name = 'profiles/profile_requests.html'
 
-@login_required(login_url='/admin/login')
-@user_passes_test(lambda u:u.is_staff, login_url='/admin/login')
-def index(request):
-  
-  nomatch = False
-  form = SearchForm()
-  filters = FiltersForm()
-  if 'query' in request.GET:
-    context = RequestContext(request)
-    form = SearchForm(data = request.GET)
-    form.full_clean()
-    query = form.cleaned_data['query']
-    filter = request.GET.get('filter')
-    active_only = request.GET.get('active_only')
-    if query == '':
-      resultset = Alum.objects.all().order_by('last_name')
-    else:
-      if filter == 'alumni_id':
-        resultset = Alum.objects.filter(alumni_id__istartswith=query).filter(status='A').order_by('last_name')
-      if filter == 'first_name':
-        resultset = Alum.objects.filter(first_name__icontains=query).filter(status='A').order_by('first_name')
-      if filter == 'last_name':
-        resultset = Alum.objects.filter(last_name__istartswith=query).filter(status='A').order_by('last_name')
-    
-    if active_only == 'true':
-      resultset = resultset.filter(is_active=True)
-    else:
-      active_only = 'false'      
-    
-    nomatch = True
-    if len(resultset) > 0:
-      nomatch = False
-    resultset.prefetch_related('grad')
-    
-    queries_without_page = request.GET.copy()
+class ProfilesIndexView(FormMixin, ListView):
+  paginate_by = 25
+  template_name = 'profiles/profiles.html'
+  queryset = Alum.objects.prefetch_related('grad').all()
+  form_class = SearchForm
+
+  def get_queryset(self, **kwargs):
+    if self.request.GET.has_key('filter'):
+      used_filter = {str(self.request.GET.get('filter'))+'__istartswith' : self.request.GET.get('query')}
+      query = Alum.objects.prefetch_related('grad').filter(**(used_filter))
+      return query
+    else: 
+      return Alum.objects.prefetch_related('grad').all()
+
+  def get_context_data(self, **kwargs):
+    context = super(ProfilesIndexView, self).get_context_data(**kwargs)
+    form_class = self.get_form_class()
+    context['form'] = form_class
+    context['total_results'] = self.queryset.count()
+    context['previous_query'] = self.request.GET.get('query')
+    context['request_count'] = ProfileApplication.objects.filter(status='P').count()
+    queries_without_page = self.request.GET.copy()
     if queries_without_page.has_key('page'):
-      del queries_without_page['page']
-    if queries_without_page.has_key('active_only'):
-      del queries_without_page['active_only']
-    total = resultset.count
-    paginator = Paginator(resultset, 50)
-    try: page = int(request.GET.get("page", '1'))
-    except ValueError: page = 1
+        del queries_without_page['page']
+    context['query_params'] = queries_without_page
+    return context
 
-    try:
-        resultset = paginator.page(page)
-    except (InvalidPage, EmptyPage):
-        resultset = paginator.page(paginator.num_pages)
-    return render(request, 'admin/profiles.html', {'title': 'Alumni Profiles', 'total':total, 'active_only':active_only, 'query_params':queries_without_page, 'filters':filters, 'form':form, 'resultset':resultset, 'filter':filter, 'nomatch':nomatch})
-  else:    
-    return render(request, 'admin/profiles.html', {'title': 'Alumni Profiles', 'filters':filters, 'form':form})
+  def get_form_class(self):
+    form_class = SearchForm()
+    if self.request.GET.has_key('query'):
+      form_class = SearchForm(self.request.GET)
+    return form_class
+
+  def form_valid(self, form, **kwargs):
+    return super(ProfilesIndexView, self).form_valid(form)
+
+  def form_invalid(self, form, **kwargs):
+    return super(ProfilesIndexView, self).form_invalid(form)
 
 @login_required(login_url='/login')
 def add_csv(request):
@@ -273,7 +261,7 @@ def profile_details(request):
         })
       except:
         residence = ResidenceForm()
-      return render(request, 'admin/profile_details.html', {'photo':photo, 'name':name, 'alum':alum, 'info':info, 'residence':residence, 'hometown':hometown, 'business':business})
+      return render(request, 'profiles/profile_details.html', {'photo':photo, 'name':name, 'alum':alum, 'info':info, 'residence':residence, 'hometown':hometown, 'business':business})
   return redirect('/admin')
   
   
