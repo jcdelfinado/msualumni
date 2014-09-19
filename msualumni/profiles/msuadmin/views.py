@@ -20,6 +20,41 @@ class RequestsListView(ListView):
   paginate_by = 25
   template_name = 'profiles/profile_requests.html'
 
+def commit_approval(request):
+  context = RequestContext(request)
+  try:
+    if request.method == 'POST':
+      applicant_id = request.POST.get('applicant_id')
+      action = request.POST.get('action_taken')
+      if action == 'approve':
+        applicant = ProfileApplication.objects.get(id=applicant_id)
+        id = generate_id(applicant.year)
+        new_alum = Alum(alumni_id = id,
+                    first_name=applicant.first_name,
+                    last_name=applicant.last_name,
+                    middle_name=applicant.middle_name,
+                    birthdate=applicant.birthdate)
+        new_alum.save()
+        created, program = Program.objects.get_or_create(name=applicant.program)
+        if created:
+          program.save()
+        new_grad = Graduation(
+                    alumni_id = id,
+                    program = program.id,
+                    year = applicant.year
+                    )
+        new_grad.save()
+        applicant.status = 'A'
+        applicant.save()
+        print 'ok'
+    return
+  except:
+    print sys.exc_info()[0], sys.exc_info()[1]
+  return redirect('/')
+
+
+
+
 class ProfilesIndexView(FormMixin, ListView):
   paginate_by = 25
   template_name = 'profiles/profiles.html'

@@ -6,6 +6,7 @@ from views import *
 urlpatterns = patterns (
     url(r'^$', ProfilesIndexView.as_view()),
     url(r'^requests$', RequestsListView.as_view()),
+    url(r'^requests/commit$', commit_approval),
     url(r'^add$', add_profile_view),
     url(r'^add_csv$', add_csv),
     url(r'^get_profile', get_profile),
