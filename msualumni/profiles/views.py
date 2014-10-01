@@ -4,85 +4,81 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 from django.template import Context
 from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
+from django.views.generic.list import ListView
+from django.views.generic.edit import FormMixin
 
-from alumniadmin.forms import AddProfileForm
+from alumniadmin.forms import AddProfileForm, SearchForm
+from alumniadmin.models import User
 from msualumni.utils.captcha import hash
-from msuadmin.views import generate_id
+from msuadmin.views import generate_id, ProfilesIndexView
 
 from models import Alum, Graduation, Campus, Program, ProfileApplication
 from forms import SignUpForm, ProfileRequestForm
 import sys
-# Create your views here.
 
-class ProfileRequestView(CreateView):
+class ProfileDetailView(FormMixin, DetailView):
+  template_name = 'profiles/profile_page.html'
+  context_object_name = 'profile'
+  model = Alum
+  slug_field= 'alumni_id'
+  form_class = SearchForm
+
+  def get_context_data(self, **kwargs):
+    context = super(ProfileDetailView, self).get_context_data(**kwargs)
+    form_class = self.get_form_class()
+    context['form'] = form_class
+    return context
+
+  def get_form_class(self):
+    form_class = SearchForm()
+    if self.request.GET.has_key('query'):
+      form_class = SearchForm(self.request.GET)
+    return form_class
+
+class ProfileIndex(ProfilesIndexView):
+  def get_queryset(self, **kwargs):
+      if self.request.GET.has_key('filter'):
+        used_filter = {str(self.request.GET.get('filter'))+'__istartswith' : self.request.GET.get('query')}
+        query = Alum.objects.prefetch_related('grad').filter(**(used_filter))
+        return query
+      else: 
+        return Alum.objects.none()
+
+class ProfileRequest(CreateView):
   template_name = 'registration/profile_request_form.html'
   model = ProfileApplication
   form_class = ProfileRequestForm
   success_url = '/profiles/request/success'
   captcha_error = False
   
+
   def form_valid(self, form):
     if int(hash(self.request.POST['captcha'])) == int(self.request.POST['captchaHash']):
-      return super(ProfileRequestView, self).form_valid(form)
+      return super(ProfileRequest, self).form_valid(form)
     self.captcha_error = True
     return self.form_invalid(form)
 
   def get_context_data(self, **kwargs):
-    context = super(ProfileRequestView, self).get_context_data(**kwargs)
+    context = super(ProfileRequest, self).get_context_data(**kwargs)
     if self.captcha_error:
       context['errors'] = ["That's not the right code!"]
     return context
+
+  def get_success_url(self):
+    print self.object.id
+    context = Context({'applicant' : self.object})
+    try:
+      self.object.send_email(
+        subject = "MSU Alumni Profile Request",
+        context = context,
+        from_email = 'jerico.delfinado@gmail.com',
+        templates = {'html':'email_request.html', 'plaintext':'email_request.txt'}
+        )
+    except:
+      raise
+    return self.success_url
   
-def profile_request(request):
-  messages = []
-  errors = []
-
-  form = ProfileRequestForm()
-  if request.method == 'POST':
-    print 'POST'
-    print hash(request.POST['captcha'])
-    print request.POST['captchaHash']
-    print hash(request.POST['captcha']) == request.POST['captchaHash']
-    form = ProfileRequestForm(request.POST)  
-    if int(hash(request.POST['captcha'])) == int(request.POST['captchaHash']):
-         
-      print form.is_valid()
-      print form.cleaned_data
-      year = form.cleaned_data['year'].year
-      full_id = generate_id(year)
-      while Alum.objects.filter(alumni_id=full_id).exists():
-        full_id = generate_id(year)
-
-      alum = Alum(alumni_id=full_id, 
-        first_name=form.cleaned_data['first_name'], 
-        last_name=form.cleaned_data['last_name'], 
-        middle_name=form.cleaned_data['middle_name'],
-        status='P',
-        is_active = False)
-      alum.save()
-      
-      #campus, created = Campus.objects.get_or_create(name=form.cleaned_data['campus'])
-      
-      program, created = Program.objects.get_or_create(name=form.cleaned_data['program'])
-      grad = Graduation(
-          alumni_id = alum.alumni_id,
-          program_id = program.id,
-          year = year,
-          month = form.cleaned_data['year'].month
-      )
-      grad.save()
-      try:
-        send_email(alum, grad, form.cleaned_data['email'])
-      except:
-        print sys.exc_info()[0], sys.exc_info()[1]
-      #print "Your request was successfully sent. An email was also sent to <strong>"+ form.cleaned_data['email'] +"</strong> for your reference."
-      messages.append("Your request was successfully sent. An email was also sent to "+ form.cleaned_data['email'] +" for your reference.")
-      #return render_to_response("success_alert.html", {'msg' : msg}, context)
-    else:      
-      errors.append("That's not the right code!")
-      #return render_to_response("error_alert.html", {'msg' : msg}, context)
-  return render(request, 'registration/profile_request_form.html', {'form':form, 'messages':messages, 'errors':errors})
-
 def send_email(alum, grad, email):
 
   plaintext = get_template('email_request.txt')
@@ -101,15 +97,6 @@ def send_email(alum, grad, email):
   msg.attach_alternative(html_content, "text/html")
   msg.send()
 
-
-def register(request):
-  
-  if request.method == 'POST':
-    form = AddProfileForm(request.POST)
-      
-  form = AddProfileForm()
-  return render(request, 'portal/register.html', {'form' : form})
-  
 def signup(request):
   
   if request.method == 'POST':

@@ -6,7 +6,9 @@
 {% block header %}
 	<header style="background: url({% static 'images/slide1.jpg' %})">
 		<div class="container">
-			{% include 'simple_search.html' %}
+			{% if user.is_authenticated %}
+			{% include 'min_search.html' %}
+			{% endif %}
 			<h1>
 				Alumni Directory
 			</h1>
@@ -18,13 +20,21 @@
 {% endblock header %}
 
 {% block content %}
-	<div class="container">
+	<div class="container" style="min-height:475px">
 		{% if user.is_authenticated %}
 			<div class="col-md-3">
-				
+			<h3>{% lorem 4 w %}</h3>
+			{% lorem 1 p %}			
 			</div>
-			<div class="col-md-9">
-			{% include 'results_table.html' %}
+			<div class="col-md-6">
+			{% include 'results_list.html' %}
+			</div>
+			<div class="col-md-3">
+			<h4>News Updates</h4>
+				<small>{% lorem 24 w %}</small>
+			<hr></hr>
+			<h4>Twitter Updates</h4>
+				<small>{% lorem 8 w %}</small>
 			</div>
 		{% else %}
 			<div class="col-md-4">

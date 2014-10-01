@@ -1,0 +1,16 @@
+<div class="dropdown">
+  <button class="btn btn-sm bdropdown-toggle" type="button" id="action_taken" data-toggle="dropdown">
+    Choose Action
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu" aria-labelledby="action_taken">
+    {% if user.is_superuser %}
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:commit('approve')">Approve</a></li>
+    {% else %}
+      <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:commit('recommend')">Recommend Approval</a></li>
+    {% endif %}
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ask more info</a></li>
+    <li role="presentation" class="divider"></li>
+    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
+  </ul>
+</div>

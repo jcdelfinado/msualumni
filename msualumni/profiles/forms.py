@@ -65,7 +65,7 @@ class AlumGraduationForm(forms.Form):
   year = forms.DateField(label="Date", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'month', 'class':'date input-sm'}))
   
 class ProfileRequestForm(forms.ModelForm):
-  captcha = forms.CharField(label="Just to prove you're human", max_length=5, widget=forms.TextInput(attrs={'id':'captcha_field', 'placeholder':"Enter the code above",}))
+  captcha = forms.CharField(label="Just to prove you're human", max_length=6, widget=forms.TextInput(attrs={'id':'captcha_field', 'placeholder':"Enter the code above",}))
   captchaHash = forms.IntegerField(widget=forms.HiddenInput())
 
   class Meta:

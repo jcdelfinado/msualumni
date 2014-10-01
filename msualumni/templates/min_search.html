@@ -1,0 +1,21 @@
+{% load bootstrap3 %}
+<form class="form-search" style="float:right; padding-top:24px; width:70%" id="search">
+	<div class="input-group">
+		<div class="input-group-addon">
+			<select id="item_search_filters" name="filter" type="radio" >
+				<option value="alumni_id" {% ifequal filter 'alumni_id' %} selected {% endifequal %}/>ID Number
+				<option value="last_name" {% ifequal filter 'last_name' %} selected {% endifequal %}/>Last Name
+				<option value="first_name" {% ifequal filter 'first_name' %} selected {% endifequal %}/>First Name
+			</select>      
+		</div>
+    
+    	{% bootstrap_field form.query %}
+		<div class="input-group-btn">
+  
+        <button class="btn btn-success" id="go">
+          <span class="glyphicon glyphicon-search"></span>
+        </button>
+		</div>
+    
+	</div><!-- /btn-group -->
+</form>

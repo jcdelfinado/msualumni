@@ -8,7 +8,7 @@
   MSU Alumni Web Portal
 </h1>
 <h4>
-  Hi {{ alum.first_name }} {{ alum.last_name }}
+  Hi {{ applicant.first_name }} {{ applicant.last_name }}
 </h4>
 <p>
 You have successfully submitted your request to create your alum profile at the MSU Alumni Web Portal. In order to create an account on the site,
@@ -18,10 +18,10 @@ your profile must first be approved by the MSU Office on Alumni Relations to ver
 You will receive another email concerning the action taken for your request.
 </p>
 
-<label>Name:</label>&nbsp;{{ alum.last_name }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})
-<label>Program:</label>&nbsp;{{ grad.program }}
-<label>Date:</label>&nbsp;{{ grad.month }}&nbsp;{{ grad.year }}
+<label>Name:</label>&nbsp;{{ applicant.last_name }},&nbsp;{{ applicant.first_name }}&nbsp;({{ applicant.middle_name }})
+<label>Program:</label>&nbsp;{{ applicant.program }}
+<label>Date:</label>&nbsp;{{ applicant.year }}
 
--MSU Office of Alumni Relations
+-MSU Office on Alumni Relations
 </body>
 </html>

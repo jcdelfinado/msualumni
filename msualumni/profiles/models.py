@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator
-
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
 
 CAMPUSES = (('MSU Marawi', 'MSU Marawi'),
             ('MSU Iligan (IIT)', 'MSU Iligan (IIT)'),
@@ -13,7 +14,8 @@ CAMPUSES = (('MSU Marawi', 'MSU Marawi'),
             ('MSU Buug', 'MSU Buug'), 
             ('MSU Maguindanao', 'MSU Maguindanao'), 
             ('MSU LNAC', 'MSU LNAC'))
-STATUS = (('A', 'Approved'),
+STATUS = (('V', 'Verified'),
+          ('A', 'Approved'),
           ('R', 'Rejected'),
           ('P', 'Pending'),)
 
@@ -118,8 +120,7 @@ class Alum(models.Model):
   residence = models.ForeignKey(Residence, null=True, blank=True)
   hometown = models.ForeignKey(City, null=True, blank=True)
   business_address = models.ForeignKey(BusinessAddress, null=True, blank=True)
-  pic = models.ImageField(upload_to='profiles/', default='/media/profiles/no-pic.png')
-  status = models.CharField(choices=STATUS, max_length=1, default='P')
+  pic = models.ImageField(upload_to='/profiles/', default='/media/profiles/no-pic.png')
   date_created = models.DateTimeField(auto_now_add=True)
   date_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
   is_active = models.BooleanField(default=False)
@@ -133,6 +134,26 @@ class Alum(models.Model):
     """
     full_name = u'%s %s'(self.first_name, self.last_name)
     return full_name.strip()
+
+  def send_email(self, subject, context, templates, from_email=None):
+    if self.email:
+      try:
+        html = get_template(templates['html'])
+        plaintext = get_template(templates['plaintext'])
+      except KeyError:
+        raise
+
+      plaintext_content = plaintext.render(context)
+      html_content = html.render(context)
+      try:
+        email = EmailMultiAlternatives(subject, html_content, from_email, [self.email])
+        email.attach_alternative(plaintext_content, 'text/plaintext')
+        email.send()
+      except:
+        raise
+    else:
+      print "No email set!"
+
     
   class Meta:
     db_table='alum'
@@ -218,10 +239,31 @@ class ProfileApplication(models.Model):
   email = models.EmailField(unique=True)
   mobile = models.CharField(max_length=12, null=True, blank=True)
   birthdate = models.DateField(null=True, blank=True)
-  status = models.CharField(choices=STATUS, max_length=1, default='P')
   program = models.CharField(max_length=64)
   campus = models.CharField(choices=CAMPUSES, max_length=64)
   year = models.PositiveIntegerField(validators=[MinValueValidator(1963)])
+  photo = models.ImageField(upload_to='applications/', default='/media/profiles/no-pic.png')
+  status = models.CharField(choices=STATUS, max_length=1, default='P')
+  #verified_by = models.ForeignKey(adminmodels.User)
+
+  def send_email(self, subject, context, templates, from_email=None):
+    if self.email:
+      try:
+        html = get_template(templates['html'])
+        plaintext = get_template(templates['plaintext'])
+      except KeyError:
+        raise
+
+      plaintext_content = plaintext.render(context)
+      html_content = html.render(context)
+      try:
+        email = EmailMultiAlternatives(subject, html_content, from_email, [self.email])
+        email.attach_alternative(plaintext_content, 'text/plaintext')
+        email.send()
+      except:
+        raise
+    else:
+      print "No email set!"
 
   def __unicode__(self):
     return u'%s %s' % (self.first_name, self.last_name)

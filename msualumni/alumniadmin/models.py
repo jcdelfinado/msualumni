@@ -90,7 +90,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     return self.name
   
   def get_absolute_url(self):
-    return "/users/%s/" % urlquote(self.username)
+    if self.alumni_id:
+      return "/users/%s/" % urlquote(self.alumni_id)
+    return "/users/null"
   
   def get_full_name(self):
     """

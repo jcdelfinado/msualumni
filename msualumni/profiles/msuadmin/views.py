@@ -16,9 +16,15 @@ from django.views.generic.edit import FormMixin
  
 
 class RequestsListView(ListView):
-  queryset = ProfileApplication.objects.filter(status='P')
   paginate_by = 25
   template_name = 'profiles/profile_requests.html'
+
+  def get_queryset(self):
+    queryset = ProfileApplication.objects.exclude(status='A').exclude(status='R')
+
+    if not self.request.user.is_superuser:
+      queryset = queryset.exclude(status='V')
+    return queryset
 
 def commit_approval(request):
   context = RequestContext(request)
@@ -26,8 +32,14 @@ def commit_approval(request):
     if request.method == 'POST':
       applicant_id = request.POST.get('applicant_id')
       action = request.POST.get('action_taken')
-      if action == 'approve':
-        applicant = ProfileApplication.objects.get(id=applicant_id)
+      applicant = ProfileApplication.objects.get(id=applicant_id)
+      
+      if action == 'recommend':
+        applicant.status = 'V'
+        applicant.save()
+        msg = "Recommended"
+        
+      if action == 'approve':        
         id = generate_id(applicant.year)
         new_alum = Alum(alumni_id = id,
                     first_name=applicant.first_name,
@@ -46,20 +58,19 @@ def commit_approval(request):
         new_grad.save()
         applicant.status = 'A'
         applicant.save()
-        print 'ok'
-    return
+        msg = "Approved"
+    return HttpResponse(msg)
   except:
     print sys.exc_info()[0], sys.exc_info()[1]
+    return HttpResponse("Oops!", code=400)
   return redirect('/')
-
-
-
 
 class ProfilesIndexView(FormMixin, ListView):
   paginate_by = 25
   template_name = 'profiles/profiles.html'
   queryset = Alum.objects.prefetch_related('grad').all()
   form_class = SearchForm
+  allow_empty = True
 
   def get_queryset(self, **kwargs):
     if self.request.GET.has_key('filter'):
@@ -74,6 +85,8 @@ class ProfilesIndexView(FormMixin, ListView):
     form_class = self.get_form_class()
     context['form'] = form_class
     context['total_results'] = self.queryset.count()
+    if context['total_results'] < 1 and self.request.GET.has_key('filter'):
+      context['alerts'] = 'Your search returned no results.'
     context['previous_query'] = self.request.GET.get('query')
     context['request_count'] = ProfileApplication.objects.filter(status='P').count()
     queries_without_page = self.request.GET.copy()

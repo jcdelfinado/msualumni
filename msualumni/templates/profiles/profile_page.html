@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block css %}
+	{{ block.super }}
+	<link href={% static 'css/profiles.css' %} rel="stylesheet" type="text/css">
+{% endblock css %}
+{% block header %}
+	<header style="background-image: url({% static 'images/slide1.jpg'%}); min-height:51px">
+	</header>
+{% endblock header %}
+
+{% block content %}
+	<div class="container">
+		<div class="col-md-3">
+			<div style="text-align:center">
+				<img class="profile-pic" src="/media/{{ profile.pic }}" height=80px/>
+				<h2>{{ profile.first_name }} {{ profile.middle_name|slice:":1" }}. {{ profile.last_name | title }}</h2>
+				{% for g in profile.grad.all %}
+					<h4 class="grey">{{ g.program }}, {{ g.year }}</h4>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock content %}

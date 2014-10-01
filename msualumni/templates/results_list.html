@@ -1,0 +1,63 @@
+{% load filters %}
+    <div class="well" style="min-height:360px">
+      {% for result in object_list %}
+        <div class="panel panel-default">
+          <div class="panel panel-body">
+            <td></td>
+            <strong>{{ result.last_name|upper }},&nbsp;{{ result.first_name }}&nbsp;{{ result.middle_name|slice:":1" }}.</strong>
+            <small>
+              {{ result.alumni_id }}; &nbsp;
+              {% for g in result.grad.all %}
+                {{ g.program }}, {{ g.year }};&nbsp;
+              {% endfor %}
+            </small>
+          </div>
+        </div>
+      {% empty %}
+        {% if alerts %}
+        <div class="alert alert-danger alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          <strong>Your search returned no results!</strong> Please double check your search entry.
+        </div>
+        {% endif %}
+        <h3>Type a search entry on the search bar.<br>
+        <small>You can choose from the filters. We use Alumni ID numbers by default</small></h3>
+      {% endfor %}
+    </div>
+  <div style="text-align: center; margin-left:auto">
+  {% if is_paginated %}
+    <ul class="pager">
+      {% if page_obj.has_previous %}
+        <li class="previous">
+          <a href= "?{{ query_params.urlencode }}&amp;page={{ page_obj.previous_page_number }}"><span class="glyphicon glyphicon-chevron-left"></span></a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href= "#"><span class="glyphicon glyphicon-chevron-left"></a>
+        </li>
+      {% endif %}
+      
+      {% for page in paginator.page_range %}
+        <a href= "?{{ query_params.urlencode }}&amp;page={{ page }}">
+          {% ifequal page page_obj.number %}
+            <b>{{ page }}</b>
+          {% else %}
+            {{ page }}
+          {% endifequal %}
+        </a>&nbsp;
+      {% endfor %}
+      
+      {% if page_obj.has_next %}
+        <li>
+          <a href= "?{{ query_params.urlencode }}&amp;page={{ page_obj.next_page_number }}"><span class="glyphicon glyphicon-chevron-right"></span></a>
+        </li>
+      {% else %}
+        <li class="disabled">
+          <a href= "#">&raquo;</a>
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+  </div>
+  <div id="profile">
+  </div>

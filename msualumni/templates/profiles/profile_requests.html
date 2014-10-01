@@ -23,73 +23,57 @@
 {% endblock side_nav %}
 
 {% block main_pane %}
-  <div class="dropdown">
-  <button class="btn btn-sm bdropdown-toggle" type="button" id="action_taken" data-toggle="dropdown">
-    Choose Action
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="action_taken">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:commit('approve')">Approve</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ask more info</a></li>
-    <li role="presentation" class="divider"></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
-  </ul>
-</div>
-  <table class="table table-hover">
-    <thead>
-      <th width="20px"><input type="checkbox" id="check-all"></th>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Degree, Year</th>
-      <th>Birthdate</th>
-      <th>Campus</th>
-    </thead>
-  {% for applicant in object_list %}
-    <tr id="{{ applicant.id }}" class="alum-row">
-    <td><input type="checkbox" class="selector" data-id={{ applicant.id }}></td>
-    <td>{{ applicant }} </td>
-    <td>{{ applicant.email }}</td>
-    <td>
-      {{ applicant.program }},&nbsp;{{ applicant.year }}
-    </td>
-    <td>
-      {{ applicant.birthdate }}
-    </td>
-    <td>
-      {{ applicant.campus }}
-    </td>
-    </tr>
-  {% empty %}
+  {% if object_list %}
+    <div class="progress">
+      <div id="bar" class="progress-bar progress-bar-striped active" role="progressbar" data-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+      </div>
+    </div>
+    {% include 'profiles/approval_actions.html' %}  
+    <table class="table table-hover">
+      <thead>
+        <th width="20px"><input type="checkbox" id="check-all"></th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Degree, Year</th>
+        <th>Birthdate</th>
+        <th>Campus</th>
+        <th>Status</th>
+      </thead>
+    {% for applicant in object_list %}
+      <tr id="{{ applicant.id }}" class="alum-row">
+      <td><input type="checkbox" class="selector" data-id={{ applicant.id }}></td>
+      <td>{{ applicant }} </td>
+      <td>{{ applicant.email }}</td>
+      <td>
+        {{ applicant.program }},&nbsp;{{ applicant.year }}
+      </td>
+      <td>
+        {{ applicant.birthdate }}
+      </td>
+      <td>
+        {{ applicant.campus }}
+      </td>
+      <td>
+        {% if applicant.status == 'P' %}
+          <label class="label label-warning">Pending</label>
+        {% elif applicant.status == 'V'  %}
+          <label class="label label-success">Verified</label>
+        {% endif %}
+      </td>
+      </tr>
+    {% endfor %}
+    </table>
+    
+    <div id="profile"></div>
+  {% else %}
     <div class="jumbotron">
       <h2>There are no requests to approve.</h2>
       <h2><small>Check again later.</small></h2>
     </div>
-  {% endfor %}
-  </table>
-  <div class="dropdown">
-  <button class="btn btn-sm bdropdown-toggle" type="button" id="action_taken" data-toggle="dropdown">
-    Choose Action
-    <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu" aria-labelledby="action_taken">
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Approve</a></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ask more info</a></li>
-    <li role="presentation" class="divider"></li>
-    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
-  </ul>
-</div>
-  <div id="profile"></div>
+  {% endif %}
 {% endblock main_pane %}
 
 {% block scripts %}
   <script src={% static 'js/requests.js' %} type="text/javascript"></script>
-  <script type="text/javascript">
-    $('#check-all').click(function(){
-      $('.selector').prop('checked', this.checked);
-    })
-    $('.selector').click(function(){
-      var check = ($('.selector').filter(':checked').length == $('.selector').length);
-      $('#check-all').prop('checked', check);
-    })
-  </script>
+  <script src={% static 'js/checkboxes.js' %} type="text/javascript"></script>
 {% endblock scripts %}
