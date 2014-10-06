@@ -101,4 +101,3 @@ class ProfileRequestForm(forms.ModelForm):
     labels = {
       'program':'Course/Degree Graduated',
     }
-

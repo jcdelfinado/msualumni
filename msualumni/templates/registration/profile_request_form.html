@@ -54,12 +54,12 @@
 {% block content %}
   <div class="container">
   <div class="col-sm-4">
-    {% for msg in form.error_messages %}
+    {% if form.errors %}
       <div class="alert alert-danger alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <strong>Oops!</strong> {{ msg }}
+        <strong>Oops!</strong> Something was wrong with your application. Please review your entries.
       </div>
-    {% endfor %}
+    {% endif %}
     {% for msg in messages %}
       <div class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>

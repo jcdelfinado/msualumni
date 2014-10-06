@@ -88,7 +88,7 @@ class ProfilesIndexView(MSUAdminMixin, ProfileIndex):
 
 
 class AdvancedSearch(ProfilesIndexView):
-  template_name = 'profiles/advanced_search.html'
+  template_name = 'profiles/client_advanced_search.html'
   form_class = FiltersForm
 
   def get_form_class(self):
@@ -367,8 +367,7 @@ def save_profile_details(request):
     except:
       print "errors here"
     if info.is_valid():
-    
-      "d valid form"
+
       alum.birthdate = info.cleaned_data['birthdate']
       alum.gender = info.cleaned_data['gender']
       alum.citizenship = info.cleaned_data['citizenship']

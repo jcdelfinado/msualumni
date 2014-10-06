@@ -74,8 +74,8 @@ class City(models.Model):
 class Residence(models.Model):
 
   
-  street = models.CharField(max_length=32)
-  barangay = models.CharField(max_length=32)
+  street = models.CharField(max_length=64)
+  barangay = models.CharField(max_length=64)
   city = models.ForeignKey(City)
   
   def __unicode__(self):
@@ -245,7 +245,7 @@ class ProfileApplication(models.Model):
   program = models.CharField(max_length=64)
   campus = models.CharField(choices=CAMPUSES, max_length=64)
   year = models.PositiveIntegerField(validators=[MinValueValidator(1963)])
-  photo = models.ImageField(upload_to='/media/applications/', default='/media/profiles/no-pic.png')
+  photo = models.ImageField(upload_to='applications/', default='/media/profiles/no-pic.png')
   status = models.CharField(choices=STATUS, max_length=1, default='P')
   #verified_by = models.ForeignKey(adminmodels.User)
 

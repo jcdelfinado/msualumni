@@ -24,7 +24,8 @@
 		{% if user.is_authenticated %}
 			<div class="col-md-3">
 			<h3>{% lorem 4 w %}</h3>
-			{% lorem 1 p %}			
+			{% lorem 1 p %}
+			<a href="/profiles/advanced">Do an advanced search.</a>
 			</div>
 			<div class="col-md-6">
 			{% include 'results_list.html' %}

@@ -14,14 +14,14 @@ class FiltersForm(forms.Form):
   program = forms.CharField(required=False, max_length=64, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Program', 'name':'grad__program', 'class':'input-sm advanced'}))
   college = forms.CharField(required=False, max_length=64, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'College', 'name':'grad__college', 'class':'input-sm advanced'}))
   campus = forms.ChoiceField(required=False, label="", choices = CAMPUSES, widget=forms.Select(attrs={'disabled':'', 'placeholder':'Campus', 'name':'grad__campus', 'class':'input-sm advanced', 'type':'radio'}))
-  hometown_city = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Hometown City/Town', 'class':'input-sm advanced'}))
-  hometown_province = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Hometown Province/State', 'class':'input-sm advanced'}))
-  residence_city = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Residence City/Town', 'class':'input-sm advanced'}))
-  residence_province = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Residence Province/State', 'class':'input-sm advanced'}))
-  residence_country = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Residence Province/State', 'class':'input-sm advanced'}))
-  business_city = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Business City/Town', 'class':'input-sm advanced'}))
-  business_province = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Business Province/State', 'class':'input-sm advanced'}))
-  business_country = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Business Country', 'class':'input-sm advanced'}))
+  hometown_city = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Hometown City/Town', 'name':'hometown__city', 'class':'input-sm advanced'}))
+  hometown_province = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Hometown Province/State','name':'hometown__province',  'class':'input-sm advanced'}))
+  residence_city = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Residence City/Town', 'name':'residence__city__city', 'class':'input-sm advanced'}))
+  residence_province = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Residence Province/State','name':'residence__city__province', 'class':'input-sm advanced'}))
+  residence_country = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Residence Country','name':'residence__city__country', 'class':'input-sm advanced'}))
+  business_city = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Business City/Town', 'name':'business_address__city__city', 'class':'input-sm advanced'}))
+  business_province = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Business Province/State', 'name':'business_address__city__province', 'class':'input-sm advanced'}))
+  business_country = forms.CharField(required=False, max_length=32, label="", widget=forms.TextInput(attrs={'disabled':'', 'placeholder':'Business Country','name':'business_address__city__country',  'class':'input-sm advanced'}))
   
 
 class SearchForm(forms.Form):

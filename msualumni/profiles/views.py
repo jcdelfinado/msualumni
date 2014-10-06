@@ -8,7 +8,7 @@ from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
 from django.views.generic.edit import FormMixin, ProcessFormView, UpdateView
 
-from alumniadmin.forms import AddProfileForm, SearchForm
+from alumniadmin.forms import AddProfileForm, SearchForm, FiltersForm
 from alumniadmin.models import User
 from msualumni.utils.captcha import hash
 from braces import views as access
@@ -16,6 +16,51 @@ from braces import views as access
 from models import *
 from forms import *
 import sys
+
+
+class ProfileIndex(FormMixin, ListView):
+
+  paginate_by = 25
+  template_name = 'profiles/profiles.html'
+  queryset = Alum.objects.prefetch_related('grad').all()
+  form_class = SearchForm
+  allow_empty = True
+
+  def get_queryset(self, **kwargs):
+      if self.request.GET.has_key('filter'):
+        used_filter = {str(self.request.GET.get('filter'))+'__istartswith' : self.request.GET.get('query')}
+        query = Alum.objects.prefetch_related('grad').filter(**(used_filter))
+        return query
+      else: 
+        return Alum.objects.none()
+
+  def get_form_class(self):
+    form_class = SearchForm()
+    if self.request.GET.has_key('query'):
+      form_class = SearchForm(self.request.GET)
+    return form_class
+
+  def get_context_data(self, **kwargs):
+    context = super(ProfileIndex, self).get_context_data(**kwargs)
+    form_class = self.get_form_class()
+    context['form'] = form_class
+    context['total_results'] = self.object_list.count()
+    if context['total_results'] < 1 and self.request.GET.has_key('filter'):
+      context['alerts'] = 'Your search returned no results.'
+    context['previous_query'] = self.request.GET.get('query')
+    #context['request_count'] = ProfileApplication.objects.all().count() if self.request.user.is_superuser else ProfileApplication.objects.filter(status='P').count()
+    queries_without_page = self.request.GET.copy()
+    if queries_without_page.has_key('page'):
+        del queries_without_page['page']
+    context['query_params'] = queries_without_page
+    return context
+
+  def form_valid(self, form, **kwargs):
+    return super(ProfilesIndexView, self).form_valid(form)
+
+  def form_invalid(self, form, **kwargs):
+    return super(ProfilesIndexView, self).form_invalid(form)
+
 
 class ProfileDetailView(UpdateView):
   template_name = 'profiles/profile_page.html'
@@ -70,6 +115,23 @@ class ProfileDetailView(UpdateView):
     context['photo'] = PhotoForm()
     context['form'] = EditableInfoForm(instance=self.object)
     return context
+
+class AdvancedSearch(ProfileIndex):
+  template_name = 'profiles/client_advanced_search.html'
+  form_class = FiltersForm
+
+  def get_form_class(self):
+    form_class = FiltersForm()
+    return form_class
+
+  def get_queryset(self):
+    used_filter = self.request.GET.dict()
+    mod_filter = {}
+    for key, value in used_filter.iteritems():
+      mod_filter[key+'__istartswith'] = value
+    queryset = Alum.objects.select_related('grad').filter(**(mod_filter))
+    print queryset
+    return queryset
 
 class ProfileUpdateView(access.UserPassesTestMixin, UpdateView):
   template_name = 'profiles/profile_page.html'
@@ -214,48 +276,6 @@ def save_profile_details(request):
       print "invalid form"
   return redirect('/')
 
-class ProfileIndex(FormMixin, ListView):
-
-  paginate_by = 25
-  template_name = 'profiles/profiles.html'
-  queryset = Alum.objects.prefetch_related('grad').all()
-  form_class = SearchForm
-  allow_empty = True
-
-  def get_queryset(self, **kwargs):
-      if self.request.GET.has_key('filter'):
-        used_filter = {str(self.request.GET.get('filter'))+'__istartswith' : self.request.GET.get('query')}
-        query = Alum.objects.prefetch_related('grad').filter(**(used_filter))
-        return query
-      else: 
-        return Alum.objects.none()
-
-  def get_form_class(self):
-    form_class = SearchForm()
-    if self.request.GET.has_key('query'):
-      form_class = SearchForm(self.request.GET)
-    return form_class
-
-  def get_context_data(self, **kwargs):
-    context = super(ProfileIndex, self).get_context_data(**kwargs)
-    form_class = self.get_form_class()
-    context['form'] = form_class
-    context['total_results'] = self.object_list.count()
-    if context['total_results'] < 1 and self.request.GET.has_key('filter'):
-      context['alerts'] = 'Your search returned no results.'
-    context['previous_query'] = self.request.GET.get('query')
-    #context['request_count'] = ProfileApplication.objects.all().count() if self.request.user.is_superuser else ProfileApplication.objects.filter(status='P').count()
-    queries_without_page = self.request.GET.copy()
-    if queries_without_page.has_key('page'):
-        del queries_without_page['page']
-    context['query_params'] = queries_without_page
-    return context
-
-  def form_valid(self, form, **kwargs):
-    return super(ProfilesIndexView, self).form_valid(form)
-
-  def form_invalid(self, form, **kwargs):
-    return super(ProfilesIndexView, self).form_invalid(form)
 
 class ProfileRequest(CreateView):
   template_name = 'registration/profile_request_form.html'
@@ -263,18 +283,15 @@ class ProfileRequest(CreateView):
   form_class = ProfileRequestForm
   success_url = '/profiles/request/success'
   captcha_error = False
-  
 
   def form_valid(self, form):
     if int(hash(self.request.POST['captcha'])) == int(self.request.POST['captchaHash']):
       return super(ProfileRequest, self).form_valid(form)
-    self.captcha_error = True
+    form.errors['captcha'] = "That's not the right code!"
     return self.form_invalid(form)
 
   def get_context_data(self, **kwargs):
     context = super(ProfileRequest, self).get_context_data(**kwargs)
-    if self.captcha_error:
-      context['errors'] = ["That's not the right code!"]
     return context
 
   def get_success_url(self):

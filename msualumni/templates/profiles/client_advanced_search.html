@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+  MSU Alumni Admin - Profiles
+{% endblock title %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <h1>
+        Advanced Searching
+      </h1>
+      <a href="/admin/profiles">
+          <span class="glyphicon glyphicon-user"></span>
+          Back to Profiles
+      </a>
+    </div>
+  </header>
+{% endblock header %}
+{% block content %}
+  <div class="container-fluid"  style="min-height:420px">
+    <div class="col-md-3">
+      <form autocomplete="on" method="get" action="/profiles/advanced">
+      <table width="100%">
+          <tr><td></td><td><strong>Full Name</strong><br></td></tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_first_name">
+            </td>
+            <td>
+              {% bootstrap_field form.first_name %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_middle_name">
+            </td>
+            <td>
+              {% bootstrap_field form.middle_name %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_last_name">
+            </td>
+            <td>
+              {% bootstrap_field form.last_name %}
+            </td>
+          </tr>
+          <tr><td></td><td><strong>Graduation</strong><br></td></tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_class_year">
+            </td>
+            <td>
+              {% bootstrap_field form.class_year %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_program">
+            </td>
+            <td>
+              {% bootstrap_field form.program %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_college">
+            </td>
+            <td>
+              {% bootstrap_field form.college %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_campus">
+            </td>
+            <td>
+              {% bootstrap_field form.campus %}
+            </td>
+          </tr>
+          <tr><td></td><td><strong>Hometown</strong><br></td></tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_hometown_city">
+            </td>
+            <td>
+              {% bootstrap_field form.hometown_city %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_hometown_province">
+            </td>
+            <td>
+              {% bootstrap_field form.hometown_province %}
+            </td>
+          </tr>
+        </table>          
+        
+        <a href="#" id="more">Show more</a>
+          
+        <div id="more_filters" style="display:none">
+          <table width="100%" style="margin:0">
+            <tr><td></td><td><strong>Residence</strong><br></td></tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_residence_city">
+              </td>
+              <td>
+                {% bootstrap_field form.residence_city %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_residence_province">
+              </td>
+              <td>
+                {% bootstrap_field form.residence_province %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_residence_country">
+              </td>
+              <td>
+                {% bootstrap_field form.residence_country %}
+              </td>
+            </tr>
+            <tr><td></td><td><strong>Business Address</strong><br></td></tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_business_city">
+              </td>
+              <td>
+                {% bootstrap_field form.business_city %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_business_province">
+              </td>
+              <td>
+                {% bootstrap_field form.business_province %}
+              </td>
+            </tr>
+            <tr>
+              <td class="ticker">
+                <input type="checkbox" class="filter_pick" data-toggle="#id_business_country">
+              </td>
+              <td>
+                {% bootstrap_field form.business_country %}
+              </td>
+            </tr>
+          </table>
+        </div>
+        <br>
+        <button class="btn btn-primary col-md-12">Let's Go!</button>
+      </form>
+    </div>
+    <div class="col-md-9" >
+      {% if not object_list %}
+      <h4>
+        Choose your filters from the right.<br>
+        <small>Click the checkbox to enable the filter and type in your query</small>
+      </h4>
+      {% else %}
+        {% include 'results_list.html' %}
+      {% endif %}
+    </div>
+  </div>
+  <!-- <div class="col-sm-4">
+    <div id="profile">
+    </div>
+  </div> -->
+{% endblock content %}
+
+{% block scripts %}
+  <script type="text/javascript" src="/static/js/simple_search.js"></script>
+  <script type="text/javascript" src="{% static 'js/admin.js' %}"></script>
+{% endblock scripts %}
