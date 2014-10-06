@@ -6,89 +6,122 @@ from django.template import Context
 from django.views.generic.edit import CreateView
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-from django.views.generic.edit import FormMixin, UpdateView
+from django.views.generic.edit import FormMixin, ProcessFormView, UpdateView
 
 from alumniadmin.forms import AddProfileForm, SearchForm
 from alumniadmin.models import User
 from msualumni.utils.captcha import hash
+from braces import views as access
 
 from models import *
 from forms import *
 import sys
 
-class ProfileDetailView(FormMixin, DetailView):
+class ProfileDetailView(UpdateView):
   template_name = 'profiles/profile_page.html'
-  context_object_name = 'profile'
+  context_object_name = 'alum'
   model = Alum
   slug_field= 'alumni_id'
-  form_class = SearchForm
+  form_class = EditableInfoForm
+
+  def get_object(self):
+    obj = Alum.objects.prefetch_related('grad').get(alumni_id=self.kwargs['slug'])
+    return obj
+
+  def post(self, *args, **kwargs):
+    print self.request.POST
+    if self.request.FILES.has_key('pic'):
+      form = PhotoForm(self.request.POST, self.request.FILES)
+      print form
+      print self.request.FILES['pic']
+      if form.is_valid():
+        alum = Alum.objects.get(alumni_id=self.request.POST.get('id'))
+        alum.pic = self.request.FILES['pic']
+        alum.save()
+    return super(ProfileDetailView, self).post(self, *args, **kwargs)
 
   def get_context_data(self, **kwargs):
     context = super(ProfileDetailView, self).get_context_data(**kwargs)
-    form_class = self.get_form_class()
-    context['form'] = form_class
-    return context
-
-  def get_form_class(self):
-    form_class = SearchForm()
-    if self.request.GET.has_key('query'):
-      form_class = SearchForm(self.request.GET)
-    return form_class
-
-class ProfileUpdateView(UpdateView):
-  template_name = 'profiles/profile_update.html'
-  form_class = EditableInfoForm
-  model = Alum
-  context_object_name = 'alum'
-
-  def get(self, request, **kwargs):
-    self.object = Alum.objects.get(alumni_id=self.request.GET.get('id'))
-    form_class = self.get_form_class()
-    form = self.get_form(form_class)
-    context = self.get_context_data(object=self.object, form=form)
-    return self.render_to_response(context)
-
-  def get_object(self):
-    obj = Alum.objects.get(alumni_id=self.request.GET.get('id'))
-    return obj
-
-  def get_context_data(self):
-    context = super(ProfileUpdateView, self).get_context_data()
-    alum = self.object
     try:
-      hometown_data = City.objects.get(id=alum.hometown_id)
-      context['hometown'] = HometownForm(initial={
-        'hometown_city' : hometown_data.city,
-        'hometown_zip' : hometown_data.zip,
-        'hometown_province' : hometown_data.province,
-        'hometown_country' : hometown_data.country
-      })        
-    except:
-      context['hometown'] = HometownForm()
-    try:
-      business_data = BusinessAddress.objects.select_related().get(id=alum.business_address_id)
+      business_data = BusinessAddress.objects.select_related('alum_set').get(id=self.object.business_address_id)
       context['business'] = BusinessForm(initial={
         'business_position': business_data.position,
         'business_company' : business_data.company,
-        'business_city' : business_data.city_id.city,
-        'business_zip' : business_data.city_id.zip,
-        'business_province' : business_data.city_id.province,
-        'business_country' : business_data.city_id.country
+        'business_city' : business_data.city.city,
+        'business_zip' : business_data.city.zip,
+        'business_province' : business_data.city.province,
+        'business_country' : business_data.city.country
       })
     except:
       context['business'] = BusinessForm()
     try:
-      residence_data = Residence.objects.select_related().get(id=alum.residence_id)
-      context['residence'] = ResidenceForm(initial={
-        'residence_street': residence_data.street,
-        'residence_barangay' : residence_data.barangay,
-        'residence_city' : residence_data.city.city,
-        'residence_zip' : residence_data.city.zip,
-        'residence_province' : residence_data.city.province,
-        'residence_country' : residence_data.city.country
-      })
+        residence_data = Residence.objects.select_related().get(id=self.object.residence_id)
+        context["residence"] = ResidenceForm(initial={
+          'residence_street': residence_data.street,
+          'residence_barangay' : residence_data.barangay,
+          'residence_city' : residence_data.city.city,
+          'residence_zip' : residence_data.city.zip,
+          'residence_province' : residence_data.city.province,
+          'residence_country' : residence_data.city.country
+        })
     except:
-        context['residence'] = ResidenceForm()
+      print sys.exc_info()[0], sys.exc_info()[1] 
+      context["residence"] = ResidenceForm()
+    context['photo'] = PhotoForm()
+    context['form'] = EditableInfoForm(instance=self.object)
+    return context
+
+class ProfileUpdateView(access.UserPassesTestMixin, UpdateView):
+  template_name = 'profiles/profile_page.html'
+  form_class = EditableInfoForm
+  model = Alum
+  context_object_name = 'alum'
+  login_url='/login'
+
+  def test_func(self, user):
+    return (user.alumni_id_id == self.kwargs['id'])
+
+  def get_object(self):
+    obj = Alum.objects.prefetch_related('grad').get(alumni_id=self.kwargs['id'])
+    return obj
+
+  def get_context_data(self, **kwargs):
+    context = super(ProfileUpdateView, self).get_context_data(**kwargs)
+    # alum = self.object
+    # try:
+    #   hometown_data = City.objects.get(id=alum.hometown_id)
+    #   context['hometown'] = HometownForm(initial={
+    #     'hometown_city' : hometown_data.city,
+    #     'hometown_zip' : hometown_data.zip,
+    #     'hometown_province' : hometown_data.province,
+    #     'hometown_country' : hometown_data.country
+    #   })        
+    # except:
+    #   context['hometown'] = HometownForm()
+    # try:
+    #   business_data = BusinessAddress.objects.select_related().get(id=alum.business_address_id)
+    #   context['business'] = BusinessForm(initial={
+    #     'business_position': business_data.position,
+    #     'business_company' : business_data.company,
+    #     'business_city' : business_data.city_id.city,
+    #     'business_zip' : business_data.city_id.zip,
+    #     'business_province' : business_data.city_id.province,
+    #     'business_country' : business_data.city_id.country
+    #   })
+    # except:
+    #   context['business'] = BusinessForm()
+    # try:
+    #   residence_data = Residence.objects.select_related().get(id=alum.residence_id)
+    #   context['residence'] = ResidenceForm(initial={
+    #     'residence_street': residence_data.street,
+    #     'residence_barangay' : residence_data.barangay,
+    #     'residence_city' : residence_data.city.city,
+    #     'residence_zip' : residence_data.city.zip,
+    #     'residence_province' : residence_data.city.province,
+    #     'residence_country' : residence_data.city.country
+    #   })
+    # except:
+    #     context['residence'] = ResidenceForm()
     return context
 
 def profile_update(request):

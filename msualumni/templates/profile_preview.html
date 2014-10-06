@@ -45,6 +45,7 @@
         {{ profile.birthdate }}<br>
       <strong>Gender: </strong>
         {{ profile.gender }}<br>
+    {% if user.is_staff %}
       <strong>Civil Status: </strong>
         {{ profile.civil_status }}<br>
       <strong>Citizenship </strong>
@@ -68,6 +69,9 @@
         {{ profile.residence.city }},&nbsp;
         {{ profile.residence.province }}
         </div>
+    {% else %}
+      <a href={% url 'profile-page' slug=profile.alumni_id|urlencode %}>View Full Profile</a>
+    {% endif %}
     </div>
   </div>
   </div>

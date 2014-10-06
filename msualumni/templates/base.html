@@ -54,7 +54,7 @@
               </a>
               <ul class="dropdown-menu">
                 {% if not user.is_staff %}
-                  <li><a href="/profiles/update?id={{user.alumni_id.alumni_id}}">Update my profile</a></li>
+                  <li><a href="/profiles/{{user.alumni_id.alumni_id}}">My Profile</a></li>
                 {% endif %}
                 <li><a href="/password/change">Account Settings</a></li> 
                 <li><a href="#">About the Developer</a></li> 

@@ -62,7 +62,7 @@ class City(models.Model):
   country = models.CharField(max_length=64,  default="Philippines")
   
   def __unicode__(self):
-    return u'%s at %s' % (self.city, self.province)
+    return u'%s, %s, %s' % (self.city, self.province, self.country)
   
   class Meta:
     db_table='city'
@@ -115,12 +115,12 @@ class Alum(models.Model):
   gender = models.CharField(max_length=6, null=True, blank=True)
   civil_status = models.CharField(max_length=8, null=True, blank=True)
   citizenship = models.CharField(max_length=32, null=True, blank=True)
-  tribe = models.ForeignKey(Tribe, null=True, blank=True)
-  religion = models.ForeignKey(Religion, null=True, blank=True)
+  tribe = models.CharField(max_length=128, null=True, blank=True)
+  religion = models.CharField(max_length=64, null=True, blank=True)
   residence = models.ForeignKey(Residence, null=True, blank=True)
   hometown = models.ForeignKey(City, null=True, blank=True)
   business_address = models.ForeignKey(BusinessAddress, null=True, blank=True)
-  pic = models.ImageField(upload_to='/media/profiles/', default='/media/profiles/no-pic.png')
+  pic = models.ImageField(upload_to='media/profiles/', default='/media/profiles/default.png')
   date_created = models.DateTimeField(auto_now_add=True)
   date_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
   is_active = models.BooleanField(default=False)
@@ -134,6 +134,9 @@ class Alum(models.Model):
     """
     full_name = u'%s %s'(self.first_name, self.last_name)
     return full_name.strip()
+
+  def get_absolute_url(self):
+    return "/profiles/"+self.alumni_id
 
   def send_email(self, subject, context, templates, from_email=None):
     if self.email:

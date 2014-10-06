@@ -1,24 +1,295 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
 {% load staticfiles %}
+
+{% block title %}
+MSU Alumni Web Portal - Update Profile
+{% endblock %}
+
 {% block css %}
-	{{ block.super }}
-	<link href={% static 'css/profiles.css' %} rel="stylesheet" type="text/css">
+  {{ block.super }}
+  <link href={% static 'css/profiles.css' %} rel="stylesheet" type="text/css">
 {% endblock css %}
+
+
 {% block header %}
-	<header style="background-image: url({% static 'images/slide1.jpg'%}); min-height:51px">
-	</header>
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <div class="col-md-2">
+      </div>
+      <div class="col-md-10">
+        <table style="margin-top:1%">
+          <tr>
+            <td>
+              <img src={{ alum.pic.url }} height="80px" class="profile-thumb pull-left"/>
+            </td>
+            <td style="padding-left:5%">
+              <h3>
+                {{ alum.last_name|upper }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})
+                {% ifequal user.alumni_id_id alum.alumni_id %}
+                <small>
+                  <br>
+                  <a href="#" data-toggle="modal" data-target="#photo_upload"><span class="glyphicon glyphicon-user"></span>&nbsp;Edit Profile Photo</a>
+                </small>
+                {% endifequal %}
+              </h3>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    {% ifequal user.alumni_id_id alum.alumni_id %}
+<div id="photo_upload" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <form method="POST" action="" enctype="multipart/form-data">
+      <div class="modal-body">
+          {% bootstrap_form photo %}
+          {% csrf_token %}
+          <input type="hidden" name="id" value={{ alum.alumni_id }}>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Upload</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+  {% endifequal %}
+  </header>
 {% endblock header %}
 
 {% block content %}
-	<div class="container">
-		<div class="col-md-3">
-			<div style="text-align:center">
-				<img class="profile-pic" src="/media/{{ profile.pic }}" height=80px/>
-				<h2>{{ profile.first_name }} {{ profile.middle_name|slice:":1" }}. {{ profile.last_name | title }}</h2>
-				{% for g in profile.grad.all %}
-					<h4 class="grey">{{ g.program }}, {{ g.year }}</h4>
-				{% endfor %}
-			</div>
-		</div>
-	</div>
+  <div class="container" style="min-height:480px">
+  <div class="col-md-2">
+    <ul class="nav nav-pills nav-stacked">
+      <li id="profile_tab" class="active"><a href="#">Profile</a></li>
+      <li id="contact_tab"><a href="#">Contact</a></li>
+    </ul> 
+  </div>
+
+  <div class="col-md-4">
+    {% for grad in alum.grad.all %}
+      <div class="well">
+        {{ grad.program }}, {{ grad.year }}<br>
+        {{ grad.campus }}
+      </div>
+    {% endfor %}    
+  </div>
+  
+  <div class="col-sm-4">
+    <div class="well">
+      <address id="business_address">
+        {% ifequal alum.business_address None %}
+          <h3><small>No Employment Data Specified</small></h3>
+        {% if user.alumni_id_id == alum.alumni_id %}
+          <a id="add_business" href="#">Add</a>
+        {% endif %}
+        {% else %}
+        <strong>
+          {{ alum.business_address.position }}
+        </strong> at 
+        <strong>
+          {{ alum.business_address.company }}
+        </strong><br>
+          {{ alum.business_address.city }}
+          {% ifequal user.alumni_id_id alum.alumni_id %}
+             <a id="add_business" href="#">Edit</a>
+          {% endifequal %} 
+        {% endifequal %}
+      </address>
+
+      <form id="business_address_form" method="POST" action="/admin/profiles/save_business" style="display:none">
+        {% csrf_token %}
+        {% bootstrap_form business %}
+        <button id="business_cancel" class="btn btn-default" href="javascript:toggle_business_address_form()" type="button">Cancel</button>
+        <button id="save_business" data-loading-text="Saving Details..." class="btn btn-primary" type="button">Save</button>
+      </form>
+    <hr>
+      <address id="residence">
+        {% ifequal alum.residence None %}
+          <h3><small>No Current Residence Specified</small></h3>
+          {% if user.alumni_id_id == alum.alumni_id %}
+            <a id="add_residence" href="#">Add</a>
+          {% endif %}
+        {% else %}
+        Lives in <strong>{{ alum.residence.city }}</strong>
+        {% if user.alumni_id_id == alum.alumni_id %}
+        <a href="#" id="add_residence">
+          Edit
+        </a>
+        {% endif %}
+        {% endifequal %}
+      </address>
+      <form id="residence_form" method="POST" action="/admin/profiles/save_business" style="display:none">
+        {% csrf_token %}
+        {% bootstrap_form residence %}
+        <button id="residence_cancel" class="btn btn-default" href="javascript:toggle_residence_form()" type="button">Cancel</button>
+        <button id="save_residence" data-loading-text="Saving Details..." class="btn btn-primary" type="button">Save</button>
+      </form>
+    </div>
+    <label>Hometown:</label>
+    <span>{{ alum.hometown }}</span><br>
+    <label>Birthdate:</label>
+    <span>{{ alum.birthdate }}</span><br>
+    <label>Tribe:</label>
+    <span>{{ alum.tribe }}</span><br>
+    <label>Gender:</label>
+    <span>
+      {% if alum.gender == 'M' %} Male {% endif %}
+      {% if alum.gender == 'F' %} Female {% endif %}
+      {% ifequal alum.gender None %} Unspecified {% endifequal %}
+    </span><br>
+    <fieldset>
+    <div id="editable">
+      {% if user.alumni_id_id == alum.alumni_id %}
+        <a href="#" id="toggle_editable">
+          Edit this section
+        </a><br>
+    {% endif %}
+      <label>Religion:</label>
+      <span>{{ alum.religion }}</span><br>
+      <label>Citizenship:</label>
+      <span>{{ alum.citizenship }}</span><br>
+      <label>Civil Status:</label>
+      <span>{{ alum.civil_status }}</span><br>
+    </div>
+    <form id="editable_form" method="POST" action="" style="display:none">
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <button id="editable_cancel" class="btn btn-default" href="javascript:toggle_editable_form()" type="button">Cancel</button>
+      <button data-loading-text="Saving Details..." class="btn btn-primary">Save</button>
+    </form>
+    </fieldset>
+    
+    
+  </div>  
+  </div>
 {% endblock content %}
+{% block scripts %}
+{{ block.super }}
+<script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
+<script type="text/javascript">
+
+function toggle_business_address_form(){
+  $('#business_address').slideToggle();
+  $('#business_address_form').slideToggle();
+  if ($('#add_business').css('display') == 'none')
+    $('#add_business').show()
+  else $('#add_business').hide()
+}
+function toggle_residence_form(){
+  $('#residence').slideToggle();
+  $('#residence_form').slideToggle();
+  if ($('#add_residence').css('display') == 'none')
+    $('#add_residence').show()
+  else $('#add_residence').hide()
+}
+function toggle_editable_form(){
+  $('#editable').slideToggle();
+  $('#editable_form').slideToggle();
+}
+$(document).ready(function(){
+  $('#business_cancel').on('click', function(){
+    toggle_business_address_form()
+  })
+  $('#add_business').on('click', function(){
+    toggle_business_address_form()
+  })
+  $('#residence_cancel').on('click', function(){
+    toggle_residence_form()
+  })
+  $('#add_residence').on('click', function(){
+    toggle_residence_form()
+  })
+  $('#editable_cancel').on('click', function(){
+    toggle_editable_form()
+  })
+  $('#toggle_editable').on('click', function(){
+    toggle_editable_form()
+  })
+  $('#save_business').on('click', function(){
+    
+    $('#business_address_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#business_address_form').valid()){
+      alert($.cookie("csrfmiddlewaretoken"))
+      $(this).button('loading')
+      $.post(
+        '/admin/profiles/save_business', 
+        {'business' : $('#business_address_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          $('#business_modal').modal('hide')
+          $('#message').html(msg)
+          $('.alert').removeClass('hidden')
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
+  
+  $('#save_residence').on('click', function(){
+    
+    $('#residence_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#residence_form').valid()){
+      $(this).button('loading')
+      $.post(
+        '/admin/profiles/save_residence', 
+        {'residence' : $('#residence_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          $('#residence_modal').modal('hide')
+          $('#message').html(msg)
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
+
+  $('#hometown_ok').on('click', function(){
+    
+    $('#hometown_form').validate({
+      errorClass:'text-danger',
+      errorElement:'span'
+    });
+    if ($('#hometown_form').valid()){
+      $(this).button('loading')
+      $.post(
+        'save_hometown', 
+        {'hometown' : $('#hometown_form').serialize(),
+        'id' : {{ alum.alumni_id }},
+        'csrfmiddlewaretoken' : csrftoken},
+        function(msg){
+          $('#hometown_modal').modal('hide')
+          $('#message').html(msg)
+          $('.alert').removeClass('hidden')
+          location.reload()
+        }
+      ).always(
+        $(this).button('reset')
+      );
+    }
+    else alert('Oops!') 
+  });
+  $('#save').on('click', function(){
+    $(this).button('loading')
+  });
+});
+</script>
+
+{% endblock scripts %}

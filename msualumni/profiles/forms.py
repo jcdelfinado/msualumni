@@ -11,9 +11,13 @@ class SignUpForm(forms.Form):
   confirm_password = forms.CharField(max_length=32, label="Confirm Password", widget=forms.PasswordInput(attrs={'placeholder':'Password (again)'}))
 
 
-class PhotoForm(forms.Form):
+class PhotoForm(forms.ModelForm):
 
-  photo = forms.ImageField(label="", required=False, widget=forms.FileInput(attrs={'class':'btn btn-default'}))
+  class Meta:
+    model = Alum
+    fields = ['pic']
+    widgets = {'pic':forms.FileInput(attrs={'class':'btn btn-default btn-sm'})}
+    labels = {'pic':''}
 
 class NameForm(forms.ModelForm):
 
@@ -21,12 +25,12 @@ class NameForm(forms.ModelForm):
     model = Alum
     fields = ['first_name', 'middle_name', 'last_name']
 
-class EditableInfoForm(forms.Form):
+class EditableInfoForm(forms.ModelForm):
 
-  tribe = forms.CharField(required=True, label="Tribe", max_length=32, widget=forms.TextInput(attrs={'placeholder':'Ethnic Group'}))
-  citizenship = forms.CharField(required=True, label="Nationality", max_length=32, widget=forms.TextInput(attrs={'placeholder':'Current citizenship'}))
-  religion = forms.CharField(required=True, label="Religion", max_length=54, widget=forms.TextInput(attrs={'placeholder':'Religious affiliation'}))
-
+  class Meta:
+    model = Alum
+    fields = ['citizenship', 'religion', 'civil_status']
+    
 class AlumInfoForm(forms.Form):
 
   birthdate = forms.DateField(required=False, label="Birth Date", widget=forms.DateInput(attrs={'type':'date', 'max':'2000-01-01'}))
@@ -47,12 +51,12 @@ class ResidenceForm(forms.Form):
   residence_country = forms.CharField(required=True, max_length=32, label="", widget=forms.TextInput(attrs={'placeholder':'Country', 'class':'input-sm'}))
   
 class BusinessForm(forms.Form):   
-  business_position = forms.CharField(required=False, max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Position', 'class':'input-sm'}))
-  business_company = forms.CharField(required=False, max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Company/Organization', 'class':'input-sm'}))
-  business_city = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'City/Town', 'class':'input-sm'}))
+  business_position = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Position', 'class':'input-sm'}))
+  business_company = forms.CharField(max_length=64, label="", widget=forms.TextInput(attrs={'placeholder':'Company/Organization', 'class':'input-sm'}))
+  business_city = forms.CharField(max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'City/Town', 'class':'input-sm'}))
   business_zip = forms.CharField(required=False, max_length=16,  label="", widget=forms.TextInput(attrs={'placeholder':'ZIP Code', 'class':'input-sm'}))
   business_province = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'Province/State', 'class':'input-sm'}))
-  business_country = forms.CharField(required=False, max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'Country', 'class':'input-sm'}))
+  business_country = forms.CharField(max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'Country', 'class':'input-sm'}))
   
 class HometownForm(forms.Form):
   hometown_city = forms.CharField(required=True, max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'City/Town', 'class':'input-sm'}))

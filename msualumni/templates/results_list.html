@@ -6,7 +6,6 @@
             <td></td>
             <strong>{{ result.last_name|upper }},&nbsp;{{ result.first_name }}&nbsp;{{ result.middle_name|slice:":1" }}.</strong>
             <small>
-              {{ result.alumni_id }}; &nbsp;
               {% for g in result.grad.all %}
                 {{ g.program }}, {{ g.year }};&nbsp;
               {% endfor %}

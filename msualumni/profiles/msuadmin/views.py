@@ -300,6 +300,8 @@ def save_business(request):
           zip = business_form.cleaned_data['business_zip'],
           country = business_form.cleaned_data['business_country']
         )
+      if created:
+        city.save()
       try:
         business, created = BusinessAddress.objects.get_or_create(
           position=business_form.cleaned_data['business_position'],
@@ -315,7 +317,6 @@ def save_business(request):
         business.province = business_form.cleaned_data['business_province']
         business.country = business_form.cleaned_data['business_country']
         business.save() 
-      
       alum.business_address_id = business.id
       alum.save()
       print "Update: Saved business address."
@@ -347,7 +348,8 @@ def save_residence(request):
         residence.street = residence_form.cleaned_data['residence_street']
         residence.barangay = residence_form.cleaned_data['residence_barangay']
         residence.city_id = city.id
-        residence.save()   
+        residence.save()
+        print sys.exc_info()[0], sys.exc_info()[1]   
       alum.residence_id = residence.id
       alum.save()
       return HttpResponse("Residence updated")
