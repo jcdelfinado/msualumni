@@ -146,8 +146,8 @@ class Alum(models.Model):
       plaintext_content = plaintext.render(context)
       html_content = html.render(context)
       try:
-        email = EmailMultiAlternatives(subject, html_content, from_email, [self.email])
-        email.attach_alternative(plaintext_content, 'text/plaintext')
+        email = EmailMultiAlternatives(subject, plaintext_content, from_email, [self.email])
+        email.attach_alternative(html_content, 'text/html')
         email.send()
       except:
         raise
@@ -257,8 +257,8 @@ class ProfileApplication(models.Model):
       plaintext_content = plaintext.render(context)
       html_content = html.render(context)
       try:
-        email = EmailMultiAlternatives(subject, html_content, from_email, [self.email])
-        email.attach_alternative(plaintext_content, 'text/plaintext')
+        email = EmailMultiAlternatives(subject, plaintext_content, from_email, [self.email])
+        email.attach_alternative(html_content, 'text/html')
         email.send()
       except:
         raise

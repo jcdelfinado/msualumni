@@ -24,8 +24,8 @@ def index(request):
 
 def send_activation(alum, user):
 
-  plaintext = get_template('email_activation.txt')
-  html = get_template('email_activation.html')
+  plaintext = get_template('emails/activation.txt')
+  html = get_template('emails/activation.html')
   params = Context({
     'activation_code' : user.activation_code,
     'user' : alum
@@ -33,7 +33,8 @@ def send_activation(alum, user):
   text_content = plaintext.render(params)
   html_content = html.render(params)
   subject = "MSU Alumni Profile Activation"
-  from_email = "jerico.delfinado@gmail.com"
+  from msualumni.settings import EMAIL_HOST_USER
+  from_email = EMAIL_HOST_USER
   to = user.email
   
   msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
@@ -49,6 +50,7 @@ def signup(request):
       id = form.cleaned_data['alumni_id']      
       try:
         alum = Alum.objects.get(alumni_id = id)
+        print alum
         user = User.objects.create_inactive_user(
           alumni_id = alum,
           email = form.cleaned_data['email'],
@@ -58,6 +60,7 @@ def signup(request):
         return render(request, 'portal/email_sent.html')
       except IntegrityError:
         errors = "That email address is already in use."
+        print sys.exc_info()[0], sys.exc_info()[1]
         return render(request, 'portal/signup.html', {'form':form, 'errors':errors})
       except:
         print "Unexpected error:", sys.exc_info()[0], sys.exc_info()[1]

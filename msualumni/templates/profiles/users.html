@@ -8,18 +8,16 @@
 {% block main_pane %}
 <table class="table table-hover">
 	<thead>
-		<th>Alumni ID</th>
+		<th>Short Name</th>
 		<th>Email</th>
-		<th>Group</th>
 		<th>Status</th>
 		<th>Date Joined</th>
 	</thead>
 	<tbody>
 		{% for user in object_list %}
 			<tr>
-				<td>{{ user.alumni_id }}</td>
+				<td>{{ user.get_short_name }}</td>
 				<td>{{ user.email }}</td>
-				<td>{{ user.groups.all.0 }}</td>
 				<td>
 		            {% if user.is_active %}
 		            <span class="label label-success">Active</span>

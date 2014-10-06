@@ -13,6 +13,7 @@
         <h4>Do more. Sign in with your account</h4>
         <form method="post" action="/login/">
           {% csrf_token %}
+          <input type="hidden" name="next" value="{{ next }}" />
           {% bootstrap_form form %}
           <button class="btn btn-danger" style="width:100%">
             Sign In

@@ -41,6 +41,7 @@
 		</small>
 		</h4>
 		<a href="/admin/news/edit/{{ article.id }}">Edit this Article</a>
+		{% include 'delete_confirmation.html' %}
 		<br>	
 		{{ article.content | safe }}
 	</div>

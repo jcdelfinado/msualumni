@@ -5,18 +5,19 @@ from django.http import HttpResponse, QueryDict, HttpResponseRedirect
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.utils import timezone
 from django.views.generic.list import ListView
+from django.template import Context
+from django.views.generic.edit import FormMixin, CreateView
 
 import sys, random, string, csv
+
 from profiles.forms import NameForm, PhotoForm, AlumInfoForm, HometownForm, BusinessForm, ResidenceForm
 from alumniadmin.forms import AddProfileForm, LogInForm, SearchForm, FiltersForm
 from profiles.models import Alum, Campus, College, Program, Major, Graduation, City, BusinessAddress, Residence, Tribe, Religion, ProfileApplication
 from alumniadmin.models import User
-from django.views.generic.edit import FormMixin, CreateView
+from portal.access import MSUAdminMixin
+from profiles.views import ProfileIndex
 
-
- 
-
-class RequestsListView(ListView):
+class RequestsListView(MSUAdminMixin, ListView):
   paginate_by = 25
   template_name = 'profiles/profile_requests.html'
 
@@ -59,6 +60,10 @@ def commit_approval(request):
         new_grad.save()
         applicant.status = 'A'
         applicant.save()
+        from msualumni.settings import EMAIL_HOST_USER as default
+        applicant.send_email("MSU Alumni Profile Approval", Context({'alum':new_alum}), 
+                            {'html':'emails/approved.html', 'plaintext':'emails/approved.txt'}, default)
+        applicant.delete()
         msg = "Approved"
     return HttpResponse(msg)
   except:
@@ -66,13 +71,8 @@ def commit_approval(request):
     return HttpResponse("Oops!", code=400)
   return redirect('/')
 
-class ProfilesIndexView(FormMixin, ListView):
-  paginate_by = 25
-  template_name = 'profiles/profiles.html'
-  queryset = Alum.objects.prefetch_related('grad').all()
-  form_class = SearchForm
-  allow_empty = True
-
+class ProfilesIndexView(MSUAdminMixin, ProfileIndex):
+  
   def get_queryset(self, **kwargs):
     if self.request.GET.has_key('filter'):
       used_filter = {str(self.request.GET.get('filter'))+'__istartswith' : self.request.GET.get('query')}
@@ -83,30 +83,9 @@ class ProfilesIndexView(FormMixin, ListView):
 
   def get_context_data(self, **kwargs):
     context = super(ProfilesIndexView, self).get_context_data(**kwargs)
-    form_class = self.get_form_class()
-    context['form'] = form_class
-    context['total_results'] = self.queryset.count()
-    if context['total_results'] < 1 and self.request.GET.has_key('filter'):
-      context['alerts'] = 'Your search returned no results.'
-    context['previous_query'] = self.request.GET.get('query')
     context['request_count'] = ProfileApplication.objects.all().count() if self.request.user.is_superuser else ProfileApplication.objects.filter(status='P').count()
-    queries_without_page = self.request.GET.copy()
-    if queries_without_page.has_key('page'):
-        del queries_without_page['page']
-    context['query_params'] = queries_without_page
     return context
 
-  def get_form_class(self):
-    form_class = SearchForm()
-    if self.request.GET.has_key('query'):
-      form_class = SearchForm(self.request.GET)
-    return form_class
-
-  def form_valid(self, form, **kwargs):
-    return super(ProfilesIndexView, self).form_valid(form)
-
-  def form_invalid(self, form, **kwargs):
-    return super(ProfilesIndexView, self).form_invalid(form)
 
 class AdvancedSearch(ProfilesIndexView):
   template_name = 'profiles/advanced_search.html'
@@ -125,7 +104,7 @@ class AdvancedSearch(ProfilesIndexView):
     print queryset
     return queryset
 
-class AddProfileView(CreateView):
+class AddProfileView(MSUAdminMixin, CreateView):
   model = Alum
   form_class = AddProfileForm
   template_name = 'profiles/add_profile.html'

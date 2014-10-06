@@ -1,0 +1,10 @@
+MSU Alumni Web Portal
+
+Hi {{ applicant.first_name }} {{ applicant.last_name }}
+
+You have successfully submitted your request to create your applicant profile at the MSU Alumni Web Portal. In order to create an account on the site, your profile must first be approved by the MSU Office on Alumni Relations to verify that you are a bona fide alum.
+
+You will receive another email concerning the action taken for your request.
+
+
+-MSU Office of Alumni Relations

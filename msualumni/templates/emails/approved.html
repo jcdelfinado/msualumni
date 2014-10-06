@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<html>
+<head>
+	<link href={% static 'css/bootstrap.min.css' %} rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>
+  MSU Alumni Web Portal
+</h1>
+<h4>
+  Hi {{ alum.first_name }} {{ alum.last_name }}
+</h4>
+<p>
+Your profile request at the MSU Alumni Web Portal has been approved. You may now use your alumni ID {{ alum.alumni_id }} to create an account on the site and enjoy other privileges being an alumnus of MSU affords you.
+</p>
+<h3>Your Alumni ID</h3>
+<h2>{{ alum.alumni_id }}</h2>
+<p>
+<a href="127.0.0.1/signup"><button class="btn btn-primary">Sign Up Here</button></a>
+</p>
+
+<br>
+-MSU Office on Alumni Relations
+</body>
+</html>

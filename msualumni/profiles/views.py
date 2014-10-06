@@ -11,7 +11,6 @@ from django.views.generic.edit import FormMixin, UpdateView
 from alumniadmin.forms import AddProfileForm, SearchForm
 from alumniadmin.models import User
 from msualumni.utils.captcha import hash
-from msuadmin.views import generate_id, ProfilesIndexView
 
 from models import *
 from forms import *
@@ -182,7 +181,14 @@ def save_profile_details(request):
       print "invalid form"
   return redirect('/')
 
-class ProfileIndex(ProfilesIndexView):
+class ProfileIndex(FormMixin, ListView):
+
+  paginate_by = 25
+  template_name = 'profiles/profiles.html'
+  queryset = Alum.objects.prefetch_related('grad').all()
+  form_class = SearchForm
+  allow_empty = True
+
   def get_queryset(self, **kwargs):
       if self.request.GET.has_key('filter'):
         used_filter = {str(self.request.GET.get('filter'))+'__istartswith' : self.request.GET.get('query')}
@@ -190,6 +196,33 @@ class ProfileIndex(ProfilesIndexView):
         return query
       else: 
         return Alum.objects.none()
+
+  def get_form_class(self):
+    form_class = SearchForm()
+    if self.request.GET.has_key('query'):
+      form_class = SearchForm(self.request.GET)
+    return form_class
+
+  def get_context_data(self, **kwargs):
+    context = super(ProfileIndex, self).get_context_data(**kwargs)
+    form_class = self.get_form_class()
+    context['form'] = form_class
+    context['total_results'] = self.object_list.count()
+    if context['total_results'] < 1 and self.request.GET.has_key('filter'):
+      context['alerts'] = 'Your search returned no results.'
+    context['previous_query'] = self.request.GET.get('query')
+    #context['request_count'] = ProfileApplication.objects.all().count() if self.request.user.is_superuser else ProfileApplication.objects.filter(status='P').count()
+    queries_without_page = self.request.GET.copy()
+    if queries_without_page.has_key('page'):
+        del queries_without_page['page']
+    context['query_params'] = queries_without_page
+    return context
+
+  def form_valid(self, form, **kwargs):
+    return super(ProfilesIndexView, self).form_valid(form)
+
+  def form_invalid(self, form, **kwargs):
+    return super(ProfilesIndexView, self).form_invalid(form)
 
 class ProfileRequest(CreateView):
   template_name = 'registration/profile_request_form.html'
@@ -215,34 +248,17 @@ class ProfileRequest(CreateView):
     print self.object.id
     context = Context({'applicant' : self.object})
     try:
+      from msualumni.settings import EMAIL_HOST_USER
       self.object.send_email(
         subject = "MSU Alumni Profile Request",
         context = context,
-        from_email = 'jerico.delfinado@gmail.com',
-        templates = {'html':'email_request.html', 'plaintext':'email_request.txt'}
+        from_email = EMAIL_HOST_USER,
+        templates = {'html':'emails/request.html', 'plaintext':'emails/request.txt'}
         )
     except:
       raise
     return self.success_url
   
-def send_email(alum, grad, email):
-
-  plaintext = get_template('email_request.txt')
-  html = get_template('email_request.html')
-  params = Context({
-    'alum' : alum,
-    'grad' : grad
-    })
-  text_content = plaintext.render(params)
-  html_content = html.render(params)
-  subject = "MSU Alumni Profile Request"
-  from_email = "jerico.delfinado@gmail.com"
-  to = email
-  
-  msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-  msg.attach_alternative(html_content, "text/html")
-  msg.send()
-
 def signup(request):
   
   if request.method == 'POST':

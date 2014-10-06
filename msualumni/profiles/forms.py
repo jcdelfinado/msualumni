@@ -7,7 +7,7 @@ class SignUpForm(forms.Form):
 
   alumni_id = forms.CharField(max_length=32, label="Alumni ID", widget=forms.TextInput(attrs={'placeholder':'Valid Alumni ID'}))
   email = forms.EmailField(max_length=64, label="Email Address", widget=forms.EmailInput(attrs={'placeholder':'Valid Email Address'}))
-  password = forms.CharField(max_length=32, min_length=8, label="Password", widget=forms.PasswordInput(attrs={'placeholder':'Password'}))
+  password = forms.CharField(max_length=32, min_length=8, label="Password", widget=forms.PasswordInput(attrs={'placeholder':'Your password must be at least 8 characters long.'}))
   confirm_password = forms.CharField(max_length=32, label="Confirm Password", widget=forms.PasswordInput(attrs={'placeholder':'Password (again)'}))
 
 
@@ -82,3 +82,19 @@ class ProfileRequestForm(forms.ModelForm):
   class Meta:
     model = ProfileApplication
     exclude = ['status']
+    help_texts = {
+      'last_name':'Please use the name that appears on your diploma',
+      'mobile':'Please include your country code enclosed in parentheses',
+      'birthdate':'For example 06/10/1993',
+      'program':'If you have more than one course/degree, please choose only one. We can add the others later.'
+      }
+    widgets = {
+      'last_name':forms.TextInput(attrs={'placeholder':'The surname you graduated with'}),
+      'mobile':forms.TextInput(attrs={'placeholder':''}),
+      'birthdate':forms.DateInput(attrs={'type':'date', 'placeholder':'mm/dd/yyyy'}),
+      'program':forms.TextInput(attrs={'placeholder':'The course you graduated in'})
+      }
+    labels = {
+      'program':'Course/Degree Graduated'
+    }
+

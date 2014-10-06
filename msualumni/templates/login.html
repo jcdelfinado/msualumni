@@ -26,6 +26,7 @@ Log In - MSU Alumni Admin
     
     <form method="post" action="/login">
       {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
       {% bootstrap_form form %}
       <button class="btn btn-danger col-sm-12">LogIn</button>
       <input type="hidden" name="next" value="{{ next }}"/>

@@ -28,9 +28,7 @@
 <div class="container-fluid" style="height:500px">
 	<div class="col-md-2">
 		<ul class="nav nav-pills nav-stacked">
-			<li><a href="#">News Feed</a></li>
-			<li><a href="#">Categories</a></li>
-			<li><a href="#">Archives</a></li>
+			<li><a href="/admin/news">News Feed</a></li>
 		</ul>
 	</div>
 	<div class="col-md-10">
@@ -47,6 +45,7 @@
 				<span style="text-align: right">
 					<button class="btn btn-primary" value="Create">Post</button>
 				</span>
+				&nbsp;or {% include 'delete_confirmation.html' %}
 			</div>
 		</div>
 		</form>

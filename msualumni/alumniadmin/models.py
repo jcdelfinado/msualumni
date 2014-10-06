@@ -16,6 +16,7 @@ class CustomUserManager(BaseUserManager):
         """
         now = timezone.now()
         code = ''.join(random.choice(string.ascii_letters) for _ in range(8))
+        print email
         if not email:
             raise ValueError('The given email must be set')
         email = self.normalize_email(email)
@@ -27,6 +28,7 @@ class CustomUserManager(BaseUserManager):
                           date_joined=now, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        print user.id
         return user
         
     def _create_staff(self, email, password,
@@ -64,7 +66,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
   alumni_id = models.ForeignKey(Alum, null=True, blank=True)
   email = models.EmailField(_('email address'), unique=True)
-  name = models.CharField(_('username'), max_length=32, unique=True)
   is_staff = models.BooleanField(_('staff status'), default=False,
       help_text=_('Designates whether the user can log into this admin '
                   'site.'))
@@ -74,7 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
   status = models.CharField(max_length=1, choices=STATUS)
   date_joined = models.DateTimeField(_('date joined'), default=timezone.now)
   activation_code = models.CharField(max_length=8, null=True, blank=True)
-  #username = models.CharField(max_length=16, unique=True)
+  #name = models.CharField(max_length=16, unique=True)
   #last_name = models.CharField(max_length=64, null=True, blank=True)
 
   objects = CustomUserManager()
@@ -87,7 +88,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     db_table="user"
 
   def __unicode__(self):
-    return self.name
+    if self.alumni_id:
+      short = str(self.alumni_id)
+    else:
+      short = "MSU-OAR"
+    return short
   
   def get_absolute_url(self):
     if self.alumni_id:
@@ -105,7 +110,12 @@ class User(AbstractBaseUser, PermissionsMixin):
   
   def get_short_name(self):
     "Returns the short name for the user."
-    return self.name
+    if self.alumni_id:
+      short = str(self.alumni_id.first_name)[:1]
+      short = short + str(self.alumni_id.last_name)
+    else:
+      short = "MSU-OAR"
+    return short
 
   def send_email(self, subject, message, from_email=None):
     """

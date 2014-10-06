@@ -1,0 +1,8 @@
+MSU Alumni Web Portal
+
+Hi {{ alum.first_name }} {{ alum.last_name }}
+
+Your profile request at the MSU Alumni Web Portal has been approved. You may now use your alumni ID {{ alum.alumni_id }} to create an account on the site and enjoy other privileges being an alumnus of MSU affords you.
+
+
+-MSU Office on Alumni Relations
