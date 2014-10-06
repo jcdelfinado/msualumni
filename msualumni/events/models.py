@@ -20,7 +20,7 @@ class Event(models.Model):
   date = models.DateField()
   time = models.TimeField(null=True, blank=True)
   is_private = models.BooleanField(default=False)
-  is_approved = models.BooleanField(default=False)
+  is_approved = models.BooleanField(default=True)
   author = models.ForeignKey(User, related_name='author')
   guests = models.ManyToManyField(User, through='RSVP')
   category = models.ForeignKey(Category)
@@ -29,6 +29,9 @@ class Event(models.Model):
 
   def __unicode__(self):
   	return self.title + "(" + str(self.date) + ")"
+
+  def get_absolute_url(self):
+    return "/events/details/"+str(self.id)
 
   class Meta:
   	db_table='event'

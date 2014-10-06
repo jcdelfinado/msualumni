@@ -1,11 +1,11 @@
-{% extends 'admin/accounts_base.html' %}
+{% extends 'profiles/profiles_base.html' %}
 
 {% block side_nav %}
 	<li class="active"><a href="/admin/users">Users</a></li>
 	<li><a href="/admin/groups">Groups</a></li>
 {%endblock%}
 
-{% block main_content %}
+{% block main_pane %}
 <table class="table table-hover">
 	<thead>
 		<th>Alumni ID</th>
@@ -32,4 +32,4 @@
 		{% endfor %}
 	</tbody>
 </table>
-{% endblock main_content %}
+{% endblock main_pane %}

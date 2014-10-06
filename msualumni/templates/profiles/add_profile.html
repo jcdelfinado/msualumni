@@ -26,30 +26,30 @@ Add Alum - MSU Alumni Administration
 {% endblock header %}
 
 {% block content %}
-<form method="POST" action="profiles/add" style="margin:10px 0">
-  {% csrf_token %}
-  <div class="col-sm-4 ">
-    <fieldset id="general" style="padding:0px">
-    <legend id="gen_label">Basic Alumni Information</legend>
-    {% bootstrap_field form.first_name %}
-    {% bootstrap_field form.last_name %}
-    {% bootstrap_field form.middle_name %}
-    </fieldset>
-    <fieldset id="general" style="padding:0px">
-    <legend id="gen_label">Graduation Information</legend>
-    {% bootstrap_field form.campus %}
-    {% bootstrap_field form.college %}
-    {% bootstrap_field form.program %}
-    {% bootstrap_field form.major %}
-    <div class="col-sm-6" style="padding:0px">
-      {% bootstrap_field form.month %}
+<div class="container-fluid">
+  <form method="POST" action="/admin/profiles/add" style="margin:10px 0">
+    {% csrf_token %}
+    <div class="col-sm-4 ">
+      <fieldset id="general" style="padding:0px">
+      <legend id="gen_label">Basic Alumni Information</legend>
+      {% bootstrap_field form.first_name %}
+      {% bootstrap_field form.last_name %}
+      {% bootstrap_field form.middle_name %}
+      </fieldset>
+      <fieldset id="general" style="padding:0px">
+      <legend id="gen_label">Graduation Information</legend>
+      {% bootstrap_field form.campus %}
+      {% bootstrap_field form.college %}
+      {% bootstrap_field form.program %}
+      <div class="col-sm-6" style="padding:0px">
+        {% bootstrap_field form.month %}
+      </div>
+      <div class="col-sm-6">
+        {% bootstrap_field form.year %}
+      </div><br>
+      <button id="continue" class="btn btn-danger col-sm-12">Continue</button>
+      </fieldset>
     </div>
-    <div class="col-sm-6">
-      {% bootstrap_field form.year %}
-    </div><br>
-    <button id="continue" class="btn btn-danger col-sm-12">Continue</button>
-    </fieldset>
-  </div>
-</form>
-
+  </form>
+</div>
 {% endblock content %}

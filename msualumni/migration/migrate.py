@@ -6,17 +6,6 @@ data_count = 0
 error_count = 0
 sequences = {}
 
-class FormatError:
-
-	def __init__(self, value):
-		global error_count
-		self.value = value
-		report(value)
-		error_count += 1
-
-	def __str__(self):
-		return repr(self.value)
-
 def parse(file):
 
 	
@@ -52,13 +41,8 @@ def parse(file):
 														('campus',None),
 														]))
 			data_count += 1
-		except FormatError as e:
-			print e.value
-			print 'Skipping Data'
-			continue
 		except:
-			report('ERROR ' + line )
-			continue
+			print sys.exc_info()[0], sys.exc_info()[1] 
 
 	return data_count
 def save_to_file(data, filename, fields):

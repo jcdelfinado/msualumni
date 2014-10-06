@@ -15,14 +15,7 @@
 
       {% if user.is_authenticated and user.is_staff %}
       <small>|&nbsp;
-        {% if profile.status == 'A' %} 
           <a style="cursor:pointer" href="javascript:{}" onclick="$('#edit').submit()">Edit</a>
-        {% else  %}
-          <a style="cursor:pointer" href="
-          javascript:{}" onclick="$('#approve').submit()">Approve</a>
-          <a style="cursor:pointer; color:#777" href="javascript:{}" onclick="$('#approval').val('False');$('#approve').submit()">Decline</a>
-        {% endif %}
-      </a>
       </small>
       {% endif %}
     </h4>
@@ -30,7 +23,7 @@
   </div>
   <div class="modal-body">
     <div style="text-align:center">  
-      <img src="/media/{{ profile.pic }}" height="80px" class="profile-thumb"/> 
+      <img src="{{ profile.pic }}" height="80px" class="profile-thumb"/> 
       <h4>{{ profile.first_name }}&nbsp;{{ profile.middle_name|slice:":1" }}.&nbsp;{{ profile.last_name | title }}</h4>
       <h5 id="alumni_id">{{ profile.alumni_id }}</h5>
       {% if user.is_authenticated and user.is_staff %}

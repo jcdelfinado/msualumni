@@ -11,6 +11,9 @@ $('.alum-row').on('click', function() {
 $(':checkbox').on('change', function(){
   var field = $(this).data('toggle')
   $(field).attr('disabled',!this.checked);
+  if ($(field).attr('disabled')){
+    $(field).val('')
+  }
   if ($(field).val().length == 0)
     $('#go_advanced').attr('disabled', true)
   else $('#go_advanced').attr('disabled', false)

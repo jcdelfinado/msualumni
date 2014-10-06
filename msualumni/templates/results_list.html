@@ -1,8 +1,8 @@
 {% load filters %}
     <div class="well" style="min-height:360px">
       {% for result in object_list %}
-        <div class="panel panel-default">
-          <div class="panel panel-body">
+        <div class="panel panel-default" style="cursor:pointer">
+          <div class="panel-body alum-row" id={{result.alumni_id}}>
             <td></td>
             <strong>{{ result.last_name|upper }},&nbsp;{{ result.first_name }}&nbsp;{{ result.middle_name|slice:":1" }}.</strong>
             <small>

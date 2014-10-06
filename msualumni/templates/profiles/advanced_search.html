@@ -1,14 +1,29 @@
-{% load bootstrap3 %} 
-<form autocomplete="on" method="get" action="/admin/profiles/advanced_search" id="filters_form">
-<div class="modal fade" id="filters_modal" tabindex="-1" role="dialog"  aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header" >
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" style="color:#111111" >Advanced Filters</h4>
-      </div>
-      <div class="modal-body">
-        <table width="100%">
+{% extends 'admin_base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}
+  MSU Alumni Admin - Profiles
+{% endblock title %}
+
+{% block header %}
+  <header style="background-image: url({% static 'images/slide1.jpg' %})">
+    <div class="container">
+      <h1>
+        Advanced Searching
+      </h1>
+      <a href="/admin/profiles">
+          <span class="glyphicon glyphicon-user"></span>
+          Back to Profiles
+      </a>
+    </div>
+  </header>
+{% endblock header %}
+{% block content %}
+  <div class="container-fluid"  style="min-height:420px">
+    <div class="col-md-3">
+      <form autocomplete="on" method="get" action="/admin/profiles/advanced">
+      <table width="100%">
           <tr><td></td><td><strong>Full Name</strong><br></td></tr>
           <tr>
             <td class="ticker">
@@ -41,6 +56,14 @@
             </td>
             <td>
               {% bootstrap_field form.class_year %}
+            </td>
+          </tr>
+          <tr>
+            <td class="ticker">
+              <input type="checkbox" class="filter_pick" data-toggle="#id_program">
+            </td>
+            <td>
+              {% bootstrap_field form.program %}
             </td>
           </tr>
           <tr>
@@ -133,13 +156,29 @@
               </td>
             </tr>
           </table>
-        </div> 
-      </div>   
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button id="go_advanced" disabled type="submit" data-target="success" class="btn btn-primary">Search</button>
-      </div>      
+        </div>
+        <br>
+        <button class="btn btn-primary col-md-12">Let's Go!</button>
+      </form>
+    </div>
+    <div class="col-md-9" >
+      {% if not object_list %}
+      <h4>
+        Choose your filters from the right.<br>
+        <small>Click the checkbox to enable the filter and type in your query</small>
+      </h4>
+      {% else %}
+        {% include 'results_table.html' %}
+      {% endif %}
     </div>
   </div>
-</div>
-</form>
+  <!-- <div class="col-sm-4">
+    <div id="profile">
+    </div>
+  </div> -->
+{% endblock content %}
+
+{% block scripts %}
+  <script type="text/javascript" src="/static/js/simple_search.js"></script>
+  <script type="text/javascript" src="{% static 'js/admin.js' %}"></script>
+{% endblock scripts %}

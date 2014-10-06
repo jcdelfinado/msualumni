@@ -13,18 +13,17 @@
       {% block header_content %}
       {% endblock header_content %}
     </div>    
-    {% include 'filters_modal.html' %} 
   </header>
 {% endblock header %}
 {% block content %}
-  <div class="container-fluid"  style="min-height:420px">
+  <div class="container-fluid" style="min-height:500px">
   <div class="col-md-2">
     <ul class="nav nav-pills nav-stacked">
       {% block side_nav %}
       {% endblock side_nav %}
     </ul>
   </div>
-  <div class="col-sm-10" >
+  <div class="col-sm-10" style="min-height:420px">
     {% block main_pane %}
       <div id="result">
         {% include 'results_table.html' %}
@@ -32,10 +31,6 @@
     {% endblock main_pane %}
   </div>
   </div>
-  <!-- <div class="col-sm-4">
-    <div id="profile">
-    </div>
-  </div> -->
 {% endblock content %}
 
 {% block scripts %}

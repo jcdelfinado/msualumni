@@ -1,6 +1,4 @@
-var approved = 0
-var recommended = 0
-var rejected = 0
+var current = 0
 
 function updateProgress(full){
 	var offset = (100/full)
@@ -19,36 +17,25 @@ function take_action(id, action, total){
 		'/admin/profiles/requests/commit',
 		{'applicant_id':id, 'action_taken':action, 'csrf_token':csrftoken},
 		function(data){
-			if (data == 'Approved'){
-				approved++
-				return true
-			}
-			if (data == 'Recommended'){
-				recommended++
-				updateProgress(total)
-				$('#'+id).remove()
-				return true
-			}
-			if (data == 'Rejected'){
-				rejected++
-				return true
-			}
-			return false
+			current++
+			updateProgress(total)
+			$('#'+id).remove()
+			return true
 		}
 	)
 }
 
 function commit(action){
+	showProgress()
 	var total = $('input[class="selector"]:checked').length
-	var current = 0
 	var success
 	$('input[class="selector"]:checked').each(function(){
 		var id = $(this).data('id')
 		success = take_action(id, action, total)
 	})
-	if (success) alert('OK ' + recommended)
+	if (success) {alert('OK ' + current)}
 }
 function showProgress(){
-	$('#progress').show()
+	$('.progress').show()
 }
 

@@ -7,8 +7,9 @@ class SignUpForm(forms.Form):
 
   alumni_id = forms.CharField(max_length=32, label="Alumni ID", widget=forms.TextInput(attrs={'placeholder':'Valid Alumni ID'}))
   email = forms.EmailField(max_length=64, label="Email Address", widget=forms.EmailInput(attrs={'placeholder':'Valid Email Address'}))
-  password = forms.CharField(max_length=32, min_length=8, label="Password", widget=forms.TextInput(attrs={'placeholder':'Password'}))
-  confirm_password = forms.CharField(max_length=32, label="Confirm Password", widget=forms.TextInput(attrs={'placeholder':'Password (again)'}))
+  password = forms.CharField(max_length=32, min_length=8, label="Password", widget=forms.PasswordInput(attrs={'placeholder':'Password'}))
+  confirm_password = forms.CharField(max_length=32, label="Confirm Password", widget=forms.PasswordInput(attrs={'placeholder':'Password (again)'}))
+
 
 class PhotoForm(forms.Form):
 
@@ -19,6 +20,12 @@ class NameForm(forms.ModelForm):
   class Meta:
     model = Alum
     fields = ['first_name', 'middle_name', 'last_name']
+
+class EditableInfoForm(forms.Form):
+
+  tribe = forms.CharField(required=True, label="Tribe", max_length=32, widget=forms.TextInput(attrs={'placeholder':'Ethnic Group'}))
+  citizenship = forms.CharField(required=True, label="Nationality", max_length=32, widget=forms.TextInput(attrs={'placeholder':'Current citizenship'}))
+  religion = forms.CharField(required=True, label="Religion", max_length=54, widget=forms.TextInput(attrs={'placeholder':'Religious affiliation'}))
 
 class AlumInfoForm(forms.Form):
 
@@ -53,7 +60,11 @@ class HometownForm(forms.Form):
   hometown_province = forms.CharField(required=True, max_length=32,  label="", widget=forms.TextInput(attrs={'placeholder':'Province/State', 'class':'input-sm'}))
   hometown_country = forms.CharField(required=True, max_length=64,  label="", widget=forms.TextInput(attrs={'placeholder':'Country', 'class':'input-sm'}))
 
-
+class ProfileUpdateForm(forms.Form):
+  alum = AlumInfoForm()
+  residence = ResidenceForm()
+  business = BusinessForm()
+  hometown = HometownForm()
     
 class AlumGraduationForm(forms.Form):
 

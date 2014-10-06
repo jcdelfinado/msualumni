@@ -11,7 +11,8 @@ from profiles.forms import NameForm, PhotoForm, AlumInfoForm, HometownForm, Busi
 from alumniadmin.forms import AddProfileForm, LogInForm, SearchForm, FiltersForm
 from profiles.models import Alum, Campus, College, Program, Major, Graduation, City, BusinessAddress, Residence, Tribe, Religion, ProfileApplication
 from alumniadmin.models import User
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, CreateView
+
 
  
 
@@ -47,12 +48,12 @@ def commit_approval(request):
                     middle_name=applicant.middle_name,
                     birthdate=applicant.birthdate)
         new_alum.save()
-        created, program = Program.objects.get_or_create(name=applicant.program)
+        program, created = Program.objects.get_or_create(name=applicant.program)
         if created:
           program.save()
         new_grad = Graduation(
                     alumni_id = id,
-                    program = program.id,
+                    program = program,
                     year = applicant.year
                     )
         new_grad.save()
@@ -88,7 +89,7 @@ class ProfilesIndexView(FormMixin, ListView):
     if context['total_results'] < 1 and self.request.GET.has_key('filter'):
       context['alerts'] = 'Your search returned no results.'
     context['previous_query'] = self.request.GET.get('query')
-    context['request_count'] = ProfileApplication.objects.filter(status='P').count()
+    context['request_count'] = ProfileApplication.objects.all().count() if self.request.user.is_superuser else ProfileApplication.objects.filter(status='P').count()
     queries_without_page = self.request.GET.copy()
     if queries_without_page.has_key('page'):
         del queries_without_page['page']
@@ -107,6 +108,28 @@ class ProfilesIndexView(FormMixin, ListView):
   def form_invalid(self, form, **kwargs):
     return super(ProfilesIndexView, self).form_invalid(form)
 
+class AdvancedSearch(ProfilesIndexView):
+  template_name = 'profiles/advanced_search.html'
+  form_class = FiltersForm
+
+  def get_form_class(self):
+    form_class = FiltersForm()
+    return form_class
+
+  def get_queryset(self):
+    used_filter = self.request.GET.dict()
+    mod_filter = {}
+    for key, value in used_filter.iteritems():
+      mod_filter[key+'__istartswith'] = value
+    queryset = Alum.objects.select_related('grad').filter(**(mod_filter))
+    print queryset
+    return queryset
+
+class AddProfileView(CreateView):
+  model = Alum
+  form_class = AddProfileForm
+  template_name = 'profiles/add_profile.html'
+
 @login_required(login_url='/login')
 def add_csv(request):
 
@@ -120,7 +143,6 @@ def add_csv(request):
             first_name = d['first'],
             last_name = d['last'],
             middle_name = d['middle'],
-            status = 'A',
             is_active = False)
       alum.save()
     
@@ -174,87 +196,27 @@ def add_profile_view(request):
         first_name=form.cleaned_data['first_name'], 
         last_name=form.cleaned_data['last_name'], 
         middle_name=form.cleaned_data['middle_name'],
-        status='A',
         is_active = False)
       alum.save()
-      
+      campus, created = Campus.objects.get_or_create(name=form.cleaned_data['campus'])
+      if created: campus.save()
+      college, created = College.objects.get_or_create(name=form.cleaned_data['college'], campus_id=campus.id)
+      if created: college.save()
+      program, created = Program.objects.get_or_create(name=form.cleaned_data['program'])
+      if created: program.save()
+
+      grad = Graduation(alumni_id = alum.alumni_id,
+                      program_id = program.id,
+                      college_id = college.id,
+                      month = form.cleaned_data['month'], 
+                      year = int(form.cleaned_data['year']))
       grad.save()
-      return HttpResponseRedirect('/admin/profile_details?id='+full_id)
+      return HttpResponseRedirect('/admin/profiles')
   form = AddProfileForm()
-  return render(request, 'admin/add_profile.html', {'form':form})
+  return render(request, 'profiles/add_profile.html', {'form':form})
 
 @login_required(login_url='/login')
-@user_passes_test(lambda u:u.is_staff, login_url='/admin/login')
-def advanced_search(request):
-
-  if request.method=="GET":
-    filters = FiltersForm(request.GET)
-    used = []
-    if filters.is_valid():
-      print filters.cleaned_data
-      query = Alum.objects.all()
-      if filters.cleaned_data['first_name']:
-        query = query.filter(first_name=filters.cleaned_data['first_name'])
-        used.append(('First Name', filters.cleaned_data['first_name']))
-        
-      if filters.cleaned_data['last_name'] and query.count() > 0:
-        query = query.filter(last_name=filters.cleaned_data['last_name'])
-        used.append(('Last Name', filters.cleaned_data['last_name']))
-      print query.values()  
-      if filters.cleaned_data['middle_name'] and query.count() > 0:
-        query = query.filter(middle_name=filters.cleaned_data['middle_name'])
-        used.append(('Middle Name', filters.cleaned_data['middle_name']))
-      
-      if filters.cleaned_data['class_year'] and query.count() > 0:
-        query = query.grad_set.filter(year=filters.cleaned_data['class_year'])
-        used.append(('Class Year', filters.cleaned_data['class_year']))
-        
-      if query.count() > 0 and filters.cleaned_data['college'] :
-        query = query.filter(college__name=filters.cleaned_data['college'])
-        used.append(('College', filters.cleaned_data['college']))
-        
-      if query.count() > 0 and filters.cleaned_data['campus'] :
-        query = query.filter(college__campus=filters.cleaned_data['campus'])
-        used.append(('Campus', filters.cleaned_data['campus']))
-
-      if query.count() > 0 and filters.cleaned_data['hometown_city'] :
-        query = query.filter(alumni__hometown__city__startswith = filters.cleaned_data['hometown_city'])
-        used.append(('Hometown', filters.cleaned_data['hometown_city']+', '+filters.cleaned_data['hometown_province']))
-      
-      if query.count() > 0 and filters.cleaned_data['hometown_province'] :
-        query = query.filter(alumni__hometown__province = filters.cleaned_data['hometown_province'])
-        
-      if query.count() > 0 and filters.cleaned_data['residence_city'] :
-        query = query.filter(alumni__residence__city__startswith = filters.cleaned_data['residence_city'])
-        used.append(('Residence', filters.cleaned_data['residence_city']+', '+filters.cleaned_data['residence_province']))
-      
-      if query.count() > 0 and filters.cleaned_data['residence_province'] :
-        query = query.filter(alumni__residence__province = filters.cleaned_data['residence_province'])
-        
-      if query.count() > 0 and filters.cleaned_data['residence_country'] :
-        query = query.filter(alumni__residence__country = filters.cleaned_data['residence_country'])
-        
-      if query.count() > 0 and filters.cleaned_data['business_city'] :
-        query = query.filter(alumni__business__city = filters.cleaned_data['business_city'])
-
-        
-      if query.count() > 0 and filters.cleaned_data['business_province'] :
-        query = query.filter(alumni__business__province = filters.cleaned_data['business_province'])
-        
-      if query.count() > 0 and filters.cleaned_data['business_country'] :
-        query = query.filter(alumni__business__country = filters.cleaned_data['business_country'])
-      
-      if query.count() > 0:
-        nomatch = False        
-      else: 
-        nomatch = True
-      form = SearchForm()  
-      title ='Advanced Search'
-      return render(request, 'admin/profiles.html', {'title': title, 'used':used, 'form':form, 'filters':filters, 'resultset' : query, 'nomatch':nomatch})
-    return redirect('/admin')
-
-@login_required(login_url='/login')
-@user_passes_test(lambda u:u.is_staff, login_url='/admin/login')    
+#@user_passes_test(lambda u:u.is_staff, login_url='/admin/login')    
 def profile_details(request):
   
   if request.method == 'GET':

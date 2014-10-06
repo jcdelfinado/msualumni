@@ -45,11 +45,8 @@
 			</h3>		
 		{% endif %}
 		<div class="col-md-12">
-		<h5>Browse by category:
-			{% for cat in categories %}
-				<a href="#">{{ cat }}</a>&nbsp;
-			{% endfor %}
-		</h5>
+		{% include 'events/browse_event_by_category.html' %}
+		or <a href="/events">&laquo; Back to events</a>
 		</div>
 	</div>
 {% endblock content %}

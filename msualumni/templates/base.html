@@ -7,7 +7,7 @@
       MSU Alumni Portal
     {% endblock title %}
   </title>
-  
+  <link rel="icon" type="image/png" href="{% static 'favicon.png' %}">
   <link href={% static 'css/bootstrap.min.css' %} rel="stylesheet" type="text/css"/>
   
   {% block css %}
@@ -40,7 +40,6 @@
             <li><a href="/profiles">Alumni</a></li>
             <li><a href="/news">News</a></li>
             <li><a href="/events">Events</a></li>
-            <li><a href="#">Photos</a></li>
             {% if user.is_authenticated and user.is_staff %}
               <li><a href="/admin/dashboard">Admin</a></li>
             {% endif %}
@@ -53,6 +52,9 @@
                 {{ user.alumni_id.first_name }} {{ user.alumni_id.last_name }} ({{ user.name }})
               </a>
               <ul class="dropdown-menu">
+                {% if not user.is_staff %}
+                  <li><a href="/profiles/update?id={{user.alumni_id.alumni_id}}">Update my profile</a></li>
+                {% endif %}
                 <li><a href="/password/change">Account Settings</a></li> 
                 <li><a href="#">About the Developer</a></li> 
                 <li class="divider"></li>
@@ -114,6 +116,5 @@
   
   {% block scripts %}
   {% endblock scripts %}
-  
 </body>
 </html>

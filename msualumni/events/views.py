@@ -12,10 +12,16 @@ from models import Event, Category, RSVP
 
 class AddEvent(CreateView):
 	model = Event
-
+	form_class = EventForm
 	def form_valid(self, form):
 		form.instance.author = self.request.user
 		return super(AddEvent, self).form_valid(form)
+
+	def get_success_url(self):
+		success_url = "/events/details/"+str(self.object.id)
+		if self.request.user.is_staff:
+			success_url = "/admin"+success_url
+		return success_url
 
 class EditEvent(UpdateView):
 	form_class = EventForm
@@ -49,7 +55,7 @@ class EventsByCategory(ListView):
 		self.queryset = Event.objects.filter(
 			is_approved=True,
 			date__gte=datetime.date.today(),
-			category_id__name__iexact = category
+			category_id = self.category.id
 		).order_by("date")
 
 		return super(EventsByCategory, self).get(request, **kwargs)
@@ -97,6 +103,8 @@ class EventDetails(DetailView):
 	def get_context_data(self, **kwargs):
 		context = super(EventDetails, self).get_context_data(**kwargs)
 		context['attendance'] = RSVP.objects.filter(event_id = self.object.id).count()
+		print RSVP.objects.only('guest_id').filter(event_id = self.object.id).values()
+		context['attending'] = RSVP.objects.only('guest_id').filter(event_id=self.object.id, guest_id=self.request.user.id).exists()
 		return context
 
 def reserve(request):
@@ -111,6 +119,7 @@ def reserve(request):
 				response = 'A'
 				)
 			reservation.save()
-			return HttpResponse('Success',context, status=200)
+			return HttpResponse('You have successfully reserved for this event')
 	except:
 		print sys.exc_info()[0], sys.exc_info()[1]
+		return HttpResponse('There was an error processing your request')

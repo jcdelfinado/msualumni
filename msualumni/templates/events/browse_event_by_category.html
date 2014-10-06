@@ -1,5 +1,9 @@
 <h5>Browse by category:
 	{% for cat in categories %}
+		{% if user.is_staff %}
+		<a href={% url 'admin_event_category' category=cat.name|urlencode %}>{{ cat }}</a>&nbsp;
+		{% else %}
 		<a href={% url 'event_category' category=cat.name|urlencode %}>{{ cat }}</a>&nbsp;
+		{% endif %}
 	{% endfor %}
 </h5>

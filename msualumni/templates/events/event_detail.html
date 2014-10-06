@@ -35,15 +35,34 @@
 			{{ attendance }} alumni attending this event.
 		</h5>
 		{% if user.is_authenticated %}
-			<button id="rsvp" data-loading-text="Processing..." class="btn btn-primary">RSVP</button>
+			{% if attending %}
+			You are attending this event.
+			{% else %}
+			<button id="rsvp" data-loading-text="Processing..." class="btn btn-primary" data-toggle="modal" data-target="#modal_alert">RSVP</button>
+			{% endif %}
 			{% if not attendance %}
 				Be the first!
 			{% endif %}
+
 		{% endif %}
 		<br>
 		<br>
-		<a href="/events/upcoming">&laquo; Back to events</a>
-	</div>
+		<a href="/events">&laquo; Back to events</a>
+		<div class="modal fade in" id="modal_alert" tabindex="-1" role="dialog"  aria-hidden="true">
+		  <div class="modal-dialog modal-sm">
+		    <div class="modal-content">
+		    	<div class="modal-header" >
+			        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			        <h5 class="modal-title" style="color:#111111" >RSVP</h5>
+			      </div>
+		    	<div class="modal-body">
+		    		<span id="message">Processing your request</span>
+		    	</div>
+		    </div>
+		  </div>
+		</div>
+		</div>
+	
 {% endblock content %}
 
 {% block scripts %}
@@ -58,12 +77,15 @@
 					'csrftoken' : csrftoken
 					},
 			success : function(data){
+				$('#message').html(data)
 				$('#rsvp').removeClass('btn-primary')
 				$('#rsvp').addClass('btn-success')
+				$('#rsvp').addClass('disabled')
 				$('#rsvp').html('Reserved')
-				
-				alert('OK. Reserved')
-				}
+				},
+			error : function(data){
+				$('#message').html(data)
+			}
 			})
 	})
 	</script>

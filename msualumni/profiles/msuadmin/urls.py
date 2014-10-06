@@ -6,6 +6,7 @@ from views import *
 urlpatterns = patterns (
     url(r'^$', ProfilesIndexView.as_view()),
     url(r'^requests$', RequestsListView.as_view()),
+    url(r'^advanced', AdvancedSearch.as_view()),
     url(r'^requests/commit$', commit_approval),
     url(r'^add$', add_profile_view),
     url(r'^add_csv$', add_csv),
@@ -16,7 +17,6 @@ urlpatterns = patterns (
     url(r'^save_hometown$', save_hometown),
     url(r'^save_residence$', save_residence),
     url(r'^save_business$', save_business),
-    url(r'^advanced_search', advanced_search),
     url(r'^login/$',
         auth_views.login,
         {'template_name':'admin/login.html',

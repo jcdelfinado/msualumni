@@ -15,8 +15,11 @@ from alumniadmin.models import User
 import sys
 # Create your views here.
 def index(request):
-  
-  return render(request, './portal/index.html')
+  from news import views as news_views
+  articles = news_views._article_list(7, 1)
+  from events import views as event_views
+  events = event_views.EventsIndex.queryset
+  return render(request, './portal/index.html', {'articles':articles, 'events':events})
   
 
 def send_activation(alum, user):

@@ -76,7 +76,7 @@ Dashboard - MSU Alumni Admin
 	        	
 	        	{% for article in articles %}
 					<p>
-						<a href="read?id={{ article.id }}" >
+						<a href="/news/read/{{ article.id }}" >
 						{{ article.title | truncatechars:54 }}
 						</a>					
 					<p>
@@ -91,10 +91,10 @@ Dashboard - MSU Alumni Admin
 	        </div>
 	        <div class="panel-body">
 	        	
-	        	{% for article in articles %}
+	        	{% for event in events %}
 					<p>
-						<a href="read?id={{ article.id }}" >
-						{{ article.title | truncatechars:36 }}
+						<a href="events/details/{{event.id}}" >
+						{{ event.title }}
 						</a>					
 					<p>
 				{% endfor %}

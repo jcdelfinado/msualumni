@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic.list import ListView
 import sys
 from forms import LogInForm
-from profiles.models import Alum
+from profiles.models import Alum, ProfileApplication
 from models import User
 
 def _get_preserved_query(GET):
@@ -18,7 +18,7 @@ class UsersListView(ListView):
   model = User
   #queryset = User.objects.select_related('user_groups__name').all()
   paginate_by = 25
-  template_name = 'admin/users.html'
+  template_name = 'profiles/users.html'
 
 class GroupsListView(ListView):
   model = Group
@@ -34,8 +34,10 @@ def dashboard(request):
     stats['alumni'] = Alum.objects.count()
     stats['non_admin'] = User.objects.filter(is_active=True).filter(is_staff=False).count()
     stats['inactive'] = User.objects.filter(is_active=False).filter(is_staff=False).count()
-    #stats['for_approval'] = Alum.objects.filter(status='P').count()
-    from news import views
-    articles = views._article_list(7, 1)
-    return render(request, 'admin/dashboard.html', {'stats':stats, 'articles':articles})
+    stats['for_approval'] = ProfileApplication.objects.exclude(status='A').exclude(status='R').count()
+    from news import views as news_views
+    articles = news_views._article_list(7, 1)
+    from events import views as event_views
+    events = event_views.EventsIndex.queryset
+    return render(request, 'admin/dashboard.html', {'stats':stats, 'events':events, 'articles':articles})
   return redirect('/')

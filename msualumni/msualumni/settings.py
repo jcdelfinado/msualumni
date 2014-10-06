@@ -86,7 +86,7 @@ DATABASES['default'] = dj_database_url.config(env='ALUMNI_DB_URL')
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Hong_Kong'
 
 USE_I18N = True
 

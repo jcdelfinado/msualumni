@@ -120,7 +120,7 @@ class Alum(models.Model):
   residence = models.ForeignKey(Residence, null=True, blank=True)
   hometown = models.ForeignKey(City, null=True, blank=True)
   business_address = models.ForeignKey(BusinessAddress, null=True, blank=True)
-  pic = models.ImageField(upload_to='/profiles/', default='/media/profiles/no-pic.png')
+  pic = models.ImageField(upload_to='/media/profiles/', default='/media/profiles/no-pic.png')
   date_created = models.DateTimeField(auto_now_add=True)
   date_modified = models.DateTimeField(auto_now_add=True, auto_now=True)
   is_active = models.BooleanField(default=False)
@@ -242,7 +242,7 @@ class ProfileApplication(models.Model):
   program = models.CharField(max_length=64)
   campus = models.CharField(choices=CAMPUSES, max_length=64)
   year = models.PositiveIntegerField(validators=[MinValueValidator(1963)])
-  photo = models.ImageField(upload_to='applications/', default='/media/profiles/no-pic.png')
+  photo = models.ImageField(upload_to='/media/applications/', default='/media/profiles/no-pic.png')
   status = models.CharField(choices=STATUS, max_length=1, default='P')
   #verified_by = models.ForeignKey(adminmodels.User)
 

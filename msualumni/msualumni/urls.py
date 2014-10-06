@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^login/$',
         auth_views.login,
         {'template_name':'portal/login.html',
-         'redirect_field_name':'/admin/dashboard'
+         'redirect_field_name':'/'
         }),
     url(r'^$', index),
     #url(r'^captcha/get_salt', captcha.get_salt),
