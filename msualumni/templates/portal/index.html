@@ -58,7 +58,7 @@
     		<h3>Alumni News</h3>
     		{% for article in articles %}
           <p>
-            <a href="/news/read?id={{ article.id }}" >
+            <a href="/news/read/{{ article.id }}" >
             {{ article.title | truncatechars:54 }}
             </a>          
           <p>
