@@ -76,7 +76,7 @@ class AlumGraduationForm(forms.Form):
   year = forms.DateField(label="Date", widget=forms.DateInput(attrs={'placeholder':'Graduation Date', 'type':'month', 'class':'date input-sm'}))
   
 class ProfileRequestForm(forms.ModelForm):
-  captcha = forms.CharField(label="Just to prove you're human", max_length=6, widget=forms.TextInput(attrs={'id':'captcha_field', 'placeholder':"Enter the code above",}))
+  captcha = forms.CharField(help_text="This helps us know you're not a computer trying to trick us", label="Enter six-letter the code you see below", max_length=6, widget=forms.TextInput(attrs={'id':'captcha_field', 'placeholder':"Enter the code above",}))
   captchaHash = forms.IntegerField(widget=forms.HiddenInput())
 
   class Meta:
@@ -86,7 +86,7 @@ class ProfileRequestForm(forms.ModelForm):
       'last_name':'Please use the name that appears on your diploma',
       'mobile':'Please include your country code enclosed in parentheses',
       'birthdate':'For example 06/10/1993',
-      'program':'If you have more than one course/degree, please choose only one. We can add the others later.'
+      'program':'If you have more than one course/degree, please choose only one. We can add the others later.',
       }
     widgets = {
       'last_name':forms.TextInput(attrs={'placeholder':'The surname you graduated with'}),
@@ -95,6 +95,6 @@ class ProfileRequestForm(forms.ModelForm):
       'program':forms.TextInput(attrs={'placeholder':'The course you graduated in'})
       }
     labels = {
-      'program':'Course/Degree Graduated'
+      'program':'Course/Degree Graduated',
     }
 

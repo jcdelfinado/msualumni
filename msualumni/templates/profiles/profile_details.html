@@ -18,10 +18,12 @@ Profile Details - MSU Alumni Administration
   <div class="content-fluid" style="min-height:480px">
   <div class="col-md-3 center-block" style="text-align:center">
     <img src={{ alum.pic.url }} height="80px" class="profile-thumb"/> 
-    <form method="post" action="/profiles/save_photo">
-      <input type="hidden" name="id" value="{{ alum.alumni_id }}">
-      <input type="file" name="img">
-    </form>
+    {% comment %}
+      <form method="post" action="/profiles/save_photo">
+          <input type="hidden" name="id" value="{{ alum.alumni_id }}">
+          <input type="file" name="img">
+        </form>
+    {% endcomment %}
     <h4>{{ alum.last_name|upper }},&nbsp;{{ alum.first_name }}&nbsp;({{ alum.middle_name }})</h4>
     <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#name_modal">Change Name</button>
     <p>{{ alum.alumni_id }}</p>
