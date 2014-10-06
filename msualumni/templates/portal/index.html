@@ -79,6 +79,7 @@
       		</table>
       	</div>
       	<div class="col-lg-4"  style="text-align:center">
+          {% if not user.is_authenticated %}
           <a href="/profiles/request">
           <img src="{% static 'images/img-square1.jpg' %}" class="cropped-circle">
           <br>
@@ -89,6 +90,7 @@
             </small>
           </h2>
           </a>
+          {% endif %}
         </div>
       </div>
     </div>
