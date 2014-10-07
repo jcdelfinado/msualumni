@@ -5,10 +5,10 @@ Thank you for taking time to register your profile.
 
 Please follow this link to complete your activation. 
 
-http://127.0.0.1:8000/activate?code={{ activation_code }}
+http://msualumni.herokuapp.com/activate?code={{ activation_code }}
 
 This will activate the account for {{ alum.first_name }} {{ alum.last_name }}.
-If this is not you, you may try filing up the form again http://127.0.0.1:8000/signup
+If this is not you, you may try filing up the form again http://msualumni.herokuapp.com/signup
 Or reply to this email so we can address your concerns.
 
 -MSU Office of Alumni Relations
