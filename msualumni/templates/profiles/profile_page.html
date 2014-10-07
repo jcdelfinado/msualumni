@@ -216,7 +216,6 @@ $(document).ready(function(){
       errorElement:'span'
     });
     if ($('#business_address_form').valid()){
-      alert($.cookie("csrfmiddlewaretoken"))
       $(this).button('loading')
       $.post(
         '/admin/profiles/save_business', 
@@ -233,7 +232,6 @@ $(document).ready(function(){
         $(this).button('reset')
       );
     }
-    else alert('Oops!') 
   });
   
   $('#save_residence').on('click', function(){
@@ -257,8 +255,7 @@ $(document).ready(function(){
       ).always(
         $(this).button('reset')
       );
-    }
-    else alert('Oops!') 
+    } 
   });
 
   $('#hometown_ok').on('click', function(){
@@ -284,7 +281,6 @@ $(document).ready(function(){
         $(this).button('reset')
       );
     }
-    else alert('Oops!') 
   });
   $('#save').on('click', function(){
     $(this).button('loading')

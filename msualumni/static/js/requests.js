@@ -33,7 +33,6 @@ function commit(action){
 		var id = $(this).data('id')
 		success = take_action(id, action, total)
 	})
-	if (success) {alert('OK ' + current)}
 }
 function showProgress(){
 	$('.progress').show()

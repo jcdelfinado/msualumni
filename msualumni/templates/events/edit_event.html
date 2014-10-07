@@ -26,26 +26,3 @@
 		</div>
 	</div>
 {% endblock content %}
-
-{% block scripts %}
-	{{ block.super }}
-	<script type="text/javascript">
-	$('#rsvp').click(function(){
-		$.ajax({
-			type : 'post',
-			url  : '/events/rsvp',
-			data : {'id' : {{ user.id }},
-					'event' : {{ event.id }},
-					'csrftoken' : csrftoken
-					},
-			success : function(data){
-				$('#rsvp').removeClass('btn-primary')
-				$('#rsvp').addClass('btn-success')
-				$('#rsvp').html('Reserved')
-				
-				alert('OK. Reserved')
-				}
-			})
-	})
-	</script>
-{% endblock scripts %}
