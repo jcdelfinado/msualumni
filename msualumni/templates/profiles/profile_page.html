@@ -65,7 +65,9 @@ MSU Alumni Web Portal Profile
   <div class="col-md-2">
     <ul class="nav nav-pills nav-stacked">
       <li id="profile_tab" class="active"><a href="#">Profile</a></li>
+      {% if alum.email %}
       <li id="contact_tab"><a data-toggle="modal" data-target="#contact-modal" href="#">Contact</a></li>
+      {% endif %}
     </ul> 
   </div>
 
