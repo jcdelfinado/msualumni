@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin as dj_admin
 from django.contrib.auth import views as auth_views
 
-from portal.views import index, signup, activate
+from portal.views import index, signup, activate, contact_profile
 from msualumni import settings
 from msualumni.utils import captcha
 
@@ -14,7 +14,8 @@ urlpatterns = patterns('',
     url(r'^news/', include('news.urls')),
     url(r'^events/', include('events.urls')),
     url(r'^profiles/', include('profiles.urls')),
-    
+
+    url(r'^contact$', contact_profile),
     url(r'^signup$', signup),
     url(r'^activate$', activate),
     url(r'^logout$', auth_views.logout, {'next_page':'/login'}),

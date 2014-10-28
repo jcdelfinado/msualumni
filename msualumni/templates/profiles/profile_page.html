@@ -3,7 +3,7 @@
 {% load staticfiles %}
 
 {% block title %}
-MSU Alumni Web Portal - Update Profile
+MSU Alumni Web Portal Profile
 {% endblock %}
 
 {% block css %}
@@ -65,9 +65,33 @@ MSU Alumni Web Portal - Update Profile
   <div class="col-md-2">
     <ul class="nav nav-pills nav-stacked">
       <li id="profile_tab" class="active"><a href="#">Profile</a></li>
-      <li id="contact_tab"><a href="#">Contact</a></li>
+      <li id="contact_tab"><a data-toggle="modal" data-target="#contact-modal" href="#">Contact</a></li>
     </ul> 
   </div>
+
+  {% load bootstrap3 %} 
+<div class="modal fade" id="contact-modal" tabindex="-1" role="dialog"  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="contact-form">
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" style="color:#111111" >Send Email</h4>
+      </div>
+      <div class="modal-body upload-modal-body">
+        <label>Type your message here:</label>
+        <textarea id="message" rows=20 class="form-control" placeholer="Type message here"></textarea>
+      </div>   
+      <div class="modal-footer" style="">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button id="go_send" type="submit" data-target="success" class="btn btn-primary">Send</button>
+        
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
   <div class="col-md-4">
     {% for grad in alum.grad.all %}
@@ -171,6 +195,19 @@ MSU Alumni Web Portal - Update Profile
 {{ block.super }}
 <script type="text/javascript" src="/static/js/jquery.validate.min.js"></script>
 <script type="text/javascript">
+
+$('#go_send').on('click', function(){
+  $.post('/contact',
+    { 'msg': $('#message').text(),
+      'csrfmiddlewaretoken' : csrftoken,
+      'receiver' : {{alum.alumni_id}},
+    }, function(data){
+      alert(data)
+    }, function(data){
+      alert('error')
+    }
+    )
+})
 
 function toggle_business_address_form(){
   $('#business_address').slideToggle();

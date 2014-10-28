@@ -22,6 +22,21 @@ def index(request):
   return render(request, './portal/index.html', {'articles':articles, 'events':events})
   
 
+def contact_profile(request):
+  if request.method == 'POST':
+    try:
+      receiver_id = request.POST.get('receiver')
+      message = request.POST.get('message')
+
+      receiver = User.objects.get(alumni_id=receiver_id)
+      receiver.send_email(
+        subject='Someone contacted you from MSU Alumni Web Portal',
+        message=message)
+      return HttpResponse('Your message has been sent!')
+    except:
+      print sys.exc_info()[0], sys.exc_info()[1]
+      return HttpResponse('Your message could not be sent. HAHAHA :P', code=405)
+
 def send_activation(alum, user):
 
   plaintext = get_template('emails/activation.txt')
